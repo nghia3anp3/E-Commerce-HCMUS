@@ -4,6 +4,7 @@ import { CartContext } from '../context/CartContext';
 import { MdOutlineShoppingCart, MdOutlineAccountCircle } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import Logo from '../img/logo.png';
+import Menu from './menu/menu'
 
 const Header = () => {
   const [isActive, setisActive] = useState(false);
@@ -61,6 +62,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <Menu className = 'py-2'/>
     </header>
   )
 }

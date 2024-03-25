@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 //import pages
 import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails'
+import ProductType from './pages/ProductType';
 //import components
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
@@ -16,6 +17,8 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home /> } />
           <Route path='/product/:id' element={<ProductDetails />} />
+          <Route path='/:p_type/:type' element={<ProductType />} />
+          {/* <Route path='/womenClothing/:type' element={<WomenClothing />} /> */}
         </Routes>
       </div>
       <Sidebar />

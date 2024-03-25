@@ -33,7 +33,7 @@ const ProductDetails = () => {
             <h1 className='text-[26px] font-medium mb-2 max-w-[450px] mx-auto'>
               {title}
             </h1>
-            <div className='mb-6 flex justify-center lg:justify-start'>
+            <div className='mb-6 flex justify-center lg:justify-start'>  
               <p className='text-xl text-red-500 font-medium inline-block'>
                 $ {price}
               </p>
