@@ -17,20 +17,12 @@ import Navbar from './components/Navbar'
 
 const App = () => {
 
-  const isLoginPage = () => {
-    return window.location.pathname === '/login' || window.location.pathname === '/register';
-  };
+  // const isLoginPage = () => {
+  //   return window.location.pathname === '/login' || window.location.pathname === '/register';
+  // };
 
   return (
     <div className='overflow-hidden'>
-      {isLoginPage() ?
-      <Router>
-          <Routes>
-            <Route path='/login' element= {<Login />} />
-            <Route path = '/register' element = {<Register/>} />
-          </Routes>
-      </Router>
-      :
       <Router>
         <Header />
         <div className="mt-20"> {/* Add top margin to create space for the header */}
@@ -38,12 +30,13 @@ const App = () => {
             <Route path='/' element={<Home /> } />
             <Route path='/product/:id' element={<ProductDetails />} />
             <Route path='/:p_type/:type' element={<ProductType />} />
+            <Route path='/login' element= {<Login />} />
+            <Route path = '/register' element = {<Register/>} />
           </Routes>
         </div>
         <Sidebar />
         <Footer />
       </Router>
-      }
     </div>
   )
 }

@@ -2,14 +2,14 @@ import React from "react";
 import {TERipple } from "tw-elements-react";
 import LoginLogo from '../img/login_logo2.webp'
 import { Link } from "react-router-dom";
-import LoginHeader from "../components/LoginHeader";
-
+import { FaRegEye, FaRegEyeSlash  } from "react-icons/fa";
 
 class Login extends React.Component {
 
     state = {
       account: '',
-      password: ''
+      password: '',
+      showPassword: false,
     }
 
     onChangeAccount = (event) => {
@@ -24,11 +24,18 @@ class Login extends React.Component {
       })
     }
 
+    togglePasswordVisibility = (event) => {
+      event.preventDefault();
+      this.setState(prevState => ({
+        showPassword: !prevState.showPassword
+      }));
+    }
+
+
     render () {
-      let {account, password} = this.state
+      let {account, password, showPassword} = this.state
         return (
           <div>
-            <LoginHeader />
             <section className="h-fit">
               <div className="container h-5/6 px-6 py-12">
                 <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
@@ -55,16 +62,20 @@ class Login extends React.Component {
                           placeholder="Tài khoản"/>
                       </div>
                       {/* <!--Password input--> */}
-                      <div class="md:flex md:items-center mb-6">
-                        <input class="bg-gray-200 appearance-none border-2
-                         border-gray-200 rounded w-full py-2 px-4
-                          text-gray-700 leading-tight 
-                          focus:outline-none focus:bg-white
-                           focus:border-purple-500" 
-                           type="password"
-                           onChange = {(event) => this.onChangePassword(event)}
-                           value = {password}
-                        placeholder="Mật khẩu"/>
+                      <div className="md:flex md:items-center mb-6">
+                      <input 
+                        className="bg-gray-200 appearance-none border-none rounded-l w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 "
+                        type={showPassword ? "text" : "password"}
+                        onChange={this.onChangePassword}
+                        value={password}
+                        placeholder="Mật khẩu"
+                      />
+                      <button
+                        className="rounded-r bg-gray-200 py-3 px-4 cursor-pointer border-2 border-gray-200"
+                        onClick={this.togglePasswordVisibility}
+                      >
+                        {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                      </button>
                     </div>
                       {/* <!-- Remember me checkbox --> */}
                       <div className="mb-6 flex items-center justify-between">
@@ -165,4 +176,3 @@ class Login extends React.Component {
 }
 
 export default Login;
-

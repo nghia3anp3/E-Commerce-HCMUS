@@ -5,6 +5,7 @@ import {useParams} from 'react-router-dom'
 import { CartContext } from '../context/CartContext'
 //import product context
 import { ProductContext } from '../context/ProductContext'
+import Comment from '../components/Comment'
 const ProductDetails = () => {
   //get the product id from the url
   const {id} = useParams();
@@ -24,7 +25,7 @@ const ProductDetails = () => {
   //destructure product
   const {title, price, description, image} = product
   return (
-    <section className='pt-20 pb12 lg-py-25 h-screen'>
+    <section className='pt-20 pb12 lg-py-25 h-auto'>
       <div className='container mx-auto'>
         {/* image & text wrapper */}
         <div className='flex flex-col lg:flex-row lg:flex-row-reverse items-center'>
@@ -47,7 +48,9 @@ const ProductDetails = () => {
             <img className='max-w-[200px] lg:max-w-sm' src={image} alt='' />
           </div>
         </div>
+        <Comment />
       </div>
+      
     </section>
   )
 }
