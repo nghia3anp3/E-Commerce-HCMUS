@@ -5,7 +5,9 @@ import {useParams} from 'react-router-dom'
 import { CartContext } from '../context/CartContext'
 //import product context
 import { ProductContext } from '../context/ProductContext'
-import Comment from '../components/Comment'
+//Comment
+import Comments from '../components/Comment/Comments'
+
 const ProductDetails = () => {
   //get the product id from the url
   const {id} = useParams();
@@ -48,7 +50,7 @@ const ProductDetails = () => {
             <img className='max-w-[200px] lg:max-w-sm' src={image} alt='' />
           </div>
         </div>
-        <Comment />
+        <Comments />
       </div>
       
     </section>
