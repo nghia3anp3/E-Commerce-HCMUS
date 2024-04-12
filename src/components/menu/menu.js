@@ -27,7 +27,6 @@ class Menu extends React.Component{
     
     render(){
         let {isHovered, hoverStates} = this.state
-
         return(
             <div className="flex">
                 {/* Dùng map được nhưng lười sửa quá =)) */}

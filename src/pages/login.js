@@ -2,16 +2,41 @@ import React from "react";
 import {TERipple } from "tw-elements-react";
 import LoginLogo from '../img/login_logo2.webp'
 import { Link } from "react-router-dom";
-import LoginHeader from "../components/LoginHeader";
 import { FaRegEye, FaRegEyeSlash  } from "react-icons/fa";
+import { VscErrorSmall } from "react-icons/vsc";
 
 class Login extends React.Component {
 
-    state = {
-      account: '',
-      password: '',
-      showPassword: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      account: "",
+      password: "",
+      show_password: false,
+      errors: {
+        account: "",
+        password: "",
+      },
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const { account, password } = this.state;
+    let errors = {};
+    if (account.trim() === "" || password.trim() === "") {
+      errors.account = "Tài khoản hoặc mật khẩu không được bỏ trống";
     }
+    if (Object.keys(errors).length > 0) {
+      // If there are errors, update state and return
+      this.setState({ errors });
+      return;
+    }
+    // Clear errors if validation passes
+    this.setState({ errors: {} });
+    console.log(account,password)
+  }
 
     onChangeAccount = (event) => {
       this.setState({
@@ -34,10 +59,9 @@ class Login extends React.Component {
 
 
     render () {
-      let {account, password, showPassword} = this.state
+      let {account, password, showPassword, errors} = this.state
         return (
-          <div>
-            <LoginHeader />
+          <div className="pt-20 pb12 lg-py-25 h-auto">
             <section className="h-fit">
               <div className="container h-5/6 px-6 py-12">
                 <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
@@ -52,15 +76,21 @@ class Login extends React.Component {
         
                   {/* <!-- Right column container with form --> */}
                   <div className="md:w-8/12 lg:ml-6 lg:w-5/12">
-                    <form>
+                    <form onSubmit={this.handleSubmit}>
+                      {/* Error message box */}
+                      {errors.account && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-4 rounded-md">
+                          {errors.account}
+                        </div>
+                      )}
                     <div class="md:flex md:items-center mb-6">
                           <input className="bg-gray-200 appearance-none border-2
                            border-gray-200 rounded w-full py-2 px-4
                             text-gray-700 leading-tight focus:outline-none
                              focus:bg-white focus:border-purple-500" 
                              type="text"
-                             value={account}
                              onChange={(event) => this.onChangeAccount(event)}
+                             value={account}
                           placeholder="Tài khoản"/>
                       </div>
                       {/* <!--Password input--> */}
@@ -68,7 +98,7 @@ class Login extends React.Component {
                       <input 
                         className="bg-gray-200 appearance-none border-none rounded-l w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 "
                         type={showPassword ? "text" : "password"}
-                        onChange={this.onChangePassword}
+                        onChange={(event) => this.onChangePassword(event)}
                         value={password}
                         placeholder="Mật khẩu"
                       />
@@ -107,15 +137,12 @@ class Login extends React.Component {
                       </div>
         
                       {/* <!-- Submit button --> */}
-        
-                      <TERipple rippleColor="light" className="w-full">
-                        <button
-                          type="button"
-                          className="inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                        >
-                          Sign in
-                        </button>
-                      </TERipple>
+      
+                      <button type="submit"
+                        className="inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                      >
+                        Sign in
+                      </button>
         
                       {/* <!-- Divider --> */}
                       <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
@@ -178,4 +205,3 @@ class Login extends React.Component {
 }
 
 export default Login;
-
