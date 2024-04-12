@@ -9,13 +9,16 @@ import ProductProvider from './context/ProductContext';
 import SidebarProvider from './context/SidebarContext';
 //cart provider
 import CartProvider from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <SidebarProvider>
     <CartProvider>
       <ProductProvider>
         <React.StrictMode>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </React.StrictMode>    
       </ProductProvider>
     </CartProvider>

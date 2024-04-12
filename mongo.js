@@ -20,8 +20,8 @@ const newSchema = new mongoose.Schema({
         type: String,
         require: true       
     },
-})
+}, { versionKey: false })
 
-const user = mongoose.model("User", newSchema)
+const user = mongoose.model("users", newSchema)
 
 module.exports = user

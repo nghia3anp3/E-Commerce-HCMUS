@@ -13,7 +13,6 @@ class Register extends React.Component {
       password: "",
       confirm_password: "",
       error: "",
-      NavigateToHome: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -26,7 +25,6 @@ class Register extends React.Component {
       this.setState({ error: "Passwords do not match" }); 
     } else {
       try {
-        console.log('test')
         const response = await axios.post("http://localhost:8000/register", {
           account,
           password,
@@ -37,7 +35,7 @@ class Register extends React.Component {
           if (data === "exist") {
             alert("User already exists");
           } else if (data === "notexist") {
-            this.setState({ NavigateToHome: true });
+            window.location.href = '/login';
           } else {
             alert("Unexpected response from server");
           }
@@ -77,10 +75,6 @@ class Register extends React.Component {
 
   render() {
     let { account, password, email, confirm_password, error } = this.state;
-    const { NavigateToHome } = this.state;
-    if (NavigateToHome) {
-      return <Navigate to={{ pathname: "/login", state: { account: this.state.account } }} />;
-    }
     return (
       <section className="min-h-screen flex items-center justify-center bg-blue-200">
         <div className="container h-5/6 px-6 py-12">

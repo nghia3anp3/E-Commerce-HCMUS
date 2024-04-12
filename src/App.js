@@ -12,7 +12,7 @@ import Header from './components/Header'
 import LoginHeader from './components/LoginHeader';
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
-
+import Account from './pages/account';
 
 
 const App = () => {
@@ -28,6 +28,7 @@ const App = () => {
         <div className="mt-20"> {/* Add top margin to create space for the header */}
           <Routes>
             <Route path='/' element={<Home /> } />
+            <Route path='/account' element={<Account /> } />
             <Route path='/product/:id' element={<ProductDetails />} />
             <Route path='/:p_type/:type' element={<ProductType />} />
             <Route path='/login' element= {<Login />} />
