@@ -6,6 +6,7 @@ import ProductDetails from './pages/ProductDetails'
 import ProductType from './pages/ProductType';
 import Login from './pages/login';
 import Register from './pages/register';
+import Account from './pages/account';
 //import components
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
@@ -32,6 +33,7 @@ const App = () => {
         <div className="mt-20"> {/* Add top margin to create space for the header */}
           <Routes>
             <Route path='/' element={<Home /> } />
+            <Route path='/account' element={<Account /> } />
             <Route path='/product/:id' element={<ProductDetails />} />
             <Route path='/:p_type/:type' element={<ProductType />} />
             <Route path='/login' element= {<Login />} />

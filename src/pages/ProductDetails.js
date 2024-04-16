@@ -27,7 +27,7 @@ const ProductDetails = () => {
   //destructure product
   const {title, price, description, image} = product
   return (
-    <section className='mt-4 pt-20 pb-12 lg-py-25 h-auto'>
+    <section className='pt-20 pb12 lg:py-25 h-auto'>
       <div className='container mx-auto'>
         {/* image & text wrapper */}
         <div className='flex flex-col lg:flex-row lg:flex-row-reverse items-center'>
@@ -52,7 +52,6 @@ const ProductDetails = () => {
         </div>
         <Comments />
       </div>
-      
     </section>
   )
 }
