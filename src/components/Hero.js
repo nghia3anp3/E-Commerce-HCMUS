@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react';
 
 class Hero extends React.Component {
@@ -29,14 +28,3 @@ class Hero extends React.Component {
 }
 
 export default Hero;
-=======
-import React from 'react'
-
-const Hero = () => {
-  return (
-    <div>Hero</div>
-  )
-}
-
-export default Hero
->>>>>>> test
