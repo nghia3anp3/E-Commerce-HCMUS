@@ -9,12 +9,11 @@ import Register from './pages/register';
 //import components
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
-import Hero from './components/Hero';
 import LoginHeader from './components/LoginHeader';
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import Account from './pages/account';
 
-import Menu from './components/menu/menu';
 
 const App = () => {
 
@@ -25,13 +24,11 @@ const App = () => {
   return (
     <div className='overflow-hidden'>
       <Router>
-        <div>
-          <Header />
-          <Menu />
-        </div>
+        <Header />
         <div className="mt-20"> {/* Add top margin to create space for the header */}
           <Routes>
             <Route path='/' element={<Home /> } />
+            <Route path='/account' element={<Account /> } />
             <Route path='/product/:id' element={<ProductDetails />} />
             <Route path='/:p_type/:type' element={<ProductType />} />
             <Route path='/login' element= {<Login />} />
