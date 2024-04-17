@@ -4,8 +4,6 @@ import { ProductContext } from '../context/ProductContext'
 //import components
 import Product from '../components/Product'
 import Hero from '../components/Hero'
-//import axios
-import axios from 'axios';
 //import Link
 import { Link } from 'react-router-dom';
 const Home = () => {
@@ -18,7 +16,9 @@ const Home = () => {
         // Content to display if the user is logged in
         <div>
         <section className='py-20'>
-        <Hero />
+          <div className="w-[80%] m-auto pt-11">
+            <Hero />
+          </div>
           <div className='container mx-auto p-12'>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0'>
               {products.map(product =>{

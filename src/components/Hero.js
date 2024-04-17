@@ -1,28 +1,84 @@
 import React from 'react';
+import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 
 class Hero extends React.Component {
 
+  state = {
+    slides : [
+      {image: 'https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png', descriptor: 'Đây là Samsung Galaxy S21'},
+      {image: 'https://cdn.hoanghamobile.com/i/preview/Uploads/2023/09/13/iphone-15-blue-pure-back-iphone-15-blue-pure-front-2up-screen-usen.png', descriptor: 'Đây là Iphone 15'},
+      {image: 'https://vcdn-sohoa.vnecdn.net/2023/07/06/DSCF3483-1686014164-7221-1688583032.jpg', descriptor: 'Đây là Macbook'},
+      {image: 'https://gamalaptop.vn/wp-content/uploads/2021/09/Acer-Nitro-5-2020-i5-10300H-GTX-1650-01.jpg', descriptor: 'Đây là Acer nitro 5'},
+    ],
+    current : 0,
+  }
 
-  render() {
+  previousSlide = () => {
+    if (this.state.current === 0){
+      this.setState({
+        current: this.state.slides.length -1
+      })
+    }
+    else{
+      this.setState({
+        current: this.state.current - 1
+      })
+    }
+  }
+
+
+  nextSlide = () => {
+    if (this.state.current === this.state.slides.length -1){
+      this.setState({
+        current: 0
+      })
+    }
+    else{
+      this.setState({
+        current: this.state.current + 1
+      })
+    }
+  }
+
+  render() { 
+    let {slides, current} = this.state
     return (
-      <section className="bg-white dark:bg-gray-900 h-auto w-full mx-2">
-        <div className="grid px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-10 lg:grid-cols-12 ">
-          <div className="mr-auto place-self-center lg:col-span-7">
-            <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">Payments tool for software companies</h1>
-            <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From checkout to global sales tax compliance, companies around the world use Flowbite to simplify their payment stack.</p>
-            <a href="#" className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
-              Get started
-              <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-            </a>
-            <a href="#" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-              Speak to Sales
-            </a>
-          </div>
-          <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-            <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/phone-mockup.png" alt="mockup" />
-          </div>
-        </div>
-      </section>
+      <div className='overflow-hidden relative'>
+    {/* ------------------------------------------------------------- */}
+    <div
+      className={`flex transition ease-out duration-40`}
+      style={{
+        transform: `translateX(-${current * 100}%)`,
+      }}
+    >
+      {slides.map((s) => {
+        return (
+          <img className='mx-20' src={s.image} alt="LHH" />
+        )
+      })}
+    </div>
+    {/* ------------------------------------------------------------- */}
+    <div className='absolute top-0 h-full w-full justify-between items-center flex text-black px-6'>
+      <button onClick={this.previousSlide}><FaArrowLeft/></button>
+      <button onClick={this.nextSlide}><FaArrowRight/></button>
+    </div>
+    {/* ------------------------------------------------------------- */}
+    <div className="absolute bottom-0 py-4 flex justify-center gap-3 w-full">
+      {slides.map((s, i) => {
+        return (
+          <div
+            onClick={() => {
+              this.setState({current: i})
+            }}
+            key={"circle" + i}
+            className={`rounded-full w-5 h-5 cursor-pointer  ${
+              i === current ? "bg-black" : "bg-gray-500"
+            }`}
+          ></div>
+        );
+      })}
+    </div>
+  </div>
     );
   }
 }

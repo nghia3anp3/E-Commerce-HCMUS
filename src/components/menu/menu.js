@@ -29,7 +29,6 @@ class Menu extends React.Component{
         let {isHovered, hoverStates} = this.state
         return(
             <div className="flex">
-                {/* Dùng map được nhưng lười sửa quá =)) */}
                 {/* ---------------------------------------------------------- */}
                 <div className="w-1/5 mx-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(0)} onMouseLeave={() => this.handleMouseLeave(0)}>
