@@ -9,9 +9,7 @@ import Register from './pages/register';
 //import components
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
-import LoginHeader from './components/LoginHeader';
 import Footer from './components/Footer'
-import Navbar from './components/Navbar'
 import Account from './pages/account';
 
 

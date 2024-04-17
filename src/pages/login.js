@@ -18,6 +18,12 @@ class Login extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      this.handleClick();
+    }
+  };
+
   handleSubmit = async (event) => {
     event.preventDefault();
     const { account, password } = this.state;
@@ -32,6 +38,7 @@ class Login extends React.Component {
     }
   
     try {
+      console.log("Account: ", account, "Password: ", password)
       const response = await axios.post("http://localhost:8000/login", {
         account,
         password,
@@ -130,6 +137,7 @@ class Login extends React.Component {
                         placeholder="Mật khẩu"
                       />
                       <button
+                        type="button"
                         className="rounded-r bg-gray-200 py-3 px-4 cursor-pointer border-2 border-gray-200"
                         onClick={this.togglePasswordVisibility}
                       >
@@ -167,6 +175,7 @@ class Login extends React.Component {
       
                       <button type="submit"
                         className="inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                        onKeyDown={this.handleKeyDown}
                       >
                         Sign in
                       </button>
