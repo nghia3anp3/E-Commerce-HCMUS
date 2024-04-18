@@ -15,8 +15,8 @@ const Home = () => {
       {isLoggedIn ? (
         // Content to display if the user is logged in
         <div>
-        <section className='py-20'>
-          <div className="w-[80%] m-auto pt-11">
+        <section className='h-full py-20'>
+          <div className="h-auto w-[80%] m-auto pt-11">
             <Hero />
           </div>
           <div className='container mx-auto p-12'>

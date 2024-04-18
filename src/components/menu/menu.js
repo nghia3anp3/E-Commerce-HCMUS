@@ -5,22 +5,22 @@ import InfoMenu from './info_menu';
 class Menu extends React.Component{
 
     state = {
-        hoverStates: {},
+        hoverStates: {1: false, 2: false, 3: false, 4: false},
         isHovered: false,
     }
 
     handleMouseEnter = (index) => {
         const { hoverStates } = this.state;
+        hoverStates[index] = true
         this.setState({ 
-            hoverStates: { ...hoverStates, [index]: true },
             isHovered: true 
         });
     };
 
     handleMouseLeave = (index) => {
         const { hoverStates } = this.state;
+        hoverStates[index] = false
         this.setState({ 
-            hoverStates: { ...hoverStates, [index]: false },
             isHovered: false
         });
     };
@@ -28,7 +28,7 @@ class Menu extends React.Component{
     render(){
         let {isHovered, hoverStates} = this.state
         return(
-            <div className="flex">
+            <div className="flex justify-center items-center">
                 {/* ---------------------------------------------------------- */}
                 <div className="w-1/5 mx-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(0)} onMouseLeave={() => this.handleMouseLeave(0)}>
@@ -48,7 +48,7 @@ class Menu extends React.Component{
                     {hoverStates[2] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'Jewelery'}/>}
                 </div>
                 {/* ---------------------------------------------------------- */}
-                <div className="w-1/4 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
+                <div className="w-1/5 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(3)} onMouseLeave={() => this.handleMouseLeave(3)}>
                     <p className="text-center">Electronics</p>
                     {hoverStates[3] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'Electronics'}/>}
