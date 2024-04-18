@@ -1,7 +1,7 @@
 import React from 'react'
-import { TEInput, TERipple } from "tw-elements-react";
+// import { TEInput, TERipple } from "tw-elements-react";
 import axios from "axios"
-import { Navigate  , Link } from 'react-router-dom';
+import {Link } from 'react-router-dom';
 import Logo from '../img/logo.png'
 
 class Register extends React.Component {
@@ -19,34 +19,35 @@ class Register extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { account, email, password, confirm_password } = this.state;
-    
+    const { account, password, confirm_password } = this.state;
     if (password !== confirm_password) {
       this.setState({ error: "Passwords do not match" }); 
     } else {
-      try {
-        const response = await axios.post("http://localhost:8000/register", {
-          account,
-          password,
-          email
-        });
-        if (response.status === 200) {
-          const data = response.data;
-          if (data === "exist") {
-            alert("User already exists");
-          } else if (data === "notexist") {
-            window.location.href = '/login';
-          } else {
-            alert("Unexpected response from server");
+      try{
+        console.log(account, password)
+        await axios.post("http://localhost:3000/register",{
+            account,password
+        })
+      .then(res=>{
+        console.log(1, res.data)
+          if(res.data==="exist"){
+              alert("User already exists")
           }
-        } else {
-          console.log("Unexpected response status: " + response.status);
+          else if(res.data==="notexist"){
+            this.props.history.push("/", { state: { account: account } });
+          }
+      })
+      .catch(e=>{
+          alert("wrong details")
+          console.log(e);
+      })
+
         }
-      } catch (error) {
-        console.error("An error occurred while registering:", error);
-        alert("An error occurred while registering");
-      }
-    }
+      catch(e){
+            console.log(e);
+
+        }
+        }
   }
 
   onChangeAccount = (event) => {
