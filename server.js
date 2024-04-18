@@ -128,7 +128,17 @@ app.post('/change_password', async (req, res) => {
     const user = await collection.findOne({account: account})
     if (user)
     {
-      
+      const match = await bcrypt.compare(password,user.password)
+      if (match & new_password === confirm_newpassword){
+        res.status(200).json('Valid credentials')
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        const user_id =  { _id: user.id}
+        const update = {$set: {password: hashedPassword }}
+        await collection.updateOne(user_id, update)
+      }
+    else{
+        res.status(401).json("Invalid credentials")
+      }
     }
     else
     {

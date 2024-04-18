@@ -62,7 +62,7 @@ class ForgetPassword extends React.Component {
                                     })
             if (response.status === 200) {
                 console.log("Send request successful - forget password");
-                window.location.replace("/login");
+                window.location.replace("/change_password");
             }
         }
         catch(error)
