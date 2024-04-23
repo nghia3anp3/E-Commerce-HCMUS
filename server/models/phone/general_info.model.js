@@ -20,7 +20,7 @@ const general_infoSchema = mongoose.Schema(
     images: String,
   },
   {
-    timestamps: true,
+    Timestamp: true,
   }
 );
 
