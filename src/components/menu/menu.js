@@ -5,7 +5,7 @@ import InfoMenu from './info_menu';
 class Menu extends React.Component{
 
     state = {
-        hoverStates: {1: false, 2: false, 3: false, 4: false},
+        hoverStates: {1: false, 2: false},
         isHovered: false,
     }
 
@@ -32,26 +32,14 @@ class Menu extends React.Component{
                 {/* ---------------------------------------------------------- */}
                 <div className="w-1/5 mx-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(0)} onMouseLeave={() => this.handleMouseLeave(0)}>
-                    <p className="text-center">Men's clothing</p>
-                    {hoverStates[0] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'MenClothing'}/>}
+                    <p className="text-center">Điện thoại</p>
+                    {hoverStates[0] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'phone'}/>}
                 </div>
                 {/* ---------------------------------------------------------- */}
                 <div className="w-1/5 mr-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(1)} onMouseLeave={() => this.handleMouseLeave(1)}>
-                    <p className="text-center">Women's clothing</p>
-                    {hoverStates[1] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'WomenClothing'}/>}
-                </div>
-                {/* ---------------------------------------------------------- */}
-                <div className="w-1/5 mr-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
-                onMouseEnter={() => this.handleMouseEnter(2)} onMouseLeave={() => this.handleMouseLeave(2)}>
-                    <p className="text-center">Jewelery</p>
-                    {hoverStates[2] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'Jewelery'}/>}
-                </div>
-                {/* ---------------------------------------------------------- */}
-                <div className="w-1/5 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
-                onMouseEnter={() => this.handleMouseEnter(3)} onMouseLeave={() => this.handleMouseLeave(3)}>
-                    <p className="text-center">Electronics</p>
-                    {hoverStates[3] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'Electronics'}/>}
+                    <p className="text-center">Laptop</p>
+                    {hoverStates[1] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'laptop'}/>}
                 </div>
             </div>
         )

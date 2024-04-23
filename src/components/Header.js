@@ -82,17 +82,28 @@ class Header extends Component {
                       <div className="flex items-center">
                         {/* Account */}
                         <div className="relative cursor-pointer flex items-center ml-4 md:ml-6" onClick={this.toggleDropdown}>
-                          <MdOutlineAccountCircle className='text-xl text-gray-800' />
-                          {authContext.isLoggedIn && <span className="ml-2">{authContext.user.account}</span>}
-                          {isDropdownOpen && (
-                            <div className="absolute top-12 right-0 w-48 mt-2 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                              <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                <Link to="/account" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Thông tin cá nhân</Link>
-                                <button onClick={this.handleLogout} className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Đăng xuất</button>
-                              </div>
-                            </div>
+                          {authContext.isLoggedIn ? (
+                            // Nếu đã đăng nhập, hiển thị thông tin tài khoản và dropdown menu
+                            <>
+                              <MdOutlineAccountCircle className='text-xl text-gray-800' />
+                              <span className="ml-2">{authContext.user.account}</span>
+                              {isDropdownOpen && (
+                                <div className="absolute top-12 right-0 w-48 mt-2 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                    <Link to="/account" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Thông tin cá nhân</Link>
+                                    <button onClick={this.handleLogout} className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Đăng xuất</button>
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập khi click vào icon Account
+                            <Link to="/login">
+                              <MdOutlineAccountCircle className='text-xl text-gray-800' />
+                            </Link>
                           )}
                         </div>
+
                         {/* Cart */}
                         <div onClick={() => sidebarContext.setisOpen(!sidebarContext.isOpen)} className="cursor-pointer flex items-center ml-6">
                           <MdOutlineShoppingCart className='text-xl text-gray-800' />

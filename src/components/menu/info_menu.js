@@ -6,38 +6,30 @@ import { NavLink} from 'react-router-dom'
 class InfoMenu extends React.Component {
 
     state = {
-        MenClothing: ['Backpack', 'Jacket','Shirt', 'Slim Fit'],
-        WomenClothing: ['Coats', 'RainCoat'],
-        Jewelery: ['Bracelet'],
-        Electronics: ['Hard Drive', 'Screen']
+        Phone: ['Samsung', 'Panasonic','Apple', 'Kindle', 'Nokia'],
+        Laptop: ['Asus', 'Lenovo'],
     }
     
     extractIdsAndTitles = (products) => {
         let products_info = [];
         products.forEach(product => {
-            products_info.push({id: product.id, title: product.title, category: product.category})
+            products_info.push({id: product.id, name: product.name, brand_name: product.brand_name})
         });
         return products_info;
       }
 
     getType = (p_type, products_info) => {
         let types
-        if (p_type === 'MenClothing'){
-            types = this.state.MenClothing
+        if (p_type === 'phone'){
+            types = this.state.Phone
         }
-        else if(p_type === 'WomenClothing'){
-            types = this.state.WomenClothing
-        }
-        else if(p_type === 'Jewelery'){
-            types = this.state.Jewelery
-        }
-        else if(p_type === 'Electronics'){
-            types = this.state.Electronics
+        else if(p_type === 'laptop'){
+            types = this.state.Laptop
         }
         let type_array = []
         products_info.map((item, index) => {
-            let type = types.find(i => item.title.includes(i));
-            if(type!==undefined){
+            let type = types.find(i => item.brand_name === i);
+            if(type!==undefined ){
                 if (!type_array.includes(type)) type_array.push(type)
             }
         })

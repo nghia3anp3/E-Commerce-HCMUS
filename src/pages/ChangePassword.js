@@ -52,7 +52,7 @@ class ChangePassword extends React.Component {
 
         try 
         {
-            const response = await axios.post('http://localhost:8000/change_password',{
+            const response = await axios.post('http://localhost:8000/user/account/changePassword',{
                 account, password, new_password, confirm_newpassword
             })
             if(response.status === 200){

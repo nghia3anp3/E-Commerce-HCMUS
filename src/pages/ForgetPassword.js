@@ -55,14 +55,14 @@ class ForgetPassword extends React.Component {
         try
         {
             console.log("Account: ", account, " Email: ", email)
-            const response = await axios.post("http://localhost:8000/forgetPassword",
+            const response = await axios.post("http://localhost:8000/user/account/forgetPassword",
                                     {
                                         account,
                                         email
                                     })
             if (response.status === 200) {
                 console.log("Send request successful - forget password");
-                window.location.replace("/change_password");
+                window.location.replace("/changePassword");
             }
         }
         catch(error)

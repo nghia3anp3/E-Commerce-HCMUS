@@ -39,7 +39,7 @@ class Login extends React.Component {
   
     try {
       // console.log("Account: ", account, "Password: ", password)
-      const response = await axios.post("http://localhost:8000/login", {
+      const response = await axios.post("http://localhost:8000/user/login", {
         account,
         password,
       });
@@ -149,7 +149,7 @@ class Login extends React.Component {
                         <div className="mb-[0.125rem] block min-h-[1.5rem]">
                           <Link
                             className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
-                            to = {'/change_password'}
+                            to = {'/changePassword'}
                           >
                             Đổi mật khẩu
                           </Link>

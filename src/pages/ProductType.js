@@ -12,17 +12,11 @@ const ProductType = () => {
   const {type, p_type} = useParams();
   const parseProductType = (p_type) => {
     let types
-    if (p_type === 'MenClothing'){
-        types = "men's clothing"
+    if (p_type === 'phone'){
+        types = "phone"
     }
-    else if(p_type === 'WomenClothing'){
-        types = "women's clothing"
-    }
-    else if(p_type === 'Jewelery'){
-        types = "jewelery"
-    }
-    else if(p_type === 'Electronics'){
-        types = "electronics"
+    else if(p_type === 'laptop'){
+        types = "laptop"
     }
     return types
   }
@@ -34,7 +28,7 @@ const ProductType = () => {
   const filteredProducts = products.filter((item) => {
     let types = parseProductType(p_type)
     return (
-      item.category === types && item.title.includes(type) 
+      item.category === types && item.title === type 
     );
   });
   return (

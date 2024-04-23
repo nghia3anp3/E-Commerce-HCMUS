@@ -35,7 +35,7 @@ const App = () => {
             <Route path='/login' element= {<Login />} />
             <Route path = '/register' element = {<Register/>} />
             <Route path = '/forgetPassword' element = {<ForgetPassword/>} />
-            <Route path = '/change_password' element = {<ChangePassword/>} />
+            <Route path = '/changePassword' element = {<ChangePassword/>} />
           </Routes>
         </div>
         <Sidebar />

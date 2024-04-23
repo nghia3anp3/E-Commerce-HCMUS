@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect} from 'react'
 //import useParams
 import {useParams} from 'react-router-dom'
 //import cart context
@@ -9,14 +9,18 @@ import { ProductContext } from '../context/ProductContext'
 import Comments from '../components/Comment/Comments'
 
 const ProductDetails = () => {
+  useEffect(() => {
+    // Scroll to the top of the page when the component is mounted
+    window.scrollTo(0, 0);
+  }, []);
   //get the product id from the url
   const {id} = useParams();
   const { products } = useContext(ProductContext)
   const { addToCart } = useContext(CartContext)
   //get the single product based on id
-  const product = products.find(item => {
+  const product = products && products.find(item => {
     return item.id === parseInt(id)
-  })
+  });
 
   //if product is not found
   if (!product) {
@@ -24,8 +28,9 @@ const ProductDetails = () => {
       Loading...
     </section>
   }
+  
   //destructure product
-  const {title, price, description, image} = product
+  const {name, price, short_description, images} = product
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
       <div className='container mx-auto'>
@@ -34,20 +39,20 @@ const ProductDetails = () => {
           {/* text */}
           <div className='flex-1 text-center lg:text-left'>
             <h1 className='text-[26px] font-medium mb-2 max-w-[450px] mx-auto'>
-              {title}
+              {name}
             </h1>
             <div className='mb-6 flex justify-center lg:justify-start'>  
               <p className='text-xl text-red-500 font-medium inline-block'>
                 $ {price}
               </p>
             </div>
-            <p className='mb-8'>{description}</p>
+            <p className='mb-8'>{short_description}</p>
             <div className='flex justify-center lg:justify-start'></div>
               <button onClick={() => addToCart(product, product.id)} className='bg-stone-950 py-4 px-8 text-white'>Thêm vào giỏ hàng</button>
             </div>
           {/* image */}
           <div className='flex flex-1 justify-center items-center mb-8 lg:mb-0'>
-            <img className='max-w-[200px] lg:max-w-sm' src={image} alt='' />
+            <img className='max-w-[200px] lg:max-w-sm' src={"https://salt.tikicdn.com/ts/product/5b/7f/3e/473fe832294c81611e57ae77101e2f71.jpg"} alt='' />
           </div>
         </div>
         <Comments />

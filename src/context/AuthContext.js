@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8000/account', {
+      const response = await axios.get('http://localhost:8000/user/account', {
         headers: {
           authorization: `Bearer ${token}`
         }
