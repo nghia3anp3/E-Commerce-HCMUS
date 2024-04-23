@@ -21,7 +21,7 @@ const getAllInfos = async (req, res) => {
   }
 };
 
-const getinfo = async (req, res) => {
+const getInfo = async (req, res) => {
   try {
     const { id } = req.params;
     //Take after ?    
@@ -85,7 +85,7 @@ const deleteInfo = async (req, res) => {
 
 module.exports = {
   getAllInfos,
-  getinfo,
+  getInfo,
   createInfo,
   updateInfo,
   deleteInfo,
