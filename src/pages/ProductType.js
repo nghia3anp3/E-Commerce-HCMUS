@@ -10,25 +10,14 @@ import { Link } from 'react-router-dom';
 const ProductType = () => {
   // Get type
   const {type, p_type} = useParams();
-  const parseProductType = (p_type) => {
-    let types
-    if (p_type === 'phone'){
-        types = "phone"
-    }
-    else if(p_type === 'laptop'){
-        types = "laptop"
-    }
-    return types
-  }
   // get products from product context
   const { products } = useContext(ProductContext);
   const isLoggedIn = localStorage.getItem('token') !== null;
 
   //filtered category
   const filteredProducts = products.filter((item) => {
-    let types = parseProductType(p_type)
     return (
-      item.category === types && item.title === type 
+      item.category === p_type && item.brand_name === type 
     );
   });
   return (
@@ -38,8 +27,8 @@ const ProductType = () => {
         <section className='py-20'>
           <div className='container mx-auto p-12'>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0'>
-              {products.map(product => (
-                <Product product={product} key={product.id} />
+              {filteredProducts.map(product => (
+                <Product product={product} key={product.id} images = {product.images}/>
               ))}
             </div>
           </div>

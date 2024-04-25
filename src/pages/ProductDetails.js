@@ -1,25 +1,39 @@
-import React, { useContext, useEffect} from 'react'
+import React, { useContext, useEffect, useState} from 'react'
 //import useParams
 import {useParams} from 'react-router-dom'
 //import cart context
 import { CartContext } from '../context/CartContext'
 //import product context
 import { ProductContext } from '../context/ProductContext'
+//import specific product context
+import { SpecificProductContext } from '../context/SpecificProductContext'
 //Comment
 import Comments from '../components/Comment/Comments'
+//Icon
+import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 
 const ProductDetails = () => {
+
   useEffect(() => {
     // Scroll to the top of the page when the component is mounted
     window.scrollTo(0, 0);
   }, []);
+
   //get the product id from the url
   const {id} = useParams();
   const { products } = useContext(ProductContext)
+  const {specificProducts} = useContext(SpecificProductContext)
   const { addToCart } = useContext(CartContext)
+  // State
+  const [img, setImg] = useState('');
+
   //get the single product based on id
   const product = products && products.find(item => {
     return item.id === parseInt(id)
+  });
+
+  const specificProduct = specificProducts && specificProducts.find(item => {
+    return item.pid === parseInt(id)
   });
 
   //if product is not found
@@ -31,29 +45,72 @@ const ProductDetails = () => {
 
   //destructure product
   const {name, price, short_description, images} = product
+  let specificProduct1 = Object.entries(specificProduct).slice(2)
+  // console.log(specificProduct1)
+  // Get image link
+  let data = JSON.parse(images)
+  data = data.slice(0,5)
+  // format price 
+  let formatprice = price.toLocaleString()
+  // Function
+  const clickSmallImage = (index) => {
+    if (index >= 0 && index < data.length) {
+      setImg(data[index].base_url);
+    }
+  }
+
+
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
-      <div className='container mx-auto'>
+      <div className='container mx-auto pt-10 lg:pt-12'>
         {/* image & text wrapper */}
-        <div className='flex flex-col lg:flex-row items-center'>
+        <div className='flex flex-col lg:flex-row'>
+          {/* image */}
+          <div>
+          <div className='flex flex-1 mb-8 lg:mb-0'>
+            {img === '' ?
+              (<img className='max-w-[200px] lg:max-w-sm' src={data[0].base_url} alt='' />)
+              :
+              (<img className='max-w-[200px] lg:max-w-sm' src={img} alt='' />)
+            }
+          </div>
+            <div className='flex flew-row gap-2'>
+            {data.map((item, index) => (
+              <div className='cursor-pointer' key={index} onClick={() => clickSmallImage(index)}>
+                  {/* Render the image */}
+                  <img className='w-16 h-16' src={item.small_url} alt="backup"/>
+              </div>
+            ))}
+            </div>
+          </div>
           {/* text */}
-          <div className='flex-1 text-center lg:text-left'>
+          <div className='flex-1 text-center lg:text-left ml-6'>
             <h1 className='text-[26px] font-medium mb-2 max-w-[450px] mx-auto'>
               {name}
             </h1>
             <div className='mb-6 flex justify-center lg:justify-start'>  
               <p className='text-xl text-red-500 font-medium inline-block'>
-                $ {price}
+                {formatprice} VND
               </p>
             </div>
             <p className='mb-8'>{short_description}</p>
             <div className='flex justify-center lg:justify-start'></div>
               <button onClick={() => addToCart(product, product.id)} className='bg-stone-950 py-4 px-8 text-white'>Thêm vào giỏ hàng</button>
+              {/* Thông tin chi tiết về sản phẩm */}
+            <div className='mt-6'>
+              <h1 className='text-2xl font-bold'>
+                Thông tin chi tiết
+              </h1>
+              <div className='flex flex-col'>
+                {specificProduct1.map((item) => (
+                  <div className='flex flex-row border-b-2 border-gray-200'>
+                    <p className='flex-none w-40'>{item[0]}</p>
+                    <p className='flex-auto w-64'>{item[1]}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          {/* image */}
-          <div className='flex flex-1 justify-center items-center mb-8 lg:mb-0'>
-            <img className='max-w-[200px] lg:max-w-sm' src={"https://salt.tikicdn.com/ts/product/5b/7f/3e/473fe832294c81611e57ae77101e2f71.jpg"} alt='' />
-          </div>
+            </div>
         </div>
         <Comments />
       </div>

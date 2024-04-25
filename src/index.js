@@ -10,16 +10,19 @@ import SidebarProvider from './context/SidebarContext';
 //cart provider
 import CartProvider from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
+import SpecificProductProvider from './context/SpecificProductContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <SidebarProvider>
     <CartProvider>
       <ProductProvider>
-        <React.StrictMode>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </React.StrictMode>    
+        <SpecificProductProvider>
+          <React.StrictMode>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </React.StrictMode>    
+        </SpecificProductProvider>
       </ProductProvider>
     </CartProvider>
   </SidebarProvider>
