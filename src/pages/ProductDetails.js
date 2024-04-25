@@ -59,19 +59,19 @@ const ProductDetails = () => {
     }
   }
 
-
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
       <div className='container mx-auto pt-10 lg:pt-12'>
         {/* image & text wrapper */}
         <div className='flex flex-col lg:flex-row'>
           {/* image */}
-          <div>
-          <div className='flex flex-1 mb-8 lg:mb-0'>
-            {img === '' ?
-              (<img className='max-w-[200px] lg:max-w-sm' src={data[0].base_url} alt='' />)
+          <div className='space-y-2'>
+          <div className='flex justify-center'>
+            {img === '' 
+              ?
+              (<img className='w-64 h-64 object-cover' src={data[0].base_url} alt='' />)
               :
-              (<img className='max-w-[200px] lg:max-w-sm' src={img} alt='' />)
+              (<img className='w-64 h-64 object-cover' src={img} alt='' />)
             }
           </div>
             <div className='flex flew-row gap-2'>
