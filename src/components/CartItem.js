@@ -4,8 +4,30 @@ import { IoMdClose, IoMdRemove, IoMdAdd } from 'react-icons/io';
 import { CartContext } from '../context/CartContext';
 
 class CartItem extends Component {
+
+  state = {
+    firstBaseUrl: '',
+  };
+
+  parseJsonAndSetBaseUrl(str) {
+    const { images } = this.props;
+    if (images) {
+      try {
+        const data = JSON.parse(images);
+        this.setState({ firstBaseUrl:  data[0].base_url});
+      } catch (error) {
+        console.error('Failed to parse JSON string:', error);
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.parseJsonAndSetBaseUrl();
+  }
+
   render() {
     const { item } = this.props;
+    const {firstBaseUrl} = this.state
     return (
       <CartContext.Consumer>
         {({ removeFromCart, increaseAmount, decreaseAmount }) => (
@@ -13,7 +35,7 @@ class CartItem extends Component {
             <div className='w-full min-h-[150px] flex items-center gap-x-4'>
               {/* image */}
               <Link to={`/product/${item.id}`}>
-                <img className='max-w-[80px]' src={item.image} alt='' />
+                <img className='max-w-[80px]' src={firstBaseUrl} alt='' />
               </Link>
               <div className='w-full flex flex-col'>
                 {/* title & remove icon */}

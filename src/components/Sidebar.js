@@ -23,7 +23,7 @@ class Sidebar extends Component {
                 </div>
                 <div className='flex flex-col gap-y-2 h-[520px] lg:h-[400px] overflow-y-auto overflow-x-hidden border-b'>
                   {cartContext.cart.map((item) => (
-                    <CartItem item={item} key={item.id} />
+                    <CartItem item={item} key={item.id} images = {item.images} />
                   ))}
                 </div>
                 <div className='flex flex-col gap-y-3 py-4 mt-4'>

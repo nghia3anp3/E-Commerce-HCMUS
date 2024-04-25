@@ -28,14 +28,14 @@ const ProductDetails = () => {
       Loading...
     </section>
   }
-  
+
   //destructure product
   const {name, price, short_description, images} = product
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
       <div className='container mx-auto'>
         {/* image & text wrapper */}
-        <div className='flex flex-col lg:flex-row lg:flex-row-reverse items-center'>
+        <div className='flex flex-col lg:flex-row items-center'>
           {/* text */}
           <div className='flex-1 text-center lg:text-left'>
             <h1 className='text-[26px] font-medium mb-2 max-w-[450px] mx-auto'>
