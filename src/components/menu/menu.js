@@ -33,13 +33,13 @@ class Menu extends React.Component{
                 <div className="w-1/5 mx-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(0)} onMouseLeave={() => this.handleMouseLeave(0)}>
                     <p className="text-center">Điện thoại</p>
-                    {hoverStates[0] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'phone'}/>}
+                    {hoverStates[0] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'phone'} page = {1}/>}
                 </div>
                 {/* ---------------------------------------------------------- */}
                 <div className="w-1/5 mr-3 bg-gray-200 py-4 pr-4 justify-center items-center hover:bg-gray-300 transition duration-300" 
                 onMouseEnter={() => this.handleMouseEnter(1)} onMouseLeave={() => this.handleMouseLeave(1)}>
                     <p className="text-center">Laptop</p>
-                    {hoverStates[1] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'laptop'}/>}
+                    {hoverStates[1] && <InfoMenu className ='p-4' isHovered = {isHovered} p_type = {'laptop'} page = {1}/>}
                 </div>
             </div>
         )

@@ -6,7 +6,7 @@ import { NavLink} from 'react-router-dom'
 class InfoMenu extends React.Component {
 
     state = {
-        Phone: ['Samsung', 'Panasonic','Apple', 'Kindle', 'Nokia'],
+        Phone: ['Samsung', 'Panasonic','Apple', 'Kindle', 'Nokia', 'Xiaomi'],
         Laptop: ['Asus', 'Lenovo'],
     }
     
@@ -37,7 +37,7 @@ class InfoMenu extends React.Component {
     }
 
     render () {
-        let {isHovered, p_type} = this.props
+        let {isHovered, p_type, page} = this.props
         return (
             <ProductContext.Consumer>
             {({ products }) => {
@@ -50,7 +50,7 @@ class InfoMenu extends React.Component {
                         type_array.map((type, i) => {
                             return (
                                 <li>                            
-                                <NavLink to={`/${p_type}/${type}`} className="block px-4 py-2 text-gray-800 hover:bg-gray-200">{type}
+                                <NavLink to={`/${p_type}/${type}/${page}`} className="block px-4 py-2 text-gray-800 hover:bg-gray-200">{type}
                                 </NavLink>
                                 </li>
                             )
