@@ -27,6 +27,8 @@ class CartItem extends Component {
 
   render() {
     const { item } = this.props;
+    let formatprice = item.price.toLocaleString()
+    let totalPrice = (item.price*item.amount).toLocaleString()
     const {firstBaseUrl} = this.state
     return (
       <CartContext.Consumer>
@@ -57,15 +59,15 @@ class CartItem extends Component {
                     {/* amount */}
                     <div className='h-full flex justify-center items-center px-2'>{item.amount}</div>
                     {/* plus icon */}
-                    <div onClick={() => increaseAmount(item.id)} className='flex-1 h-full flex justify-center items-center cursor-pointer h-full'>
+                    <div onClick={() => increaseAmount(item.id)} className='flex-1 h-full flex justify-center items-center cursor-pointer'>
                       <IoMdAdd />
                     </div>
                   </div>
                   {/* item price */}
-                  <div className='flex-1 flex items-center justify-around'>$ {item.price}</div>
+                  <div className='flex-1 flex items-center justify-around'>{formatprice} VND</div>
                   {/* sum price */}
                   {/* 2 decimals */}
-                  <div className='flex-1 flex justify-end items-center text-primary font-medium'>$ {`${parseFloat(item.price * item.amount).toFixed(2)}`}</div>
+                  <div className='flex-1 flex justify-end items-center text-primary font-medium'>{`${totalPrice}`} VND</div>
                 </div>
               </div>
             </div>

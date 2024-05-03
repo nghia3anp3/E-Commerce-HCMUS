@@ -11,6 +11,7 @@ import { SpecificProductContext } from '../context/SpecificProductContext'
 import Comments from '../components/Comment/Comments'
 //Icon
 import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
+import SpecificInfo from '../components/SpecificInfo'
 
 const ProductDetails = () => {
 
@@ -94,22 +95,10 @@ const ProductDetails = () => {
               </p>
             </div>
             <p className='mb-8'>{short_description}</p>
-            <div className='flex justify-center lg:justify-start'></div>
-              <button onClick={() => addToCart(product, product.id)} className='bg-stone-950 py-4 px-8 text-white'>Thêm vào giỏ hàng</button>
+            {/* <div className='flex justify-center lg:justify-start'></div> */}
+            <button onClick={() => addToCart(product, product.id)} className='bg-stone-950 py-4 px-8 text-white'>Thêm vào giỏ hàng</button>
               {/* Thông tin chi tiết về sản phẩm */}
-            <div className='mt-6'>
-              <h1 className='text-2xl font-bold'>
-                Thông tin chi tiết
-              </h1>
-              <div className='flex flex-col'>
-                {specificProduct1.map((item) => (
-                  <div className='flex flex-row border-b-2 border-gray-200'>
-                    <p className='flex-none w-40'>{item[0]}</p>
-                    <p className='flex-auto w-64'>{item[1]}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <SpecificInfo specificProduct = {specificProduct1} />
             </div>
         </div>
         <Comments />
