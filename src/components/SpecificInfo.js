@@ -113,10 +113,11 @@ class SpecificInfo extends React.Component {
         }
       };
     
+
       render() {
-        const { dict_specific_info } = this.state;
+        let { dict_specific_info } = this.state;
         let { specificProduct } = this.props;
-        specificProduct = specificProduct.slice(0, -1);
+        specificProduct = specificProduct.slice(0, -3);
         return (
           <div className='mt-6'>
             <h1 className='text-2xl font-bold mb-4'>Thông tin chi tiết</h1>
