@@ -49,8 +49,8 @@ const ProductDetails = () => {
   let specificProduct1 = Object.entries(specificProduct).slice(2)
   // console.log(specificProduct1)
   // Get image link
-  let data = JSON.parse(images)
-  data = data.slice(0,5)
+  let data = images.slice(0,5)
+  console.log(data)
   // format price 
   let formatprice = price.toLocaleString()
   // Function

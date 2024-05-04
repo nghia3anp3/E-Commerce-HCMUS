@@ -1,6 +1,8 @@
 import React from 'react'
 import { ProductContext } from '../../context/ProductContext'
 import { NavLink} from 'react-router-dom'
+// Icon
+import { FaApple } from "react-icons/fa";
 
 
 class InfoMenu extends React.Component {

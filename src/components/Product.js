@@ -6,35 +6,16 @@ import { CartContext } from '../context/CartContext';
 class Product extends Component {
 
 
-  state = {
-    firstBaseUrl: '',
-  };
-
-  parseJsonAndSetBaseUrl() {
-    const { images } = this.props;
-    if (images) {
-      try {
-        const data = JSON.parse(images);
-        this.setState({ firstBaseUrl:  data[0].base_url});
-      } catch (error) {
-        console.error('Failed to parse JSON string:', error);
-      }
-    }
-  }
-
-  componentDidMount() {
-    this.parseJsonAndSetBaseUrl();
-  }
-
   render() {
-    const { product } = this.props;
+    const { product, images } = this.props;
+    console.log(images)
     // Price
     let price = product.price
     if (price !== undefined){
       price = price.toLocaleString()
     }
     // Image
-    const { firstBaseUrl } = this.state;
+    // const { firstBaseUrl } = this.state;
     return (
       <CartContext.Consumer>
         {({ addToCart }) => (
@@ -43,7 +24,9 @@ class Product extends Component {
               <div className='w-full h-full flex justify-center items-center bg-white'>
                 {/* image */}
                 <div className='w-[150px] mx-auto flex justify-center items-center'>
-                  <img className='max-h-[160px] group-hover:scale-110 transition duration-300' src={firstBaseUrl} alt='' />
+                  <Link to={`/product/${product.id}`}> 
+                    <img className='max-h-[160px] group-hover:scale-110 transition duration-300' src={images[0].base_url} alt='' />
+                  </Link>
                 </div>
                 {/* button */}
                 <div className='absolute top-0 -right-0 group-hover:right-5
