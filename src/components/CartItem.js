@@ -4,8 +4,11 @@ import { IoMdClose, IoMdRemove, IoMdAdd } from 'react-icons/io';
 import { CartContext } from '../context/CartContext';
 
 class CartItem extends Component {
+
   render() {
-    const { item } = this.props;
+    const { item, images } = this.props;
+    let formatprice = item.price.toLocaleString()
+    let totalPrice = (item.price*item.amount).toLocaleString()
     return (
       <CartContext.Consumer>
         {({ removeFromCart, increaseAmount, decreaseAmount }) => (
@@ -13,7 +16,7 @@ class CartItem extends Component {
             <div className='w-full min-h-[150px] flex items-center gap-x-4'>
               {/* image */}
               <Link to={`/product/${item.id}`}>
-                <img className='max-w-[80px]' src={item.image} alt='' />
+                <img className='max-w-[80px]' src={images[0].base_url} alt='' />
               </Link>
               <div className='w-full flex flex-col'>
                 {/* title & remove icon */}
@@ -35,15 +38,15 @@ class CartItem extends Component {
                     {/* amount */}
                     <div className='h-full flex justify-center items-center px-2'>{item.amount}</div>
                     {/* plus icon */}
-                    <div onClick={() => increaseAmount(item.id)} className='flex-1 h-full flex justify-center items-center cursor-pointer h-full'>
+                    <div onClick={() => increaseAmount(item.id)} className='flex-1 h-full flex justify-center items-center cursor-pointer'>
                       <IoMdAdd />
                     </div>
                   </div>
                   {/* item price */}
-                  <div className='flex-1 flex items-center justify-around'>$ {item.price}</div>
+                  <div className='flex-1 flex items-center justify-around'>{formatprice} VND</div>
                   {/* sum price */}
                   {/* 2 decimals */}
-                  <div className='flex-1 flex justify-end items-center text-primary font-medium'>$ {`${parseFloat(item.price * item.amount).toFixed(2)}`}</div>
+                  <div className='flex-1 flex justify-end items-center text-primary font-medium'>{`${totalPrice}`} VND</div>
                 </div>
               </div>
             </div>

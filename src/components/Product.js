@@ -4,9 +4,18 @@ import { BsPlus, BsEyeFill } from 'react-icons/bs';
 import { CartContext } from '../context/CartContext';
 
 class Product extends Component {
-  render() {
-    const { product } = this.props;
 
+
+  render() {
+    const { product, images } = this.props;
+    console.log(images)
+    // Price
+    let price = product.price
+    if (price !== undefined){
+      price = price.toLocaleString()
+    }
+    // Image
+    // const { firstBaseUrl } = this.state;
     return (
       <CartContext.Consumer>
         {({ addToCart }) => (
@@ -15,7 +24,9 @@ class Product extends Component {
               <div className='w-full h-full flex justify-center items-center bg-white'>
                 {/* image */}
                 <div className='w-[150px] mx-auto flex justify-center items-center'>
-                  <img className='max-h-[160px] group-hover:scale-110 transition duration-300' src={"https://salt.tikicdn.com/cache/w1200/ts/product/5b/7f/3e/473fe832294c81611e57ae77101e2f71.jpg"} alt='' />
+                  <Link to={`/product/${product.id}`}> 
+                    <img className='max-h-[160px] group-hover:scale-110 transition duration-300' src={images[0].base_url} alt='' />
+                  </Link>
                 </div>
                 {/* button */}
                 <div className='absolute top-0 -right-0 group-hover:right-5
@@ -32,11 +43,12 @@ class Product extends Component {
             </div>
             {/* category & title & price */}
             <div>
+              
               <div className='text-sm capitalize text-gray-500 mb-1'>{product.brand_name}</div>
               <Link to={`/product/${product.id}`}>
                 <h2 className='font-semibold mb-1'>{product.name}</h2>
               </Link>
-              <div className='font-semibold'>{product.price} VND</div>
+              <div className='font-semibold'>{price} VND</div>
             </div>
           </div>
         )}

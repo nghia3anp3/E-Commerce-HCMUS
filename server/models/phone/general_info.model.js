@@ -17,7 +17,7 @@ const general_infoSchema = mongoose.Schema(
     stock_item_max_sale_qty: Number,
     brand_id: Number,
     brand_name: String,
-    images: String,
+    images: Array,
   },
   {
     Timestamp: true,

@@ -22,7 +22,7 @@ const Home = () => {
           <div className='container mx-auto p-12'>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0'>
               {products.map(product =>{
-                return <Product product={product} key={product.id} />;
+                return <Product product={product} key={product.id} images = {product.images} />;
               })}
             </div>
           </div>
