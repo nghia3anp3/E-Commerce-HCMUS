@@ -34,8 +34,13 @@ const ProductProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
+  // Function to find product by ID
+  const findProductById = (productId) => {
+    return products.find(product => product.id === productId);
+  };
+
   return (
-    <ProductContext.Provider value={{ products }}>
+    <ProductContext.Provider value={{ products, findProductById }}>
       {children}
     </ProductContext.Provider>
   );
