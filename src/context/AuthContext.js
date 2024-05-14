@@ -1,7 +1,6 @@
 // AuthProvider.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -52,7 +51,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (account, password) => {
     try {
-      const response = await axios.post("http://localhost:8000/user/login", {
+      const response = await axios.post(process.env.API_URL+"/user/login", {
         account,
         password,
       });
