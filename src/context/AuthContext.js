@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8000/user/account', {
+      const response = await axios.get(process.env.API_URL+'/user/account', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -88,7 +88,7 @@ const AuthProvider = ({ children }) => {
 
   const register = async (account, email, password) => {
     try {
-      const response = await axios.post("http://localhost:8000/user/register", {
+      const response = await axios.post(process.env.API_URL+"/user/register", {
         account,
         password,
         email
