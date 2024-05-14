@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {TERipple } from "tw-elements-react";
 import LoginLogo from '../img/login_logo2.webp'
-import { Link } from "react-router-dom";
+import { Link, Navigate} from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash  } from "react-icons/fa";
 import axios from "axios";
-
+import { AuthContext } from "../context/AuthContext";
 class Login extends React.Component {
-
+  static contextType = AuthContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -24,53 +24,28 @@ class Login extends React.Component {
     }
   };
 
-  handleSubmit = async (event) => {
+  async handleSubmit(event) {
     event.preventDefault();
     const { account, password } = this.state;
+    const { login } = this.context;
+
     let errors = {};
     if (account.trim() === "" || password.trim() === "") {
       errors = "Tài khoản hoặc mật khẩu không được bỏ trống";
-    }
-    if (Object.keys(errors).length > 0) {
-      // If there are errors, update state and return
       this.setState({ errors });
       return;
     }
   
     try {
-      // console.log("Account: ", account, "Password: ", password)
-      const response = await axios.post("http://localhost:8000/user/login", {
-        account,
-        password,
-      });
-      if (response.status === 200) {
-        console.log("Login successful");
-        // Perform actions upon successful login (e.g., redirect user)
-        const { token } = response.data; // Assuming the token is returned from the server
-        // Store the token in localStorage or sessionStorage
-        localStorage.setItem("token", token);
-        window.location.replace("/");
+      const response = await login(account, password);
+      if (response) {
+        this.setState({ errors: response });
       }
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 401 && error.response.data === "Invalid credentials") {
-          console.log("Unauthorized: Incorrect credentials");
-          this.setState({ errors: "Sai mật khẩu hoặc tài khoản" });
-        } else if (error.response.status === 404 && error.response.data === "User not found") {
-          console.log("User not found");
-          this.setState({ errors: "Tài khoản không tồn tại" });
-        } else {
-          console.error("Error during login:", error);
-          // Handle other errors (e.g., network issues)
-          this.setState({ errors: "An error occurred" });
-        }
-      } else {
-        console.error("Error during login:", error);
-        // Handle other errors (e.g., network issues)
-        this.setState({ errors: "An error occurred" });
-      }
+      console.error("Error during login:", error);
+      this.setState({ errors: "An error occurred" });
     }
-  };  
+  }
 
     onChangeAccount = (event) => {
       this.setState({
@@ -94,6 +69,10 @@ class Login extends React.Component {
 
     render () {
       let {account, password, showPassword, errors} = this.state
+      const { isLoggedIn } = this.context;
+      if (isLoggedIn) {
+        <Navigate />
+      }
         return (
           <div className="pt-20 pb-12 lg-py-25 h-auto">
             <section className="h-fit">

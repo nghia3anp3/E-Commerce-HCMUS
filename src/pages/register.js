@@ -3,8 +3,9 @@ import { TEInput, TERipple } from "tw-elements-react";
 import axios from "axios"
 import { Navigate  , Link } from 'react-router-dom';
 import Logo from '../img/logo.png'
-
+import { AuthContext } from "../context/AuthContext";
 class Register extends React.Component {
+  static contextType = AuthContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -20,27 +21,14 @@ class Register extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const { account, email, password, confirm_password } = this.state;
-    
+    const { register } = this.context;
     if (password !== confirm_password) {
-      this.setState({ error: "Passwords do not match" }); 
+      this.setState({ error: "Mật khẩu không giống với nhập lại mật khẩu" }); 
     } else {
       try {
-        const response = await axios.post("http://localhost:8000/user/register", {
-          account,
-          password,
-          email
-        });
-        if (response.status === 200) {
-          const data = response.data;
-          if (data === "exist") {
-            alert("User already exists");
-          } else if (data === "notexist") {
-            window.location.href = '/login';
-          } else {
-            alert("Unexpected response from server");
-          }
-        } else {
-          console.log("Unexpected response status: " + response.status);
+        const response = await register(account, email, password);
+        if (response) {
+          this.setState({ error: response }); 
         }
       } catch (error) {
         console.error("An error occurred while registering:", error);
