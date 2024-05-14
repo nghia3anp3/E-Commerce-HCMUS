@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get(process.env.API_URL+'/user/account', {
+      const response = await axios.get('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/user/account', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (account, password) => {
     try {
-      const response = await axios.post(process.env.API_URL+"/user/login", {
+      const response = await axios.post("https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/user/login", {
         account,
         password,
       });
@@ -88,7 +88,7 @@ const AuthProvider = ({ children }) => {
 
   const register = async (account, email, password) => {
     try {
-      const response = await axios.post(process.env.API_URL+"/user/register", {
+      const response = await axios.post("https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/user/register", {
         account,
         password,
         email
