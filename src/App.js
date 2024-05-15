@@ -67,7 +67,7 @@ const PublicRoutes = () => (
       <Route path='/' element={<Home /> } />
       <Route path='/account' element={<Account /> } />
       <Route path='/product/:id' element={<ProductDetails />} />
-      <Route path='/:p_type/:type' element={<ProductType />} />
+      <Route path='/:p_type/:type/:page' element={<ProductType />} />
       <Route path='/login' element= {<Login />} />
       <Route path = '/register' element = {<Register/>} />
       <Route path = '/forgetPassword' element = {<ForgetPassword/>} />

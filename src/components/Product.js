@@ -8,7 +8,7 @@ class Product extends Component {
 
   render() {
     const { product, images } = this.props;
-    console.log(images)
+    console.log('111111111111111: ', product)
     // Price
     let price = product.price
     if (price !== undefined){

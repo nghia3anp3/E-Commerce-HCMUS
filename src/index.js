@@ -9,6 +9,7 @@ import ProductProvider from './context/ProductContext';
 import SidebarProvider from './context/SidebarContext';
 //cart provider
 import CartProvider from './context/CartContext';
+import CommentProvider from './context/CommentContext';
 import { AuthProvider } from './context/AuthContext';
 import SpecificProductProvider from './context/SpecificProductContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -17,11 +18,13 @@ root.render(
     <CartProvider>
       <ProductProvider>
         <SpecificProductProvider>
+          <CommentProvider>
           <React.StrictMode>
             <AuthProvider>
               <App />
             </AuthProvider>
-          </React.StrictMode>    
+          </React.StrictMode>
+          </CommentProvider>    
         </SpecificProductProvider>
       </ProductProvider>
     </CartProvider>

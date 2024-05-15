@@ -11,8 +11,8 @@ const SpecificProductProvider = ({ children }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const phoneResponse = await fetch('http://localhost:8000/phone/specific_data/');
-        const laptopResponse = await fetch('http://localhost:8000/laptop/specific_data/');
+        const phoneResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/phone/specific_data/');
+        const laptopResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/laptop/specific_data/');
         if (phoneResponse.ok && laptopResponse.ok) {
           const phoneData = await phoneResponse.json();
           const laptopData = await laptopResponse.json();

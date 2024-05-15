@@ -9,9 +9,11 @@ import { ProductContext } from '../context/ProductContext'
 import { SpecificProductContext } from '../context/SpecificProductContext'
 //Comment
 import Comments from '../components/Comment/Comments'
+import { CommentContext } from '../context/CommentContext'
 //Icon
 import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import SpecificInfo from '../components/SpecificInfo'
+import { list } from 'postcss'
 
 const ProductDetails = () => {
 
@@ -25,6 +27,7 @@ const ProductDetails = () => {
   const { products } = useContext(ProductContext)
   const {specificProducts} = useContext(SpecificProductContext)
   const { addToCart } = useContext(CartContext)
+  const {comments} = useContext(CommentContext)
   // State
   const [img, setImg] = useState('');
 
@@ -47,18 +50,24 @@ const ProductDetails = () => {
   //destructure product
   const {name, price, short_description, images} = product
   let specificProduct1 = Object.entries(specificProduct).slice(2)
-  // console.log(specificProduct1)
   // Get image link
   let data = images.slice(0,5)
-  console.log(data)
   // format price 
   let formatprice = price.toLocaleString()
-  // Function
+  // Click Image
   const clickSmallImage = (index) => {
     if (index >= 0 && index < data.length) {
       setImg(data[index].base_url);
     }
   }
+
+  // Trích xuất những comment có id bằng với id của sản phẩm mà người dùng đang xem
+  let product_comments = [];
+  comments.forEach((item) => {
+      if (item.product_id == id) {
+          product_comments.push(item);
+      }
+  });
 
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
@@ -101,7 +110,7 @@ const ProductDetails = () => {
             <SpecificInfo specificProduct = {specificProduct1} />
             </div>
         </div>
-        <Comments />
+        <Comments product_comments = {product_comments} product_id = {id}/>
       </div>
     </section>
   )

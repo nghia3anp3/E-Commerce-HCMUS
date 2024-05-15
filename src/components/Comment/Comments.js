@@ -1,22 +1,20 @@
 import React from 'react';
 import Comment from './Comment';
-import Cat1 from '../../img/Comment/cat1.jpg';
-import Cat2 from '../../img/Comment/cat2.jpg';
 import { AuthContext } from '../../context/AuthContext';
 
 class Comments extends React.Component {
     state = {
         userid: '', // Initialize userid
         commentInput: '',
-        comments: [
-            { id: 'User1', avatar: Cat1, display: 'LHH', children: [] },
-            { id: 'User2', avatar: Cat2, display: '1323', children: [{ id: 'User3', avatar: Cat1, display: '924', children: [] }] }
-        ]
+        comments: []
     };
 
     componentDidMount() {
         // Check if user is logged in and set userid in state
         this.updateUserId();
+        //
+        const { product_comments } = this.props;
+        this.loadComments(product_comments);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -29,7 +27,7 @@ class Comments extends React.Component {
     updateUserId() {
         const { authContext } = this.props;
         if (authContext.isLoggedIn) {
-            this.setState({ userid: authContext.user.account });
+            this.setState({ userid: authContext.user.account});
         }
     }
 
@@ -49,10 +47,10 @@ class Comments extends React.Component {
     };
 
     // Comment mới
-    newComment = (userid, context) => {
+    newComment = (userid, content) => {
         return {
-            id: userid,
-            display: context,
+            id: userid, // Nên là id comment
+            content: content,
             children: []
         };
     };
@@ -81,18 +79,31 @@ class Comments extends React.Component {
         });
     };
 
+
+    loadComments = (product_comments) => {
+        let oldComments = [...this.state.comments]
+        for (let i = 0; i < product_comments.length; i++){
+            let comment = product_comments[i]
+            oldComments.push(this.newComment(comment.customer_name, comment.content))
+        }
+        console.log('Old: ', oldComments)
+        this.setState({ comments: oldComments });
+    }
+    
+
     render() {
-        let { commentInput, comments } = this.state;
+        let { commentInput, comments} = this.state;
         return (
             <AuthContext.Consumer>
                 {authContext => (
                     <>
-                        {authContext.isLoggedIn ? (
+                        {authContext.isLoggedIn 
+                        ? (
                             <div className='p-4 m-4 bg-gray-200'>
-                                <h3 className="font-semibold p-1">Discussion</h3>
+                                <h3 className="font-semibold p-1">Bình luận</h3>
                                 <ul>
-                                    {comments.map((comment) => (
-                                        <Comment key={comment.id} id={comment.id} avatar={comment.avatar} display={comment.display} children={comment.children} addReply={this.addReply} />
+                                    {comments.map((comment, index) => (
+                                        <Comment key={`${comment.id}-${index}`} id={comment.id} avatar={comment.avatar} content={comment.content} children={comment.children} addReply={this.addReply} />
                                     ))}
                                 </ul>
                                 <div className="flex flex-col justify-start ml-6">

@@ -37,7 +37,7 @@ class Comment extends React.Component {
 
   render() {
     let {replyText, showReplyBox} = this.state
-    let {id, avatar, display, children, addReply} = this.props
+    let {key, id, avatar, content, children, addReply} = this.props
     if (avatar === undefined) {
       avatar = NoAvatar
     }
@@ -55,7 +55,7 @@ class Comment extends React.Component {
               {/* ----------------- Nội dung bình luận ---------------------------- */}
               <div className="bg-slate-400 p-2 rounded-b-lg">
                 <div className="text-white">
-                      {display}
+                      {content}
                 </div>
               </div>
             </div>
@@ -102,9 +102,10 @@ class Comment extends React.Component {
           {children.map((childComment, index) => (
             <li key={index}>
                 <Comment
+                  key = {key}
                   id={childComment.id}
                   avatar={childComment.avatar} 
-                  display={childComment.display}
+                  content={childComment.content}
                   children={childComment.children}
                   addReply={addReply}
                 />

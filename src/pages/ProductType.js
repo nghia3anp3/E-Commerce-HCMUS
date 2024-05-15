@@ -18,7 +18,7 @@ const ProductType = () => {
   // get products from product context
   const { products } = useContext(ProductContext);
   const isLoggedIn = localStorage.getItem('token') !== null;
-
+  
   //filtered category
   const filteredProducts = products.filter((item) => {
     return (
@@ -61,7 +61,6 @@ const ProductType = () => {
 
   //
   const currentProducts = getProductsPerPage(page)
-  console.log(currentProducts.length)
 
   return (
     <div>
