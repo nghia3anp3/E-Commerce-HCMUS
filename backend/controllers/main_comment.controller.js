@@ -59,13 +59,35 @@ const createComment = async (req, res) => {
 const updateComment = async (req, res) => {
   try {
     const { product_id } = req.params;
-
-    const comment = await Comments.findOneAndUpdate({ product_id: product_id }, req.body);
-    if (!comment) {
-      return res.status(404).json({ message: "comment not found" });
+    const queryParams = req.query;
+    if (Object.keys(req.body).length === 0) {
+      const updateResult = await Comments.updateMany(
+        { product_id: product_id },
+        { $set: req.body },
+        { new: true }
+      );
+      // Fetch updated comments
+      const updatedComments = await Comments.find({ product_id: product_id });
+      return res.status(200).json(updatedComments);
     }
-    const updatedComment = await Comments.find({ product_id: product_id  });
-    res.status(200).json(updatedComment);
+    // Create filter with product_id
+    const filter = { product_id };
+    // Add query parameters to filter if they exist
+    Object.keys(queryParams).forEach(key => {
+      filter[key] = queryParams[key];
+    });
+    // Update multiple comments based on filter
+    const updateResult = await Comments.updateMany(
+      filter,
+      { $set: req.body },
+      { new: true }
+    );
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ message: "No comments found matching the criteria" });
+    }
+    // Fetch updated comments
+    const updatedComments = await Comments.find(filter);
+    res.status(200).json(updatedComments);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -74,14 +96,19 @@ const updateComment = async (req, res) => {
 const deleteComment = async (req, res) => {
   try {
     const { product_id } = req.params;
-
-    const comment = await Comments.findOneAndDelete({ product_id: product_id });
-
-    if (!comment) {
-      return res.status(404).json({ message: "comment not found" });
+    const queryParams = req.query;
+    // Create filter with product_id
+    const filter = { product_id };
+    // Add query parameters to filter if they exist
+    Object.keys(queryParams).forEach(key => {
+      filter[key] = queryParams[key];
+    });
+    // Delete multiple comments based on filter
+    const deleteResult = await Comments.deleteMany(filter);
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ message: "No comments found matching the criteria" });
     }
-
-    res.status(200).json({ message: "Comment deleted successfully" });
+    res.status(200).json({ message: "Comments deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

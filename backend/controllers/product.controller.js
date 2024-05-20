@@ -55,14 +55,35 @@ const createInfo = async (req, res) => {
 const updateInfo = async (req, res) => {
   try {
     const { product_id } = req.params;
-    const product = await Products.findOneAndUpdate({ product_id: product_id }, req.body);
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+    const queryParams = req.query;
+    if (Object.keys(req.body).length === 0) {
+      const updateResult = await Products.updateMany(
+        { product_id: product_id },
+        { $set: req.body },
+        { new: true }
+      );
+      // Fetch updated Products
+      const updatedProducts = await Products.find({ product_id: product_id });
+      return res.status(200).json(updatedProducts);
     }
-
-    const updatedproduct = await Products.find({ product_id: product_id  });
-    res.status(200).json(updatedproduct);
+    // Create filter with product_id
+    const filter = { product_id };
+    // Add query parameters to filter if they exist
+    Object.keys(queryParams).forEach(key => {
+      filter[key] = queryParams[key];
+    });
+    // Update multiple Products based on filter
+    const updateResult = await Products.updateMany(
+      filter,
+      { $set: req.body },
+      { new: true }
+    );
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ message: "No Products found matching the criteria" });
+    }
+    // Fetch updated Products
+    const updatedProducts = await Products.find(filter);
+    res.status(200).json(updatedProducts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -71,13 +92,19 @@ const updateInfo = async (req, res) => {
 const deleteInfo = async (req, res) => {
   try {
     const { product_id } = req.params;
-
-    const product = await Products.findOneAndDelete({ product_id: product_id });
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+    const queryParams = req.query;
+    // Create filter with product_id
+    const filter = { product_id };
+    // Add query parameters to filter if they exist
+    Object.keys(queryParams).forEach(key => {
+      filter[key] = queryParams[key];
+    });
+    // Delete multiple Products based on filter
+    const deleteResult = await Products.deleteMany(filter);
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ message: "No Products found matching the criteria" });
     }
-    res.status(200).json({ message: "Product deleted successfully" });
+    res.status(200).json({ message: "Products deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

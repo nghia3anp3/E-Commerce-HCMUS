@@ -19,5 +19,5 @@ const MainCommentSchema = mongoose.Schema({
     Timestamp: true,
   }
   );
-  const MainComments = mongoose.model('comments', MainCommentSchema);
+  const MainComments = mongoose.model('test_comments', MainCommentSchema);
   module.exports = MainComments;

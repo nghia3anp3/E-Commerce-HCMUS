@@ -30,17 +30,17 @@ Router.delete("/user/:id", deleteUser);
 
 // Main_comment Routes
 Router.get("/comments", getComments);
-Router.get("/comments/:id", getCommentByProductID);
+Router.get("/comments/:product_id", getCommentByProductID);
 Router.post("/comments", createComment);
-Router.put("/comments/:id", updateComment);
-Router.delete("/comments/:id", deleteComment);
+Router.put("/comments/:product_id", updateComment);
+Router.delete("/comments/:product_id", deleteComment);
 
 // Sub_comment Routes
 Router.get("/subcomments", getSubComments);
-Router.get("/subcomments/:id", getSubcommentbyID);
+Router.get("/subcomments/:product_id", getSubcommentbyID);
 Router.post("/subcomments", createSubcomment);
-Router.put("/subcomments/:id", updateSubcomment);
-Router.delete("/subcomments/:id", deleteSubcomment);
+Router.put("/subcomments/:product_id", updateSubcomment);
+Router.delete("/subcomments/:product_id", deleteSubcomment);
 
 // Order Routes
 Router.get("/orders", getAll);
@@ -52,10 +52,10 @@ Router.delete("/orders/:id", deleteOrder);
 // Product Routes
 
 Router.get("/product", getAllInfo);
-Router.get("/product/:id", getInfo);
+Router.get("/product/:product_id", getInfo);
 Router.post("/product", createInfo);
-Router.put("/product/:id", updateInfo);
-Router.delete("/product/:id", deleteInfo);
+Router.put("/product/:product_id", updateInfo);
+Router.delete("/product/:product_id", deleteInfo);
 
 
 
