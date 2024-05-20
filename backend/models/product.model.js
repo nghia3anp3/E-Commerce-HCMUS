@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
-const general_infoSchema = mongoose.Schema(
+const productSchema = mongoose.Schema(
   {
-    id: Number,
+    product_id: Number,
+    type: String,
     name: String,
     sku: Number,
     short_description: String,
@@ -10,6 +11,7 @@ const general_infoSchema = mongoose.Schema(
     original_price: Number,
     discount: Number,
     discount_rate: Number,
+    quantity_sold: String,
     review_count: Number,
     inventory_status: String,
     stock_item_qty: Number,
@@ -17,11 +19,14 @@ const general_infoSchema = mongoose.Schema(
     brand_id: Number,
     brand_name: String,
     images: Array,
+    comments_id: Array,
+    specific_infos: Array,
   },
   {
     Timestamp: true,
   }
 );
 
-const General_Info = mongoose.model("laptop_general_infos", general_infoSchema);
-module.exports = General_Info;
+const Product = mongoose.model("product_information", productSchema);
+module.exports = Product;
+

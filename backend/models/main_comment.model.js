@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 
 // Define main comment schema
-const CommentSchema = mongoose.Schema({
+const MainCommentSchema = mongoose.Schema({
     product_id: Number,
-    id_comment: Number,
+    type: Number,
+    comment_id: Number,
     title: String,
     content: String,
     thank_count: Number,
@@ -11,11 +12,12 @@ const CommentSchema = mongoose.Schema({
     rating: Number,
     created_at: Number,
     customer_name: String,
-    purchased_at: Number
+    purchased_at: Number,
+    sub_comments_id: Number,
   },
   {
     Timestamp: true,
   }
   );
-  const Comments = mongoose.model('laptop_comments', CommentSchema);
-  module.exports = Comments;
+  const MainComments = mongoose.model('comments', MainCommentSchema);
+  module.exports = MainComments;

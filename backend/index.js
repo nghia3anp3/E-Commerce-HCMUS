@@ -1,8 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const phoneRoute = require("./routes/phone/index.js");
-const laptopRoute = require("./routes/laptop/index.js");
-const userRoute = require("./routes/user/index.js");
+const routes = require("./routes/routes.js");
+
 const app = express();
 const cors = require("cors");
 
@@ -14,11 +13,9 @@ app.use(express.text({ limit: '50mb' }));
 app.use(cors());
 
 // routes
-app.use("/phone", phoneRoute);
-app.use("/laptop", laptopRoute);
-app.use("/user", userRoute);
+app.use("/api", routes);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Hello from Node API Server");
 });
 
