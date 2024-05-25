@@ -11,21 +11,14 @@ const CommentProvider = ({ children }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const phoneResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/phone/comments/');
-        const laptopResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/laptop/comments/');
-        
-        if (phoneResponse.ok && laptopResponse.ok) {
-          const phoneData = await phoneResponse.json();
-          const laptopData = await laptopResponse.json();
-          
-          const phoneDataWithType = phoneData.map(item => ({ ...item, category: 'phone' }));
-          const laptopDataWithType = laptopData.map(item => ({ ...item, category: 'laptop' }));
-          
-          const combinedData = phoneDataWithType.concat(laptopDataWithType);
-          
-          setComments(combinedData);
+        // const phoneResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/phone/comments/');
+        // const laptopResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/laptop/comments/');
+        const productResponse = await fetch('http://localhost:3000/api/comments')
+        if (productResponse.ok ) {
+          const productcommentData = await productResponse.json();   
+          setComments(productcommentData);
         } else {
-          console.error('Failed to fetch Comments:', phoneResponse.statusText);
+          console.error('Failed to fetch Comments:', productResponse.statusText);
         }
       } catch (error) {
         console.error('Error fetching Comments:', error);

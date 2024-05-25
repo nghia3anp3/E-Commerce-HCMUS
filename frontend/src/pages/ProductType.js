@@ -22,7 +22,7 @@ const ProductType = () => {
   //filtered category
   const filteredProducts = products.filter((item) => {
     return (
-      item.category === p_type && item.brand_name === type 
+      item.type === p_type && item.brand_name === type 
     );
   });
   // Trang hiện tại
@@ -70,7 +70,7 @@ const ProductType = () => {
           <div className='container mx-auto p-12'>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0'>
               {currentProducts.map(product => (
-                <Product product={product} key={product.id} images = {product.images}/>
+                <Product product={product} key={product.product_id} images = {product.images}/>
               ))}
             </div>
             {/* Chuyển hướng trang */}

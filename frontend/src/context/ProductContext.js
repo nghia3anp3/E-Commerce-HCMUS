@@ -11,21 +11,12 @@ const ProductProvider = ({ children }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const phoneResponse = await fetch('https://e-commerce-hcmus-chi.vercel.app/phone/general_info/');
-        const laptopResponse = await fetch('https://e-commerce-hcmus-chi.vercel.app/laptop/general_info/');
-        
-        if (phoneResponse.ok && laptopResponse.ok) {
-          const phoneData = await phoneResponse.json();
-          const laptopData = await laptopResponse.json();
-          
-          const phoneDataWithType = phoneData.map(item => ({ ...item, category: 'phone' }));
-          const laptopDataWithType = laptopData.map(item => ({ ...item, category: 'laptop' }));
-          
-          const combinedData = phoneDataWithType.concat(laptopDataWithType);
-          
-          setProducts(combinedData);
+        const productResponse = await fetch('http://localhost:8000/api/product/')
+        if (productResponse.ok ) {
+          const productdata = await productResponse.json();   
+          setProducts(productdata);
         } else {
-          console.error('Failed to fetch products:', phoneResponse.statusText);
+          console.error('Failed to fetch products:', productResponse.statusText);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -35,8 +26,8 @@ const ProductProvider = ({ children }) => {
   }, []);
 
   // Function to find product by ID
-  const findProductById = (productId) => {
-    return products.find(product => product.id === productId);
+  const findProductById = (product_id) => {
+    return products.find(product => product.product_id === product_id);
   };
 
   return (

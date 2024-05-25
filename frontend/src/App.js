@@ -1,5 +1,5 @@
-import React from 'react';
-import {BrowserRouter as Router, Route, Routes, Outlet, useLocation} from 'react-router-dom';
+import React, {useContext} from 'react'
+import {BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate} from 'react-router-dom';
 //import pages
 import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails'
@@ -14,38 +14,14 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProducts from './pages/Admin/AdminProducts';
 import AdminOrders from './pages/Admin/AdminOrders';
 import AdminEditProduct from './pages/Admin/AdminEditProduct';
+import { AuthContext } from './context/AuthContext';
 //import components
 import Sidebar from './components/Sidebar'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
-
-
-// const App = () => {
-//   return (
-//     <div className='overflow-hidden'>
-//       <Router>
-//         <Header />
-//         <div className="mt-20"> {/* Add top margin to create space for the header */}
-//           <Routes>
-//             <Route path='/' element={<Home /> } />
-//             <Route path='/account' element={<Account /> } />
-//             <Route path='/product/:id' element={<ProductDetails />} />
-//             <Route path='/:p_type/:type' element={<ProductType />} />
-//             <Route path='/login' element= {<Login />} />
-//             <Route path = '/register' element = {<Register/>} />
-//             <Route path = '/forgetPassword' element = {<ForgetPassword/>} />
-//             <Route path = '/changePassword' element = {<ChangePassword/>} />
-//           </Routes>
-//         </div>
-//         <Sidebar />
-//         <Footer />
-//       </Router>
-//     </div>
-//   )
-// }
-
 const App = () => {
+  const { user, isLoggedIn } = useContext(AuthContext);
   return (
     <Router>
       <div className='overflow-hidden'>
@@ -67,7 +43,7 @@ const PublicRoutes = () => (
     <Routes>
       <Route path='/' element={<Home /> } />
       <Route path='/account' element={<Account /> } />
-      <Route path='/product/:id' element={<ProductDetails />} />
+      <Route path='/product/:product_id' element={<ProductDetails />} />
       <Route path='/:p_type/:type/:page' element={<ProductType />} />
       <Route path='/login' element= {<Login />} />
       <Route path = '/register' element = {<Register/>} />
@@ -81,16 +57,19 @@ const PublicRoutes = () => (
   </>
 );
 
-const AdminRoutes = () => (
-  <div className='flex'>
-    <Sidebar />
-    <Routes>
-      <Route path='/' element={<AdminDashboard />} />
-      <Route path='/products' element={<AdminProducts />} />
-      <Route path='/orders' element={<AdminOrders />} />
-      <Route path='/products/editProduct/:id' element={<AdminEditProduct />} />
-    </Routes>
-  </div>
-);
+const AdminRoutes = () => {
+  return (
+    <div className='flex'>
+      <Sidebar />
+      <Routes>
+        <Route path='/' element={<AdminDashboard />} />
+        <Route path='/products' element={<AdminProducts />} />
+        <Route path='/orders' element={<AdminOrders />} />
+        <Route path='/products/editProduct' element={<AdminEditProduct />} />
+      </Routes>
+    </div>
+  );
+};
+
 
 export default App;

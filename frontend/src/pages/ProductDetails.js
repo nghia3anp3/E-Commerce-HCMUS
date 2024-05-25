@@ -5,8 +5,6 @@ import {useParams} from 'react-router-dom'
 import { CartContext } from '../context/CartContext'
 //import product context
 import { ProductContext } from '../context/ProductContext'
-//import specific product context
-import { SpecificProductContext } from '../context/SpecificProductContext'
 //Comment
 import Comments from '../components/Comment/Comments'
 import { CommentContext } from '../context/CommentContext'
@@ -23,9 +21,8 @@ const ProductDetails = () => {
   }, []);
 
   //get the product id from the url
-  const {id} = useParams();
+  const {product_id} = useParams();
   const { products } = useContext(ProductContext)
-  const {specificProducts} = useContext(SpecificProductContext)
   const { addToCart } = useContext(CartContext)
   const {comments} = useContext(CommentContext)
   // State
@@ -33,12 +30,9 @@ const ProductDetails = () => {
 
   //get the single product based on id
   const product = products && products.find(item => {
-    return item.id === parseInt(id)
+    return item.product_id === parseInt(product_id)
   });
 
-  const specificProduct = specificProducts && specificProducts.find(item => {
-    return item.pid === parseInt(id)
-  });
 
   //if product is not found
   if (!product) {
@@ -49,7 +43,8 @@ const ProductDetails = () => {
 
   //destructure product
   const {name, price, short_description, images} = product
-  let specificProduct1 = Object.entries(specificProduct).slice(2)
+  const specialProduct = JSON.parse(product.specific_infos[0].replace(/'/g, '"').replace(/\bnan\b/g, 'null'))
+  let specificProduct1 = Object.entries(specialProduct).slice(2)
   // Get image link
   let data = images.slice(0,5)
   // format price 
@@ -64,7 +59,7 @@ const ProductDetails = () => {
   // Trích xuất những comment có id bằng với id của sản phẩm mà người dùng đang xem
   let product_comments = [];
   comments.forEach((item) => {
-      if (item.product_id == id) {
+      if (item.product_id == product_id) {
           product_comments.push(item);
       }
   });
@@ -105,12 +100,12 @@ const ProductDetails = () => {
             </div>
             <p className='mb-8'>{short_description}</p>
             {/* <div className='flex justify-center lg:justify-start'></div> */}
-            <button onClick={() => addToCart(product, product.id)} className='bg-stone-950 py-4 px-8 text-white'>Thêm vào giỏ hàng</button>
+            <button onClick={() => addToCart(product, product.product_id)} className='bg-stone-950 py-4 px-8 text-white'>Thêm vào giỏ hàng</button>
               {/* Thông tin chi tiết về sản phẩm */}
             <SpecificInfo specificProduct = {specificProduct1} />
             </div>
         </div>
-        <Comments product_comments = {product_comments} product_id = {id}/>
+        <Comments product_comments = {product_comments} product_id = {product_id}/>
       </div>
     </section>
   )

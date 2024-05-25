@@ -11,13 +11,11 @@ import SidebarProvider from './context/SidebarContext';
 import CartProvider from './context/CartContext';
 import CommentProvider from './context/CommentContext';
 import { AuthProvider } from './context/AuthContext';
-import SpecificProductProvider from './context/SpecificProductContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <SidebarProvider>
     <CartProvider>
       <ProductProvider>
-        <SpecificProductProvider>
           <CommentProvider>
           <React.StrictMode>
             <AuthProvider>
@@ -25,7 +23,6 @@ root.render(
             </AuthProvider>
           </React.StrictMode>
           </CommentProvider>    
-        </SpecificProductProvider>
       </ProductProvider>
     </CartProvider>
   </SidebarProvider>

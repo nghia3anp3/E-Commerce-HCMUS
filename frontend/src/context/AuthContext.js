@@ -10,14 +10,13 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setIsLoggedIn(true);
       fetchUserData(token);
     }
   }, []);
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get('https://e-commerce-hcmus-chi.vercel.app/user/account', {
+      const response = await axios.get('http://localhost:8000/api/account/', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -25,6 +24,7 @@ const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         console.log("User data fetched successfully");
         setUser(response.data);
+        setIsLoggedIn(true)
       }
     } catch (error) {
       if (error.response) {
@@ -34,16 +34,20 @@ const AuthProvider = ({ children }) => {
           logout(); // Log out the user if token is invalid
         } else if (error.response.status === 403) {
           console.log("Forbidden: Access denied");
+          logout();
           // Handle access denied due to insufficient permissions
         } else if (error.response.status === 404) {
           console.log("User not found");
+          logout();
           // Handle user not found
         } else {
           console.error("Error fetching user data:", error);
+          logout();
           // Handle other errors (e.g., network issues)
         }
       } else {
         console.error("Error fetching user data:", error);
+        logout();
         // Handle other errors (e.g., network issues)
       }
     }
@@ -51,7 +55,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (account, password) => {
     try {
-      const response = await axios.post("https://e-commerce-hcmus-chi.vercel.app/user/login", {
+      const response = await axios.post("http://localhost:8000/api/login/", {
         account,
         password,
       });
@@ -62,7 +66,7 @@ const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         fetchUserData(token);
         window.location.replace("/");
-        return true;
+        return null;
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -88,7 +92,7 @@ const AuthProvider = ({ children }) => {
 
   const register = async (account, email, password) => {
     try {
-      const response = await axios.post("https://e-commerce-hcmus-chi.vercel.app/user/register", {
+      const response = await axios.post("http://localhost:8000/api/register/", {
         account,
         password,
         email

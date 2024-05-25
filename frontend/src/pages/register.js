@@ -63,6 +63,10 @@ class Register extends React.Component {
 
   render() {
     let { account, password, email, confirm_password, error } = this.state;
+    const { isLoggedIn } = this.context;
+    if (isLoggedIn) {
+      return <Navigate to="/" replace/>
+    }
     return (
       <section className="min-h-screen flex items-center justify-center bg-blue-200">
         <div className="container h-5/6 px-6 py-12">

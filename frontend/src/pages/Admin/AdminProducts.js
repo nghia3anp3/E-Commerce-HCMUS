@@ -22,9 +22,9 @@ class AdminProducts extends Component {
 
   render() {
     return (
-      <div className="flex flex-col md:flex-row">
+      <div className="flex">
         <AdminSidebar />
-        <div className="flex-1 ml-0 md:ml-64">
+        <div className="flex-1 ml-0 md:ml-64 overflow-x-auto">
           <h1 className="text-2xl font-bold mb-4">Admin Products</h1>
           <div className="mb-8">
             <ProductForm onSubmit={this.addProduct} />

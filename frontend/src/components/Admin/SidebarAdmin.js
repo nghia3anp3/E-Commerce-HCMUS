@@ -10,7 +10,7 @@ class AdminSidebar extends Component {
         <div className="flex-grow p-4">
           <ul>
             <li>
-              <Link to="/admin/dashboard" className="flex items-center py-2 text-gray-400 hover:text-white">
+              <Link to="/admin/" className="flex items-center py-2 text-gray-400 hover:text-white">
                 <FiHome className="mr-2" />
                 Dashboard
               </Link>
