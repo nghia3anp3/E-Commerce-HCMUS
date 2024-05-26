@@ -2,7 +2,7 @@ const express = require("express");
 const Router = express.Router();
 const {login, register, logout} = require('../controllers/auth.controller.js');
 const {getAccount, forgetPassword, changePassword, update} = require('../controllers/account.controller.js');
-const {getUser,deleteUser,updateUser} = require('../controllers/user.controller.js');
+const {getAllusers,getUser,deleteUser,updateUser} = require('../controllers/user.controller.js');
 const {getComments, getCommentByProductID, createComment, updateComment, deleteComment} = require('../controllers/main_comment.controller.js');
 const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, deleteSubcomment} = require('../controllers/sub_comment.controller.js');
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
@@ -24,9 +24,10 @@ Router.post("/account/changePassword", changePassword);
 Router.post("/account", update);
 
 // User Routes
-Router.get("/user/:id", getUser);
-Router.post("/user/:id", updateUser);
-Router.delete("/user/:id", deleteUser);
+Router.get("/users/", getAllusers);
+Router.get("/users/:user_id", getUser);
+Router.post("/users/:user_id", updateUser);
+Router.delete("/users/:user_id", deleteUser);
 
 // Main_comment Routes
 Router.get("/comments", getComments);
@@ -44,18 +45,18 @@ Router.delete("/subcomments/:product_id", deleteSubcomment);
 
 // Order Routes
 Router.get("/orders", getAll);
-Router.get("/orders/:id", getbyID);
+Router.get("/orders/:order_id", getbyID);
 Router.post("/orders", createOrder);
-Router.put("/orders/:id", updateOrder);
-Router.delete("/orders/:id", deleteOrder);
+Router.put("/orders/:order_id", updateOrder);
+Router.delete("/orders/:order_id", deleteOrder);
 
 // Product Routes
 
-Router.get("/product", getAllInfo);
-Router.get("/product/:product_id", getInfo);
-Router.post("/product", createInfo);
-Router.put("/product/:product_id", updateInfo);
-Router.delete("/product/:product_id", deleteInfo);
+Router.get("/products", getAllInfo);
+Router.get("/products/:product_id", getInfo);
+Router.post("/products", createInfo);
+Router.put("/products/:product_id", updateInfo);
+Router.delete("/products/:product_id", deleteInfo);
 
 
 

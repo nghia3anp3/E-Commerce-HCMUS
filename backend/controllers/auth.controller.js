@@ -1,7 +1,6 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require('uuid');
 
 const login = async (req, res) => {
   // Handle POST requests for login
@@ -26,7 +25,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-    const { account, email, password, address, phone} = req.body;
+    const { account, password, email,  address} = req.body;
     
     try {
       const existingUser = await User.findOne({ account: account });
@@ -35,21 +34,11 @@ const register = async (req, res) => {
       } else {
         // Hash the password before storing it
         const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
-        let user_id =  uuidv4() // Initialize user id
-        // Check xem đã có USER ID nào trùng chưa, có rồi thì tạo lại.
-        const existingUserID = await User.findOne({ user_id: user_id });
-        while(!existingUserID){
-          user_id =  uuidv4()
-        }
         const newUser = {
-          user_id: user_id,
           account: account,
           password: hashedPassword,
           email: email,
           address: address,
-          phone: phone,
-          avatar: "https://icons.veryicon.com/png/o/miscellaneous/generic-icon-3/avatar-empty.png",
-          role: "",
         };
         await User.create(newUser);
         res.json("notexist");

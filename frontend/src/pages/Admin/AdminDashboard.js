@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '../../components/Admin/SidebarAdmin';
-import { FiUser, FiActivity, FiBell, FiPieChart, FiBarChart2 } from 'react-icons/fi';
+import { FiUser, FiActivity, FiBell, FiPieChart, FiBarChart2, FiHeart } from 'react-icons/fi';
 
 const AdminDashboard = () => {
-  const [onlineUsers, setOnlineUsers] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [error, setError] = useState(null);
@@ -11,54 +10,43 @@ const AdminDashboard = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const fetchOnlineUsers = async () => {
+
+    const fetchTotalOrders = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/online-users');
+        const response = await fetch('http://localhost:8000/api/total-orders');
         if (!response.ok) {
-          throw new Error('Failed to fetch online users');
+          throw new Error('Failed to fetch total orders');
         }
         const data = await response.json();
-        setOnlineUsers(data.onlineUsers);
+        setTotalOrders(data.totalOrders);
         setError(null);
       } catch (error) {
-        console.error('Error fetching online users:', error);
-        setError('Failed to fetch online users');
+        console.error('Error fetching total orders:', error);
+        setError('Failed to fetch total orders');
       }
     };
 
-    // const fetchTotalOrders = async () => {
-    //   try {
-    //     const response = await fetch('http://localhost:8000/api/total-orders');
-    //     if (!response.ok) {
-    //       throw new Error('Failed to fetch total orders');
-    //     }
-    //     const data = await response.json();
-    //     setTotalOrders(data.totalOrders);
-    //     setError(null);
-    //   } catch (error) {
-    //     console.error('Error fetching total orders:', error);
-    //     setError('Failed to fetch total orders');
-    //   }
-    // };
+    const fetchTotalUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/total-users');
+        if (!response.ok) {
+          throw new Error('Failed to fetch total users');
+        }
+        const data = await response.json();
+        setTotalUsers(data.totalUsers);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching total users:', error);
+        setError('Failed to fetch total users');
+      }
+    };
 
-    // const fetchTotalUsers = async () => {
-    //   try {
-    //     setTotalUsers(500); // For demo purposes
-    //     setError(null);
-    //   } catch (error) {
-    //     console.error('Error fetching total users:', error);
-    //     setError('Failed to fetch total users');
-    //   }
-    // };
-
-    fetchOnlineUsers();
-    // fetchTotalOrders();
-    // fetchTotalUsers();
+    fetchTotalOrders();
+    fetchTotalUsers();
 
     const interval = setInterval(() => {
-      fetchOnlineUsers();
-      // fetchTotalOrders();
-      // fetchTotalUsers();
+      fetchTotalOrders();
+      fetchTotalUsers();
     }, 60000);
 
     return () => clearInterval(interval);
@@ -88,10 +76,10 @@ const AdminDashboard = () => {
             {/* Add order statistics data structure here */}
           </div>
         );
-      case 'Total Users Data':
+      case 'User Activities':
         return (
           <div>
-            {/* Add total users data structure here */}
+            {/* Add user activities data structure here */}
           </div>
         );
       default:
@@ -105,16 +93,6 @@ const AdminDashboard = () => {
       <div className="flex-grow ml-64 p-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold mb-2">Online Users</h2>
-              {error ? (
-                <p className="text-red-500">{error}</p>
-              ) : (
-                <p className="text-lg">{onlineUsers}</p>
-              )}
-            </div>
-          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Sales Overview */}
@@ -151,9 +129,6 @@ const AdminDashboard = () => {
                 <FiUser className="w-6 h-6" />
                 <p>Total Users: {totalUsers}</p>
               </div>
-              <button onClick={() => openModal('Total Users Data')} className="text-blue-500 hover:text-blue-700 focus:outline-none">
-                View Details
-              </button>
             </div>
           </div>
         </div>

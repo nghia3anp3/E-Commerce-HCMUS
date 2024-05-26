@@ -1,7 +1,25 @@
 const Users = require("../models/user.model");
 
 
-
+const getAllusers = async (req, res) => {
+  try {
+    const queryParams = req.query; // JSON data from the request query
+    if (Object.keys(queryParams).length == 0) {
+      const users = await Users.find({});
+      return res.status(200).json(users);
+    }
+    const filter = {};
+    // Iterate over each key in the JSON data
+    Object.keys(queryParams).forEach(key => {
+        filter[key] = queryParams[key];
+    });
+    // Fetch users from the database based on the constructed filter
+    const users = await Users.find(filter);
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 //By /:id + ?key=value
 const getUser = async (req, res) => {
     try {
@@ -59,4 +77,5 @@ module.exports = {
     getUser,
     deleteUser,
     updateUser,
+    getAllusers
 };

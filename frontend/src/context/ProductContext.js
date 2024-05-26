@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 // Create context
 export const ProductContext = createContext();
@@ -11,8 +12,8 @@ const ProductProvider = ({ children }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const productResponse = await fetch('http://localhost:8000/api/product/')
-        if (productResponse.ok ) {
+        const productResponse = await fetch('http://localhost:8000/api/products/')
+        if (productResponse.ok) {
           const productdata = await productResponse.json();   
           setProducts(productdata);
         } else {
@@ -25,13 +26,46 @@ const ProductProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
+  // Function to delete a product by ID
+  const deleteProduct = async (product_id) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/products/${product_id}`);
+      setProducts(products.filter(product => product.product_id !== product_id));
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert("Error deleting product")
+    }
+  };
+
+  const addProduct = async (newProduct) => {
+    try {
+      const response = await axios.post(`http://localhost:8000/api/products`, newProduct);
+      setProducts([...products, response.data]);
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert("Error adding product")
+    }
+  };
+
+  const updateProduct = async (product_id, updatedProduct) => {
+    try {
+      const response = await axios.put(`http://localhost:8000/api/products/${product_id}`, updatedProduct);
+      setProducts(products.map(product => (product.product_id === product_id ? response.data : product)));
+    } catch (error) {
+      console.error('Error updating product:', error);
+      alert("Error updating product")
+    }
+  };
+
+
+
   // Function to find product by ID
   const findProductById = (product_id) => {
     return products.find(product => product.product_id === product_id);
   };
 
   return (
-    <ProductContext.Provider value={{ products, findProductById }}>
+    <ProductContext.Provider value={{ products, findProductById, deleteProduct, addProduct, updateProduct}}>
       {children}
     </ProductContext.Provider>
   );

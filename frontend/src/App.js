@@ -13,6 +13,7 @@ import CheckOut from './pages/Checkout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProducts from './pages/Admin/AdminProducts';
 import AdminOrders from './pages/Admin/AdminOrders';
+import AdminUsers from './pages/Admin/AdminUsers';
 import { AuthContext } from './context/AuthContext';
 //import components
 import Sidebar from './components/Sidebar'
@@ -64,6 +65,7 @@ const AdminRoutes = () => {
         <Route path='/' element={<AdminDashboard />} />
         <Route path='/products' element={<AdminProducts />} />
         <Route path='/orders' element={<AdminOrders />} />
+        <Route path='/users' element={<AdminUsers />} />
       </Routes>
     </div>
   );

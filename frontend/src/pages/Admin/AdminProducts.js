@@ -4,8 +4,8 @@ import { ProductContext } from '../../context/ProductContext';
 import axios from 'axios';
 import AdminSidebar from '../../components/Admin/SidebarAdmin';
 
-
 const AdminAddProduct = ({ onClose }) => {
+  const {addProduct } = useContext(ProductContext)
   const [formData, setFormData] = useState({
     product_id: '',
     name: '',
@@ -28,7 +28,6 @@ const AdminAddProduct = ({ onClose }) => {
     specific_infos: [],
   });
   const [error, setError] = useState('');
-
   const handleChange = e => {
     setFormData({
       ...formData,
@@ -53,8 +52,7 @@ const AdminAddProduct = ({ onClose }) => {
         stock_item_max_sale_qty: parseInt(formData.stock_item_max_sale_qty),
         brand_id: parseInt(formData.brand_id),
       };
-      console.log("Hello")
-      await axios.post(`http://localhost:8000/api/product`, newproduct);
+      addProduct(newproduct);
       // Close the modal
       onClose();
       window.location.reload();
@@ -306,7 +304,7 @@ const AdminAddProduct = ({ onClose }) => {
 
 // AdminEditProduct component as a modal
 const AdminEditProduct = ({ product_id, onClose }) => {
-  const { findProductById } = useContext(ProductContext);
+  const { findProductById, updateProduct } = useContext(ProductContext);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -386,8 +384,8 @@ const AdminEditProduct = ({ product_id, onClose }) => {
       };
 
       // Make API call to update the product
-      await axios.put(`http://localhost:8000/api/product/${product_id}`, updatedProduct);
-
+      // await axios.put(`http://localhost:8000/api/products/${product_id}`, updatedProduct);
+      updateProduct(product_id, updatedProduct)
       onClose();
       window.location.reload();
     } catch (error) {
@@ -637,12 +635,16 @@ const AdminEditProduct = ({ product_id, onClose }) => {
 
 // AdminProducts component
 const AdminProducts = () => {
-  const { products } = useContext(ProductContext);
+  const { products, deleteProduct } = useContext(ProductContext);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [searchValue, setSearchValue] = useState('');
-
+  const [error, setError] = useState(null);
+  const handleDelete = (product_id) => {
+    deleteProduct(product_id)
+  };
+  
   const handleEditClick = product_id => {
     setSelectedProductId(product_id);
     setIsEditModalOpen(true);
@@ -770,12 +772,22 @@ const AdminProducts = () => {
       },
       {
         Header: 'Actions',
-        accessor: 'actions',
         Cell: ({ row }) => (
-          <button onClick={() => handleEditClick(row.original.product_id)} className="text-blue-500 hover:underline">
-            Edit
-          </button>
-        ),
+          <div className="flex justify-center">
+            <button
+              className="bg-green-500 text-white px-3 py-1 rounded-md mr-2"
+              onClick={() => handleEditClick(row.original.product_id)}
+            >
+              Edit
+            </button>
+            <button
+              className="bg-red-500 text-white px-3 py-1 rounded-md"
+              onClick={() => handleDelete(row.original.product_id)}
+            >
+              Delete
+            </button>
+          </div>
+        )
       },
     ],
     []
@@ -805,8 +817,8 @@ const AdminProducts = () => {
   return (
     <div className="flex">
       <AdminSidebar />
-      <div className="flex-1 ml-0 md:ml-64 overflow-x-auto">
-        <h1 className="text-2xl font-bold mb-4">Admin Products</h1>
+      <div className="flex-1 p-4 ml-64">
+        <h1 className="mb-4 text-2xl font-bold">Admin Products</h1>
         <div className="mb-8">
           <button onClick={handleAddClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Add Product
@@ -822,6 +834,8 @@ const AdminProducts = () => {
             className="border border-gray-300 rounded py-2 px-4"
           />
         </div>
+        {/* Error message */}
+        {error && <div className="mb-4 text-red-500 font-bold">{error}</div>}
         {/* Table and pagination */}
         <div className="flex justify-center items-center overflow-x-auto">
           <div className="table-container" style={{ maxWidth: "1200px" }}>
