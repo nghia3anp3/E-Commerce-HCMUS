@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { useTable, usePagination } from 'react-table';
 import { ProductContext } from '../../context/ProductContext';
 import axios from 'axios';
@@ -308,8 +307,6 @@ const AdminAddProduct = ({ onClose }) => {
 // AdminEditProduct component as a modal
 const AdminEditProduct = ({ product_id, onClose }) => {
   const { findProductById } = useContext(ProductContext);
-  const navigate = useNavigate();
-
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -640,7 +637,7 @@ const AdminEditProduct = ({ product_id, onClose }) => {
 
 // AdminProducts component
 const AdminProducts = () => {
-  const { products, addProduct } = useContext(ProductContext);
+  const { products } = useContext(ProductContext);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
