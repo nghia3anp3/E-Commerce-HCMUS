@@ -5,7 +5,6 @@ import { CartContext } from '../context/CartContext';
 
 class Product extends Component {
 
-
   render() {
     const { product, images } = this.props;
     // Price

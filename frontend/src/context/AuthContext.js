@@ -1,7 +1,7 @@
 // AuthProvider.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         console.log("User data fetched successfully");
         setUser(response.data);
-        setIsLoggedIn(true)
+        setIsLoggedIn(true);
       }
     } catch (error) {
       if (error.response) {
@@ -126,4 +126,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export { AuthContext, AuthProvider };
+export default AuthProvider;

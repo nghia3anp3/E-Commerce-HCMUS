@@ -94,11 +94,10 @@ class SpecificInfo extends React.Component {
       };
     
       renderItem = (info) => {
-        if (typeof info === 'string' && info.includes('[')) {
-          const parsedInfo = this.formatInfo(info);
+        if (Array.isArray(info)) {
           return (
             <div className='flex flex-col'>
-              {parsedInfo.map((item, index) => (
+              {info.map((item, index) => (
                 <div key={index} className='flex items-center gap-2'>
                   <BsCheck className='text-blue-500 w-6 h-6' />
                   <p className='text-gray-700'>{item}</p>
@@ -113,7 +112,6 @@ class SpecificInfo extends React.Component {
         }
       };
     
-
       render() {
         let { dict_specific_info } = this.state;
         let { specificProduct } = this.props;

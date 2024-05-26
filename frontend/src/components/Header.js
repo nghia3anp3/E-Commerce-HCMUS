@@ -6,6 +6,7 @@ import { MdOutlineShoppingCart, MdOutlineAccountCircle } from 'react-icons/md';
 import { SidebarContext } from '../context/SidebarContext';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
+import SearchBar from './SearchBar';
 
 class Header extends Component {
   constructor(props) {
@@ -13,7 +14,6 @@ class Header extends Component {
     this.state = {
       isActive: false,
       isDropdownOpen: false,
-      searchTerm: '',
     };
   }
 
@@ -30,10 +30,6 @@ class Header extends Component {
     window.scrollY > 60 ? this.setState({ isActive: true }) : this.setState({ isActive: false });
   };
 
-  handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Searching for:", this.state.searchTerm);
-  };
 
   toggleDropdown = () => {
     this.setState((prevState) => ({ isDropdownOpen: !prevState.isDropdownOpen }));
@@ -46,7 +42,7 @@ class Header extends Component {
   };
 
   render() {
-    const { isActive, isDropdownOpen, searchTerm } = this.state;
+    const { isActive, isDropdownOpen} = this.state;
 
     return (
       <SidebarContext.Consumer>
@@ -62,16 +58,7 @@ class Header extends Component {
                         <img className='w-16 h-auto' src={Logo} alt="Logo" />
                       </Link>
                       {/* Search bar */}
-                      <form onSubmit={this.handleSearch} className="ml-6 md:ml-0 flex-grow max-w-md">
-                        <input 
-                          type="text" 
-                          placeholder=" Tìm kiếm..." 
-                          className="px- py-2 rounded-lg border-gray-300 border focus:outline-none focus:border-gray-400 mr-2 flex-grow"
-                          value={searchTerm}
-                          onChange={(e) => this.setState({ searchTerm: e.target.value })}
-                        />
-                        <button type="submit" className="bg-stone-950 text-white py-2 px-4 rounded-lg">Tìm kiếm</button>
-                      </form>
+                      <SearchBar/>
                       {/* Navigation */}
                       <nav className="hidden md:flex space-x-4">
                         <Link to={'/'} className="text-gray-800 hover:text-gray-600">Trang chủ</Link>

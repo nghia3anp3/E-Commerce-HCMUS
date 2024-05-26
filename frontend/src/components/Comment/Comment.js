@@ -37,7 +37,7 @@ class Comment extends React.Component {
 
   render() {
     let {replyText, showReplyBox} = this.state
-    let {key, id, avatar, content, children, addReply} = this.props
+    let {key, id, avatar, content, subcomment, addReply} = this.props
     if (avatar === undefined) {
       avatar = NoAvatar
     }
@@ -97,16 +97,16 @@ class Comment extends React.Component {
           </div>
         </div>
       )}
-      {children.length > 0 && (
+      {subcomment.length > 0 && (
         <ul className="mt-4">
-          {children.map((childComment, index) => (
+          {subcomment.map((childComment, index) => (
             <li key={index}>
                 <Comment
                   key = {key}
                   id={childComment.id}
                   avatar={childComment.avatar} 
                   content={childComment.content}
-                  children={childComment.children}
+                  subcomment={childComment.subcomment}
                   addReply={addReply}
                 />
             </li>

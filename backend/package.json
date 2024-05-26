@@ -12,6 +12,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.4",
     "nodemon": "^3.1.0",
+    "react-search-autocomplete": "^8.5.2",
+    "uuid": "^9.0.1",
     "vercel": "^34.1.14"
   }
 }

@@ -8,6 +8,7 @@ import { ProductContext } from '../context/ProductContext'
 //Comment
 import Comments from '../components/Comment/Comments'
 import { CommentContext } from '../context/CommentContext'
+import { SubCommentContext } from '../context/SubCommentContext'
 //Icon
 import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import SpecificInfo from '../components/SpecificInfo'
@@ -25,6 +26,7 @@ const ProductDetails = () => {
   const { products } = useContext(ProductContext)
   const { addToCart } = useContext(CartContext)
   const {comments} = useContext(CommentContext)
+  const {subcomments} = useContext(SubCommentContext)
   // State
   const [img, setImg] = useState('');
 
@@ -43,8 +45,15 @@ const ProductDetails = () => {
 
   //destructure product
   const {name, price, short_description, images} = product
-  const specialProduct = JSON.parse(product.specific_infos[0].replace(/'/g, '"').replace(/\bnan\b/g, 'null'))
-  let specificProduct1 = Object.entries(specialProduct).slice(2)
+  // Thông tin chi tiết của sản phẩm
+  const specificProduct = JSON.parse(product.specific_infos[0].replace(/'/g, '"').replace(/\bnan\b/g, 'null'))
+  let specificProduct2 = Object.entries(specificProduct)
+  //Lọc giá trị chứa NULL
+  specificProduct2 = specificProduct2.filter(item => {
+    return !(item[1] === null || (Array.isArray(item[1]) && item[1].length === 0));
+  });
+  let specificProduct1 = specificProduct2.slice(2)
+  // console.log('1111111111111', specificProduct1)
   // Get image link
   let data = images.slice(0,5)
   // format price 
@@ -58,11 +67,19 @@ const ProductDetails = () => {
 
   // Trích xuất những comment có id bằng với id của sản phẩm mà người dùng đang xem
   let product_comments = [];
+  let product_subcomments = [];
   comments.forEach((item) => {
       if (item.product_id == product_id) {
           product_comments.push(item);
       }
   });
+  subcomments.forEach((item) => {
+    if (item.product_id == product_id) {
+        product_subcomments.push(item);
+    }
+  });
+  // console.log(1111111, product_comments)
+  // console.log(222222222, product_subcomments)
 
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
@@ -105,7 +122,7 @@ const ProductDetails = () => {
             <SpecificInfo specificProduct = {specificProduct1} />
             </div>
         </div>
-        <Comments product_comments = {product_comments} product_id = {product_id}/>
+        <Comments product_comments = {product_comments} product_subcomments = {product_subcomments} product_id = {product_id}/>
       </div>
     </section>
   )

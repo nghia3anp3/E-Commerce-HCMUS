@@ -13,8 +13,8 @@ class Comments extends React.Component {
         // Check if user is logged in and set userid in state
         this.updateUserId();
         //
-        const { product_comments } = this.props;
-        this.loadComments(product_comments);
+        const { product_comments, product_subcomments} = this.props;
+        this.loadComments(product_comments, product_subcomments);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -51,7 +51,7 @@ class Comments extends React.Component {
         return {
             id: userid, // Nên là id comment
             content: content,
-            children: []
+            subcomment: []
         };
     };
 
@@ -60,13 +60,13 @@ class Comments extends React.Component {
         for (let i = 0; i < comments.length; i++) {
             let comment = comments[i];
             if (comment.id === parentId) {
-                comment.children.unshift(this.newComment(userid, text));
+                comment.subcomment.unshift(this.newComment(userid, text));
             }
         }
 
         for (let i = 0; i < comments.length; i++) {
             let comment = comments[i];
-            this.insertComment(comment.children, parentId, text, userid);
+            this.insertComment(comment.subcomment, parentId, text, userid);
         }
     };
 
@@ -79,12 +79,27 @@ class Comments extends React.Component {
         });
     };
 
-
-    loadComments = (product_comments) => {
+    // Load comments và subcomments từ db, đưa nó về định dạng chuẩn
+    loadComments = (product_comments, product_subcomments) => {
         let oldComments = [...this.state.comments]
+        let oldSubComments = []
+
+        for (let i = 0; i < product_subcomments.length; i++){
+            let subcomment = product_subcomments[i]
+            oldSubComments.push(this.newComment(subcomment.customer_name, subcomment.content))        
+        }
+
         for (let i = 0; i < product_comments.length; i++){
             let comment = product_comments[i]
-            oldComments.push(this.newComment(comment.customer_name, comment.content))
+            let _comment = this.newComment(comment.customer_name, comment.content)
+            for (let j = 0; j < product_subcomments.length; j++){
+                let subcomment = product_subcomments[j]
+                if (subcomment.comment_id === comment.comment_id){
+                    _comment.subcomment.push(oldSubComments[j])
+                }
+            }
+            oldComments.push(_comment)
+            
         }
         console.log('Old: ', oldComments)
         this.setState({ comments: oldComments });
@@ -103,7 +118,7 @@ class Comments extends React.Component {
                                 <h3 className="font-semibold p-1">Bình luận</h3>
                                 <ul>
                                     {comments.map((comment, index) => (
-                                        <Comment key={`${comment.id}-${index}`} id={comment.id} avatar={comment.avatar} content={comment.content} children={comment.children} addReply={this.addReply} />
+                                        <Comment key={`${comment.id}-${index}`} id={comment.id} avatar={comment.avatar} content={comment.content} subcomment={comment.subcomment} addReply={this.addReply} />
                                     ))}
                                 </ul>
                                 <div className="flex flex-col justify-start ml-6">

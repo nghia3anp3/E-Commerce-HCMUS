@@ -1,44 +1,37 @@
-// import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
-// // Create context
-// export const SubCommentContext = createContext();
+// Create context
+export const SubCommentContext = createContext();
 
-// const SubCommentProvider = ({ children }) => {
-//   // Comment state
-//   const [sub_comments, setSubComments] = useState([]);
+const SubCommentProvider = ({ children }) => {
+  // Comment state
+  const [subcomments, setSubComments] = useState([]);
 
-//   // Fetch Comments
-//   useEffect(() => {
-//     const fetchSubComments = async () => {
-//       try {
-//         const phoneResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/phone/sub_comments/');
-//         const laptopResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/laptop/sub_comments/');
-        
-//         if (phoneResponse.ok && laptopResponse.ok) {
-//           const phoneData = await phoneResponse.json();
-//           const laptopData = await laptopResponse.json();
-          
-//           const phoneDataWithType = phoneData.map(item => ({ ...item, category: 'phone' }));
-//           const laptopDataWithType = laptopData.map(item => ({ ...item, category: 'laptop' }));
-          
-//           const combinedData = phoneDataWithType.concat(laptopDataWithType);
-          
-//           setComments(combinedData);
-//         } else {
-//           console.error('Failed to fetch Comments:', phoneResponse.statusText);
-//         }
-//       } catch (error) {
-//         console.error('Error fetching Comments:', error);
-//       }
-//     };
-//     fetchSubComments();
-//   }, []);
+  // Fetch Comments
+  useEffect(() => {
+    const fetchSubComments = async () => {
+      try {
+        // const phoneResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/phone/comments/');
+        // const laptopResponse = await fetch('https://e-commerce-hcmus-server-qggz96m4u-c-zus-projects.vercel.app/laptop/comments/');
+        const productResponse = await fetch('http://localhost:8000/api/subcomments')
+        if (productResponse.ok ) {
+          const productsubcommentData = await productResponse.json();   
+          setSubComments(productsubcommentData);
+        } else {
+          console.error('Failed to fetch Comments:', productResponse.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching Comments:', error);
+      }
+    };
+    fetchSubComments();
+  }, []);
 
-//   return (
-//     <SubCommentContext.Provider value={{sub_comments} }>
-//       {children}
-//     </SubCommentContext.Provider>
-//   );
-// };
+  return (
+    <SubCommentContext.Provider value={{subcomments} }>
+      {children}
+    </SubCommentContext.Provider>
+  );
+};
 
-// export default SubCommentProvider;
+export default SubCommentProvider;

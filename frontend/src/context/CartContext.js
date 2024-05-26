@@ -26,16 +26,16 @@ const CartProvider = ({children}) => {
     }
   }, [cart])
   //add to cart
-  const addToCart = (product, id)=> {
+  const addToCart = (product, product_id)=> {
     const newItem = {...product, amount: 1}
     //check if item is already in the cart
     const cartItem = cart.find((item) => {
-      return item.id === id
+      return item.product_id === product_id
     })
     //if item is already in the cart
     if (cartItem) {
       const newCart = [...cart].map((item) => {
-        if (item.id === id) {
+        if (item.product_id === product_id) {
           return {...item, amount: cartItem.amount + 1}
         } else {
             return item
@@ -47,9 +47,9 @@ const CartProvider = ({children}) => {
     }
   }
   //remove from cart
-  const removeFromCart = (id) => {
+  const removeFromCart = (product_id) => {
     const newCart = cart.filter(item => {
-      return item.id !== id
+      return item.product_id !== product_id
     })
     setCart(newCart)
   }
@@ -58,18 +58,18 @@ const CartProvider = ({children}) => {
     setCart([])
   }
   // increase amount
-  const increaseAmount = (id) => {
-    const cartItem = cart.find((item) => item.id === id)
-    addToCart(cartItem, id);
+  const increaseAmount = (product_id) => {
+    const cartItem = cart.find((item) => item.product_id === product_id)
+    addToCart(cartItem, product_id);
   }
   // decrease amount
-  const decreaseAmount = (id) => {
+  const decreaseAmount = (product_id) => {
     const cartItem = cart.find((item) => {
-      return item.id === id
+      return item.product_id === product_id
     })
     if (cartItem) {
       const newCart = cart.map(item => {
-        if (item.id === id) {
+        if (item.product_id === product_id) {
           return { ...item, amount: cartItem.amount - 1}
         } else {
           return item;
@@ -79,7 +79,7 @@ const CartProvider = ({children}) => {
     }
       
     if (cartItem.amount < 2) {
-        removeFromCart(id)
+        removeFromCart(product_id)
     }
   }
   return (
