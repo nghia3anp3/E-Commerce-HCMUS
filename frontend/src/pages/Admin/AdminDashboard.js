@@ -103,9 +103,9 @@ const AdminDashboard = () => {
                 <FiPieChart className="w-6 h-6" />
                 <p>Total Sales: $10,000</p>
               </div>
-              <button onClick={() => openModal('Sales Overview Data')} className="text-blue-500 hover:text-blue-700 focus:outline-none">
+              {/* <button onClick={() => openModal('Sales Overview Data')} className="text-blue-500 hover:text-blue-700 focus:outline-none">
                 View Details
-              </button>
+              </button> */}
             </div>
           </div>
           {/* Order Statistics */}
@@ -116,9 +116,9 @@ const AdminDashboard = () => {
                 <FiBarChart2 className="w-6 h-6" />
                 <p>Total Orders: {totalOrders}</p>
               </div>
-              <button onClick={() => openModal('Order Statistics Data')} className="text-blue-500 hover:text-blue-700 focus:outline-none">
+              {/* <button onClick={() => openModal('Order Statistics Data')} className="text-blue-500 hover:text-blue-700 focus:outline-none">
                 View Details
-              </button>
+              </button> */}
             </div>
           </div>
           {/* Total Users */}
