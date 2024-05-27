@@ -29,7 +29,7 @@ const getUser = async (req, res) => {
             const user = await Users.find({ user_id });
             return res.status(200).json(user);
         }
-        const filter = { product_id }; 
+        const filter = { user_id }; 
         
         Object.keys(queryParams).forEach(key => {
             filter[key] = queryParams[key];
@@ -45,17 +45,40 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { user_id } = req.params;
-
-    const user = await Users.findOneAndUpdate({ user_id: user_id }, req.body);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const queryParams = req.query;
+    if (Object.keys(req.body).length === 0) {
+      const updateResult = await Users.updateMany(
+        { user_id: user_id },
+        { $set: req.body },
+        { new: true }
+      );
+      // Fetch updated users
+      const updatedUsers = await Users.find({ user_id: user_id });
+      return res.status(200).json(updatedUsers);
     }
-    const updateduser = await Users.find({ user_id: user_id  });
-    res.status(200).json(updateduser);
+    // Create filter with user_id
+    const filter = { user_id };
+    // Add query parameters to filter if they exist
+    Object.keys(queryParams).forEach(key => {
+      filter[key] = queryParams[key];
+    });
+    // Update multiple users based on filter
+    const updateResult = await Users.updateMany(
+      filter,
+      { $set: req.body },
+      { new: true }
+    );
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ message: "No users found matching the criteria" });
+    }
+    // Fetch updated users
+    const updatedusers = await Users.find(filter);
+    res.status(200).json(updatedusers);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const deleteUser = async (req, res) => {
   try {

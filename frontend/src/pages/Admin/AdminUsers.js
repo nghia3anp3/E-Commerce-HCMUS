@@ -68,8 +68,14 @@ const AdminUsers = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateUser(editingUser.user_id, formData);
+    const updateduser = {
+      ...editingUser,
+      ...formData,
+    };
+    console.log(updateduser)
+    updateUser(editingUser.user_id, updateduser);
     setIsModalOpen(false);
+    window.location.reload();
   };
 
   return (

@@ -10,9 +10,7 @@ import Comments from '../components/Comment/Comments'
 import { CommentContext } from '../context/CommentContext'
 import { SubCommentContext } from '../context/SubCommentContext'
 //Icon
-import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import SpecificInfo from '../components/SpecificInfo'
-import { list } from 'postcss'
 
 const ProductDetails = () => {
 

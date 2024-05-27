@@ -2,16 +2,13 @@ import React, {useContext} from 'react'
 //import product context
 import { ProductContext } from '../context/ProductContext'
 //import auth context
-import { AuthContext } from '../context/AuthContext'
 //import components
 import Product from '../components/Product'
 import Hero from '../components/Hero'
 //import Link
-import { Link } from 'react-router-dom';
 const Home = () => {
   // get products from product context
   const { products } = useContext(ProductContext);
-  // const { isLoggedIn } = useContext(AuthContext)
   return (
     <div>
         <div>

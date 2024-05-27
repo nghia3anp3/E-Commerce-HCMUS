@@ -34,10 +34,11 @@ const UserProvider = ({ children }) => {
   };
 
   // Update user
-  const updateUser = async (userId, updatedData) => {
+  const updateUser = async (user_id, updatedData) => {
     try {
-      const response = await axios.put(`http://localhost:8000/api/users/${userId}`, updatedData);
-      setUsers(users.map(user => (user.user_id === userId ? response.data : user)));
+      console.log(updatedData)
+      const response = await axios.put(`http://localhost:8000/api/users/${user_id}`, updatedData);
+      setUsers(users.map(user => (user.user_id === user_id ? response.data : user)));
     } catch (error) {
       console.error('Error updating user:', error);
       alert('Error updating user');
@@ -45,10 +46,10 @@ const UserProvider = ({ children }) => {
   };
 
   // Delete user
-  const deleteUser = async (userId) => {
+  const deleteUser = async (user_id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/users/${userId}`);
-      setUsers(users.filter(user => user.user_id !== userId));
+      await axios.delete(`http://localhost:8000/api/users/${user_id}`);
+      setUsers(users.filter(user => user.user_id !== user_id));
     } catch (error) {
       console.error('Error deleting user:', error);
       alert('Error deleting user');
@@ -56,8 +57,8 @@ const UserProvider = ({ children }) => {
   };
 
   // Find user by ID
-  const findUserById = (userId) => {
-    return users.find(user => user.user_id === userId);
+  const findUserById = (user_id) => {
+    return users.find(user => user.user_id === user_id);
   };
 
   return (

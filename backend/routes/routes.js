@@ -26,7 +26,7 @@ Router.post("/account", update);
 // User Routes
 Router.get("/users/", getAllusers);
 Router.get("/users/:user_id", getUser);
-Router.post("/users/:user_id", updateUser);
+Router.put("/users/:user_id", updateUser);
 Router.delete("/users/:user_id", deleteUser);
 
 // Main_comment Routes
