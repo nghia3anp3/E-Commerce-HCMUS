@@ -6,6 +6,7 @@ const {getAllusers,getUser,deleteUser,updateUser} = require('../controllers/user
 const {getComments, getCommentByProductID, createComment, updateComment, deleteComment} = require('../controllers/main_comment.controller.js');
 const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, deleteSubcomment} = require('../controllers/sub_comment.controller.js');
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
+const {getAllDetailProduct, getDetailProductbyID, createDetailProduct, updateDetailProduct, deleteDetailProduct} = require('../controllers/detail_product.controller.js');
 const {getAllInfo, getInfo, createInfo, updateInfo, deleteInfo,} = require('../controllers/product.controller.js');
 
 Router.get("/", (req, res) => {
@@ -50,8 +51,14 @@ Router.post("/orders", createOrder);
 Router.put("/orders/:order_id", updateOrder);
 Router.delete("/orders/:order_id", deleteOrder);
 
-// Product Routes
+// Detail Product Routes
+Router.get("/detailproducts", getAllDetailProduct);
+Router.get("/detailproducts/:detail_product_id", getDetailProductbyID);
+Router.post("/detailproducts", createDetailProduct);
+Router.put("/detailproducts/:order_id", updateDetailProduct);
+Router.delete("/detailproducts/:order_id", deleteDetailProduct);
 
+// Product Routes
 Router.get("/products", getAllInfo);
 Router.get("/products/:product_id", getInfo);
 Router.post("/products", createInfo);

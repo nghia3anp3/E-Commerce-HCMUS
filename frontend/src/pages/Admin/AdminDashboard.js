@@ -52,40 +52,40 @@ const AdminDashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const openModal = content => {
-    setModalContent(content);
-    setShowModal(true);
-  };
+  // const openModal = content => {
+  //   setModalContent(content);
+  //   setShowModal(true);
+  // };
 
-  const closeModal = () => {
-    setModalContent(null);
-    setShowModal(false);
-  };
+  // const closeModal = () => {
+  //   setModalContent(null);
+  //   setShowModal(false);
+  // };
 
-  const renderModalContent = () => {
-    switch (modalContent) {
-      case 'Sales Overview Data':
-        return (
-          <div>
-            {/* Add sales overview data structure here */}
-          </div>
-        );
-      case 'Order Statistics Data':
-        return (
-          <div>
-            {/* Add order statistics data structure here */}
-          </div>
-        );
-      case 'User Activities':
-        return (
-          <div>
-            {/* Add user activities data structure here */}
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  // const renderModalContent = () => {
+  //   switch (modalContent) {
+  //     case 'Sales Overview Data':
+  //       return (
+  //         <div>
+  //           {/* Add sales overview data structure here */}
+  //         </div>
+  //       );
+  //     case 'Order Statistics Data':
+  //       return (
+  //         <div>
+  //           {/* Add order statistics data structure here */}
+  //         </div>
+  //       );
+  //     case 'User Activities':
+  //       return (
+  //         <div>
+  //           {/* Add user activities data structure here */}
+  //         </div>
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <div className="flex">
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-      {/* Modal */}
+      {/* Modal
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="bg-white p-8 rounded-lg shadow-md">
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
