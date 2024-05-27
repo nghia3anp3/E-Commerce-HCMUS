@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { stringify } = require("uuid");
 
 const userSchema = mongoose.Schema(
   {
@@ -8,7 +9,7 @@ const userSchema = mongoose.Schema(
     role: String,
     email: String,
     address: String,
-    phone: Number,
+    phone: String,
     avatar: String,
   },
   {

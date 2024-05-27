@@ -45,7 +45,7 @@ app.get("/api/online-users", (req, res) => {
   res.json({ onlineUsers });
 });
 
-mongoose.connect("mongodb+srv://nam:nam@se-ecommerce.lkwnlpo.mongodb.net/test_SE_Ecommerce")
+mongoose.connect("mongodb+srv://nam:nam@se-ecommerce.lkwnlpo.mongodb.net/SE_Ecommerce")
   .then(() => {
     console.log("Connected to database!");
     app.listen(8000, () => {

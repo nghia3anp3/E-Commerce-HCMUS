@@ -25,20 +25,24 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-    const { account, password, email,  address} = req.body;
+    const { user_id, account, password, email,  address, phone, role} = req.body;
     
     try {
       const existingUser = await User.findOne({ account: account });
       if (existingUser) {
         res.json("exist");
-      } else {
+      } else
+      {
         // Hash the password before storing it
         const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
         const newUser = {
+          user_id: user_id,
           account: account,
           password: hashedPassword,
           email: email,
           address: address,
+          role: role,
+          phone: phone,
         };
         await User.create(newUser);
         res.json("notexist");

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate  , Link } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import Logo from '../img/logo.png'
 import { AuthContext } from "../context/AuthContext";
 
@@ -9,7 +9,6 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user_id: "",
       account: "",
       email: "",
       password: "",
@@ -26,14 +25,14 @@ class Register extends React.Component {
     const { account, email, password, confirm_password, address, phone } = this.state;
     const { register } = this.context;
     if (password !== confirm_password) {
-      this.setState({ error: "Mật khẩu không giống với nhập lại mật khẩu" }); 
-    }
-    else {
+      this.setState({ error: "Mật khẩu không giống với nhập lại mật khẩu" });
+    } else {
       try {
         const response = await register(account, email, password, address, phone);
         if (response) {
-          this.setState({ error: response }); 
+          this.setState({ error: response });
         }
+
       } catch (error) {
         console.error("An error occurred while registering:", error);
         alert("An error occurred while registering");
@@ -81,7 +80,7 @@ class Register extends React.Component {
     let { account, password, email, confirm_password, address, phone, error } = this.state;
     const { isLoggedIn } = this.context;
     if (isLoggedIn) {
-      return <Navigate to="/" replace/>
+      return <Navigate to="/" replace />
     }
     return (
       <section className="min-h-screen flex items-center justify-center bg-blue-200">
@@ -106,16 +105,18 @@ class Register extends React.Component {
                     value={account}
                     onChange={(event) => this.onChangeAccount(event)}
                     placeholder="Tài khoản"
+                    required
                   />
                 </div>
                 {/* Email */}
                 <div className="md:flex md:items-center mb-6">
                   <input
                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                    type="text"
+                    type="email"
                     value={email}
                     onChange={(event) => this.onChangeEmail(event)}
                     placeholder="Email"
+                    required
                   />
                 </div>
                 {/* Address */}
@@ -126,6 +127,7 @@ class Register extends React.Component {
                     value={address}
                     onChange={(event) => this.onChangeAddress(event)}
                     placeholder="Địa chỉ"
+                    required
                   />
                 </div>
                 {/* Phone number */}
@@ -136,6 +138,7 @@ class Register extends React.Component {
                     value={phone}
                     onChange={(event) => this.onChangePhone(event)}
                     placeholder="Số điện thoại"
+                    required
                   />
                 </div>
                 {/* Mật khẩu */}
@@ -146,6 +149,7 @@ class Register extends React.Component {
                     onChange={(event) => this.onChangePassword(event)}
                     value={password}
                     placeholder="Mật khẩu"
+                    required
                   />
                 </div>
                 <div className="md:flex md:items-center mb-6">
@@ -155,6 +159,7 @@ class Register extends React.Component {
                     onChange={(event) => this.onChangeConfirmPassword(event)}
                     value={confirm_password}
                     placeholder="Xác nhận mật khẩu"
+                    required
                   />
                 </div>
                 <div className="text-center lg:text-left">
@@ -182,4 +187,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register
+export default Register;

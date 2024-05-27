@@ -90,12 +90,19 @@ const AuthProvider = ({ children }) => {
     setUser('');
   };
 
-  const register = async (account, email, password) => {
+  const register = async (account, email, password, address, phone) => {
     try {
+      const role = 'customer'
+      const user_id = parseInt(Date.now(), 12);
+      console.log(user_id)
       const response = await axios.post("http://localhost:8000/api/register/", {
+        user_id,  
         account,
         password,
-        email
+        email,
+        address,
+        phone,
+        role,
       });
       if (response.status === 200) {
         const data = response.data;
@@ -103,9 +110,8 @@ const AuthProvider = ({ children }) => {
           return "Tài khoản đã tồn tại";
         } else if (data === "notexist") {
           alert("Đăng ký thành công")
-          window.location.replace("/");
+          window.location.replace("/login");
           return null;
-          
         } else {
           return "Unexpected response from server";
         }
