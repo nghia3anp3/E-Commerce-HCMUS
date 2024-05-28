@@ -1,21 +1,17 @@
 import React from 'react'
 import Logo from '../img/logo.png'
 import axios from 'axios'
+import { AuthContext } from '../context/AuthContext';
 
 class ChangePassword extends React.Component {
 
     state = {
-        account: "",
         password: "",
         new_password: "",
         confirm_newpassword: "",
         errors: "",
     }
 
-
-    onChangeAccount = (event) => {
-        this.setState({account: event.target.value})
-    }
 
     onChangePassword = (event) => {
         this.setState({password: event.target.value})
@@ -36,11 +32,10 @@ class ChangePassword extends React.Component {
         }
     }
 
-    onClickChangePassword = async (event) => {
-        event.preventDefault()
-        let {account, password, new_password, confirm_newpassword, errors} = this.state
-        if (account.trim() === "" || password.trim() === "") {
-            errors = "Tài khoản hoặc mật khẩu không được bỏ trống";
+    onClickChangePassword = async (account) => {
+        let {password, new_password, confirm_newpassword, errors} = this.state
+        if (password.trim() === "") {
+            errors = "Không được bỏ trống thông tin";
           }
         
         if (Object.keys(errors).length > 0) {
@@ -84,10 +79,10 @@ class ChangePassword extends React.Component {
                     <h1 className='py-4 text-4xl font-bold text-black'>Đổi mật khẩu</h1>
                     <div className='space-y-4'>
                         {/* account */}
-                        <div className='space-y-2'>
+                        {/* <div className='space-y-2'>
                             <p className='text-2xl font-bold text-black'>Tài khoản</p>
                             <input className='bg-slate-100 border-2 rounded-lg border-black' type='text' placeholder='Tài khoản' onChange={this.onChangeAccount}/>
-                        </div>
+                        </div> */}
                         {/* password */}
                         <div className='space-y-2'>
                             <p className='text-2xl font-bold text-black'>Mật khẩu cũ</p>

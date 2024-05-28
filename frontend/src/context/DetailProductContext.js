@@ -9,7 +9,7 @@ const DetailProductProvider = ({ children }) => {
   useEffect(() => {
     const fetchDetailProducts = async () => {
       try {
-        const response = await axios.get('https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts/');
+        const response = await axios.get('http://localhost:8000/api/detailproducts/');
         setDetailProducts(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -20,7 +20,7 @@ const DetailProductProvider = ({ children }) => {
   }, []);
   const deleteDetailProduct = async (detail_product_id) => {
     try {
-      await axios.delete(`https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts/${detail_product_id}`);
+      await axios.delete(`http://localhost:8000/api/detailproducts/${detail_product_id}`);
       setDetailProducts(detailProducts.filter(detailProduct => detailProduct.detail_product_id !== detail_product_id));
     } catch (error) {
       console.error('Error deleting detail product:', error);

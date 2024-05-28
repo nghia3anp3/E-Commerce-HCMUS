@@ -12,7 +12,7 @@ const ProductProvider = ({ children }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const productResponse = await fetch('https://m8mp78nj-8000.asse.devtunnels.ms/api/products/')
+        const productResponse = await fetch('http://localhost:8000/api/products/')
         if (productResponse.ok) {
           const productdata = await productResponse.json();   
           setProducts(productdata);

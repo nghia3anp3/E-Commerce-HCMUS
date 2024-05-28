@@ -9,12 +9,14 @@ import Product from '../components/Product'
 import { Link } from 'react-router-dom';
 //Icon
 import { FaArrowRight, FaArrowLeft} from "react-icons/fa6";
+import { AuthContext } from '../context/AuthContext';
 
 const ITEMS_PER_PAGE = 40
 
 const Home = () => {
   // get products from product context
   const { products } = useContext(ProductContext);
+  
   const { page } = useParams();
   const navigate = useNavigate();
 

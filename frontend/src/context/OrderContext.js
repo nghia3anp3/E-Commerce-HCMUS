@@ -12,7 +12,7 @@ const OrderProvider = ({ children }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('https://m8mp78nj-8000.asse.devtunnels.ms/api/orders/');
+        const response = await axios.get('http://localhost:8000/api/orders/');
         setOrders(response.data);
       } catch (error) {
         console.error('Error fetching orders:', error);

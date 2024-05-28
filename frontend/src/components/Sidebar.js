@@ -8,6 +8,13 @@ import { CartContext } from '../context/CartContext';
 
 class Sidebar extends Component {
 
+  componentDidMount() {
+    const storedCartData = localStorage.getItem('userCart');
+    if (storedCartData) {
+      const userCart = JSON.parse(storedCartData);
+      this.context.updateCart(userCart); // Cập nhật giỏ hàng từ Local Storage khi Sidebar được render
+    }
+  }
 
   render() {
     return (

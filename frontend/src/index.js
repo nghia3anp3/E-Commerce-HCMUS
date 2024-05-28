@@ -17,6 +17,7 @@ import OrderProvider from './context/OrderContext';
 import DetailProductProvider from './context/DetailProductContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <AuthProvider>
   <SidebarProvider>
     <CartProvider>
       <ProductProvider>
@@ -25,10 +26,8 @@ root.render(
             <DetailProductProvider>
               <OrderProvider>
                 <UserProvider>
-                  <React.StrictMode>
-                    <AuthProvider>
+                  <React.StrictMode>               
                       <App />
-                    </AuthProvider>
                   </React.StrictMode>
                 </UserProvider>
               </OrderProvider>
@@ -38,5 +37,5 @@ root.render(
       </ProductProvider>
     </CartProvider>
   </SidebarProvider>
-
+  </AuthProvider>
 );

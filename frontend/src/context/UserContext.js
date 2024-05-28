@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://m8mp78nj-8000.asse.devtunnels.ms/api/users/');
+        const response = await axios.get('http://localhost:8000/api/users/');
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
