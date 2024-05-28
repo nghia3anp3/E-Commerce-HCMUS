@@ -7,7 +7,7 @@ import { FaPhone } from 'react-icons/fa';
 import { OrderContext } from '../context/OrderContext';
 import { AuthContext } from '../context/AuthContext';
 import { DetailProductContext } from '../context/DetailProductContext';
-
+import { UserContext } from '../context/UserContext';
 class Checkout extends React.Component {
     state = {
         address: "", 
@@ -58,11 +58,11 @@ class Checkout extends React.Component {
         window.scrollTo(0, 0);
     }
 
-    onClickSubmit = (user_id, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext ) => {
+    onClickSubmit = (user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext ) => {
         const new_order_id = orderContext.orders.length
         const new_order = {
             order_id: new_order_id,
-            customer_id: user_id,
+            customer_id: user.user_id,
             date: new Date(),
             address: address,
             detail_product_ids: null,
@@ -91,6 +91,9 @@ class Checkout extends React.Component {
         // new_order.detail_product_ids = detail_product_ids
         console.log({...new_order, detail_product_ids: detail_product_ids})
         orderContext.updateOrder(new_order_id, {...new_order, detail_product_ids: detail_product_ids})
+        userContext.updateUser(user.user_id, {...user, cart: []})
+        alert("Bạn đã đặt hàng thành công!")
+        window.location.replace("/");
     }
 
     render (){
@@ -249,39 +252,45 @@ class Checkout extends React.Component {
                                 <p className="text-2xl font-semibold text-gray-900">{(cartContext.total + this.state.ship_fee).toLocaleString()} VNĐ</p>
                                 </div>
                             </div>
-                            <AuthContext.Consumer>
-                                {(authContext) => {
+                            <UserContext.Consumer>
+                                {(userContext) => {
                                     return (
-                                        <CartContext.Consumer>
-                                            {(cartContext) => {
-                                                return (
-                                                    <OrderContext.Consumer>
-                                                        {(orderContext) => {
-                                                            return (
-                                                                <DetailProductContext.Consumer>
-                                                                    {(detailProductContext) => {
-                                                                        const user_id = authContext.user.user_id;
-                                                                        const total = cartContext.total + ship_fee;  // Ensure `ship_fee` is defined and accessible
+                                    <AuthContext.Consumer>
+                                        {(authContext) => {
+                                            return (
+                                                <CartContext.Consumer>
+                                                    {(cartContext) => {
+                                                        return (
+                                                            <OrderContext.Consumer>
+                                                                {(orderContext) => {
+                                                                    return (
+                                                                        <DetailProductContext.Consumer>
+                                                                            {(detailProductContext) => {
+                                                                                const user = authContext.user
+                                                                                const total = cartContext.total + ship_fee;  // Ensure `ship_fee` is defined and accessible
 
-                                                                        return (
-                                                                            <button 
-                                                                                className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-                                                                                onClick={() => this.onClickSubmit(user_id, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext)}
-                                                                            >    
-                                                                            Đặt hàng
-                                                                            </button>
-                                                                        );
-                                                                    }}
-                                                                </DetailProductContext.Consumer>
-                                                            );
-                                                        }}
-                                                    </OrderContext.Consumer>
-                                                );
-                                            }}
-                                        </CartContext.Consumer>
+                                                                                return (
+                                                                                    <button 
+                                                                                        className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                                                                                        onClick={() => this.onClickSubmit(user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext)}
+                                                                                    >    
+                                                                                    Đặt hàng
+                                                                                    </button>
+                                                                                );
+                                                                            }}
+                                                                        </DetailProductContext.Consumer>
+                                                                    );
+                                                                }}
+                                                            </OrderContext.Consumer>
+                                                        );
+                                                    }}
+                                                </CartContext.Consumer>
+                                            );
+                                        }}
+                                    </AuthContext.Consumer>
                                     );
                                 }}
-                            </AuthContext.Consumer>                        
+                            </UserContext.Consumer>                         
                             </div>
                         </div>
                     </div>

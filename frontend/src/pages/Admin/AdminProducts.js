@@ -680,12 +680,15 @@ class AdminProducts extends Component {
       error: null,
       pageIndex: 0,
       pageSize: 10,
+      isDeleteModalOpen: false,
+      productToDelete: null,
     };
   }
 
   handleDelete = (product_id) => {
     const { deleteProduct } = this.context;
     deleteProduct(product_id);
+    this.setState({ isDeleteModalOpen: false });
   };
 
   handleEditClick = (product_id) => {
@@ -708,10 +711,14 @@ class AdminProducts extends Component {
     this.setState((prevState) => ({ pageIndex: prevState.pageIndex + 1 }));
   };
 
+  handleDeleteConfirmation = (product) => {
+    this.setState({ productToDelete: product, isDeleteModalOpen: true });
+  };
+
   getFilteredProducts = () => {
     const { products } = this.context;
     const { searchValue } = this.state;
-    return products.filter(product =>
+    return products.filter((product) =>
       product.name.toLowerCase().includes(searchValue.toLowerCase())
     );
   };
@@ -725,8 +732,7 @@ class AdminProducts extends Component {
   };
 
   render() {
-    const { isEditModalOpen, isAddModalOpen, selectedProductId, searchValue, error, pageIndex, pageSize } = this.state;
-    const filteredProducts = this.getFilteredProducts();
+    const { isEditModalOpen, isAddModalOpen, selectedProductId, searchValue, pageIndex, pageSize, isDeleteModalOpen, productToDelete } = this.state;
     const currentPageData = this.getCurrentPageData();
 
     return (
@@ -739,7 +745,6 @@ class AdminProducts extends Component {
               Add Product
             </button>
           </div>
-          {/* Search input field */}
           <div className="mb-4">
             <input
               type="text"
@@ -749,19 +754,14 @@ class AdminProducts extends Component {
               className="border border-gray-300 rounded py-2 px-4"
             />
           </div>
-          {/* Error message */}
-          {error && <div className="mb-4 text-red-500 font-bold">{error}</div>}
-          {/* Table and pagination */}
           <div className="flex justify-center items-center overflow-x-auto">
             <div className="table-container" style={{ maxWidth: "1200px" }}>
               <h2 className="text-xl font-bold mb-5">Product List</h2>
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  {/* Table headers */}
                   <thead className="bg-gray-800 text-white">
                     <tr>
                       <th className="px-4 py-2 text-center">Product ID</th>
-                      {/* Add more table headers here */}
                       <th className="px-4 py-2 text-center">Type</th>
                       <th className="px-4 py-2 text-center">Name</th>
                       <th className="px-4 py-2 text-center">SKU</th>
@@ -783,7 +783,6 @@ class AdminProducts extends Component {
                       <th className="px-4 py-2 text-center sticky right-0 bg-gray-800">Actions</th>
                     </tr>
                   </thead>
-                  {/* Table body */}
                   <tbody>
                     {currentPageData.map(product => (
                       <tr key={product.product_id} className="hover:bg-gray-200">
@@ -806,13 +805,12 @@ class AdminProducts extends Component {
                         <td className="px-1 py-3 text-center overflow-hidden whitespace-nowrap max-w-xs overflow-ellipsis">{product.images.join(', ')}</td>
                         <td className="px-1 py-3 text-center overflow-hidden whitespace-nowrap max-w-xs overflow-ellipsis">{product.comments_id.join(', ')}</td>
                         <td className="px-1 py-3 text-center overflow-hidden whitespace-nowrap max-w-xs overflow-ellipsis">{product.specific_infos.join(', ')}</td>
-                        {/* Add more table cells for each column */}
-                        <td className="px-1 py-3 text-center sticky right-0 bg-white z-10">
+                        <td className="px-1 py-3 text-center sticky right-0">
                           <div className="flex">
                             <button className="bg-green-500 text-white px-3 py-1 rounded-md mr-2" onClick={() => this.handleEditClick(product.product_id)}>
                               Edit
                             </button>
-                            <button className="bg-red-500 text-white px-3 py-1 rounded-md" onClick={() => this.handleDelete(product.product_id)}>
+                            <button className="bg-red-500 text-white px-3 py-1 rounded-md" onClick={() => this.handleDeleteConfirmation(product)}>
                               Delete
                             </button>
                           </div>
@@ -822,7 +820,6 @@ class AdminProducts extends Component {
                   </tbody>
                 </table>
               </div>
-              {/* Pagination controls */}
               <div className="mt-4 flex justify-between">
                 <button onClick={this.handlePreviousPage} disabled={pageIndex === 0} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   Previous
@@ -830,7 +827,7 @@ class AdminProducts extends Component {
                 <div>
                   Page{' '}
                   <strong>
-                    {pageIndex + 1} of {Math.ceil(filteredProducts.length / pageSize)}
+                    {pageIndex + 1} of {Math.ceil(currentPageData.length / pageSize)}
                   </strong>
                 </div>
                 <button onClick={this.handleNextPage} disabled={currentPageData.length < pageSize} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -845,10 +842,32 @@ class AdminProducts extends Component {
           {isAddModalOpen && (
             <AdminAddProduct onClose={() => this.setState({ isAddModalOpen: false })} />
           )}
+          {isDeleteModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-4 rounded-lg">
+                <h2 className="text-xl mb-4">Confirm</h2>
+                <p>Do you want to delete this product? {productToDelete?.name}?</p>
+                <div className="flex justify-end mt-4">
+                  <button
+                    className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2"
+                    onClick={() => this.setState({ isDeleteModalOpen: false })}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    onClick={() =>this.handleDelete(productToDelete.product_id)}
+                    >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 }
-
+                    
 export default AdminProducts;

@@ -43,6 +43,7 @@ const register = async (req, res) => {
           address: address,
           role: role,
           phone: phone,
+          cart: [],
         };
         await User.create(newUser);
         res.json("notexist");

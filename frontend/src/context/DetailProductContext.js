@@ -30,7 +30,7 @@ const DetailProductProvider = ({ children }) => {
 
   const addDetailProduct = async (newDetailProduct) => {
     try {
-      const response = await axios.post('https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts', newDetailProduct);
+      const response = await axios.post('http://localhost:8000/api/detailproducts', newDetailProduct);
       setDetailProducts([...detailProducts, newDetailProduct]);
     } catch (error) {
       console.error('Error adding detail product:', error);
@@ -40,7 +40,7 @@ const DetailProductProvider = ({ children }) => {
 
   const updateDetailProduct = async (detail_product_id, updatedDetailProduct) => {
     try {
-      const response = await axios.put(`https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts/${detail_product_id}`, updatedDetailProduct);
+      const response = await axios.put(`http://localhost:8000/api/detailproducts/${detail_product_id}`, updatedDetailProduct);
       setDetailProducts(detailProducts.map(detailProduct => 
         detailProduct.detail_product_id === detail_product_id ? updatedDetailProduct : detailProduct
       ));

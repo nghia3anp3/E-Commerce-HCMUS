@@ -96,7 +96,7 @@ class Login extends React.Component {
                           {errors}
                         </div>
                       )}
-                    <div class="md:flex md:items-center mb-6">
+                    <div className="md:flex md:items-center mb-6">
                           <input className="bg-gray-200 appearance-none border-2
                            border-gray-200 rounded w-full py-2 px-4
                             text-gray-700 leading-tight focus:outline-none
@@ -140,7 +140,7 @@ class Login extends React.Component {
                         className="inline-block w-full rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                         onKeyDown={this.handleKeyDown}
                       >
-                        Sign in
+                        Đăng nhập
                       </button>
         
                       {/* <!-- Divider --> */}

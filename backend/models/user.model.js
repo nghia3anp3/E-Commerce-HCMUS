@@ -11,6 +11,7 @@ const userSchema = mongoose.Schema(
     address: String,
     phone: String,
     avatar: String,
+    cart: Array,
   },
   {
     Timestamp: true,

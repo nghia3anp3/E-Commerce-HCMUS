@@ -17,25 +17,25 @@ import OrderProvider from './context/OrderContext';
 import DetailProductProvider from './context/DetailProductContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <UserProvider>
   <AuthProvider>
-  <SidebarProvider>
-    <CartProvider>
-      <ProductProvider>
-          <CommentProvider>
-            <SubCommentProvider>
-            <DetailProductProvider>
-              <OrderProvider>
-                <UserProvider>
-                  <React.StrictMode>               
-                      <App />
-                  </React.StrictMode>
-                </UserProvider>
-              </OrderProvider>
-              </DetailProductProvider>
-            </SubCommentProvider>
-          </CommentProvider>    
-      </ProductProvider>
-    </CartProvider>
-  </SidebarProvider>
+      <SidebarProvider>
+        <CartProvider>
+          <ProductProvider>
+              <CommentProvider>
+                <SubCommentProvider>
+                  <DetailProductProvider>
+                    <OrderProvider>
+                        <React.StrictMode>               
+                            <App />
+                        </React.StrictMode>
+                    </OrderProvider>
+                  </DetailProductProvider>
+                </SubCommentProvider>
+              </CommentProvider>    
+          </ProductProvider>
+        </CartProvider>
+      </SidebarProvider>
   </AuthProvider>
+  </UserProvider>
 );
