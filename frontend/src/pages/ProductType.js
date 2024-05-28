@@ -42,7 +42,7 @@ const ProductType = () => {
   //Chuyển đến trang tiếp theo
   const goNextPage = () => {
     if (currentPage === totalPage) {
-      setCurrentPage(0)
+      setCurrentPage(1)
     }
     else{
       setCurrentPage(currentPage + 1)
@@ -51,7 +51,7 @@ const ProductType = () => {
 
   //Chuyển qua trang phía trước
   const goPreviousPage = () => {
-    if (currentPage === 0){
+    if (currentPage === 1){
       setCurrentPage(totalPage)
     }
     else{

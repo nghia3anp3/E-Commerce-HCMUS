@@ -36,26 +36,42 @@ const App = () => {
   );
 }
 
-const PublicRoutes = () => (
-  <>
-  <Header />
-  <div className="mt-20"> {/* Add top margin to create space for the header */}
-    <Routes>
-      <Route path='/' element={<Home /> } />
-      <Route path='/account' element={<Account /> } />
-      <Route path='/product/:product_id' element={<ProductDetails />} />
-      <Route path='/:p_type/:type/:page' element={<ProductType />} />
-      <Route path='/login' element= {<Login />} />
-      <Route path = '/register' element = {<Register/>} />
-      <Route path = '/forgetPassword' element = {<ForgetPassword/>} />
-      <Route path = '/changePassword' element = {<ChangePassword/>} />
-      <Route path = '/checkout' element = {<CheckOut/>} />
-    </Routes>
-  </div>
-  <Sidebar />
-  <Footer />
-  </>
-);
+const PublicRoutes = () => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+  const isRegisterPage = location.pathname === '/register';
+  const isForgetPasswordPage = location.pathname === '/forgetPassword';
+  const isChangePasswordPage = location.pathname === '/changePassword';
+  if (isLoginPage) {
+    return <Login />;
+  } else if (isRegisterPage) {
+    return <Register />;
+  } else if (isForgetPasswordPage) {
+    return <ForgetPassword />
+  } else if (isChangePasswordPage) {
+    return <ChangePassword />
+  }
+  // Conditionally render the header and footer
+  const renderHeaderFooter = !(isLoginPage || isRegisterPage || isForgetPasswordPage || isChangePasswordPage);
+
+  return (
+    <>
+      {renderHeaderFooter && <Header />}
+      <div className={renderHeaderFooter ? 'mt-20' : ''}> {/* Add top margin to create space for the header */}
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/:page' element={<Home />} />
+          <Route path='/account' element={<Account />} />
+          <Route path='/product/:product_id' element={<ProductDetails />} />
+          <Route path='/:p_type/:type/:page' element={<ProductType />} />
+          <Route path='/checkout' element={<CheckOut />} />
+        </Routes>
+      </div>
+      {renderHeaderFooter && <Sidebar />}
+      {renderHeaderFooter && <Footer />}
+    </>
+  );
+};
 
 const AdminRoutes = () => {
   return (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../img/logo.png';
-import Menu from './menu/menu';
+import Menu from './Menu';
 import { MdOutlineShoppingCart, MdOutlineAccountCircle } from 'react-icons/md';
 import { SidebarContext } from '../context/SidebarContext';
 import { AuthContext } from '../context/AuthContext';
@@ -54,7 +54,7 @@ class Header extends Component {
                   <header className={`fixed w-full z-10 transition-all ${isActive ? 'bg-white' : 'bg-white shadow-md'}`}>
                     <div className='container mx-auto py-4 px-4 flex items-center justify-between' style={{ padding: '2em' }}>
                       {/* Logo */}
-                      <Link to={'/'}>
+                      <Link to= "/">
                         <img className='w-16 h-auto' src={Logo} alt="Logo" />
                       </Link>
                       {/* Search bar */}
@@ -63,8 +63,8 @@ class Header extends Component {
                       <nav className="hidden md:flex space-x-4">
                         <Link to={'/'} className="text-gray-800 hover:text-gray-600">Trang chủ</Link>
                         <Link to={'/about'} className="text-gray-800 hover:text-gray-600">Thông tin</Link>
-                        <Link to={'/services'} className="text-gray-800 hover:text-gray-600">Dịch vụ</Link>
-                        <Link to={'/contact'} className="text-gray-800 hover:text-gray-600">Liên hệ</Link>
+                        {/* <Link to={'/services'} className="text-gray-800 hover:text-gray-600">Dịch vụ</Link>
+                        <Link to={'/contact'} className="text-gray-800 hover:text-gray-600">Liên hệ</Link> */}
                       </nav>
                       <div className="flex items-center">
                         {/* Account */}

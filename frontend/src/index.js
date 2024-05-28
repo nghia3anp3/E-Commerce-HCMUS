@@ -14,7 +14,7 @@ import SubCommentProvider from './context/SubCommentContext';
 import AuthProvider from './context/AuthContext';
 import UserProvider from './context/UserContext';
 import OrderProvider from './context/OrderContext';
-import DetailProductContext from './context/DetailProductContext';
+import DetailProductProvider from './context/DetailProductContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <SidebarProvider>
@@ -22,7 +22,7 @@ root.render(
       <ProductProvider>
           <CommentProvider>
             <SubCommentProvider>
-            <DetailProductContext>
+            <DetailProductProvider>
               <OrderProvider>
                 <UserProvider>
                   <React.StrictMode>
@@ -32,7 +32,7 @@ root.render(
                   </React.StrictMode>
                 </UserProvider>
               </OrderProvider>
-              </DetailProductContext>
+              </DetailProductProvider>
             </SubCommentProvider>
           </CommentProvider>    
       </ProductProvider>

@@ -9,7 +9,7 @@ const DetailProductProvider = ({ children }) => {
   useEffect(() => {
     const fetchDetailProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/detailproducts/');
+        const response = await axios.get('https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts/');
         setDetailProducts(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -20,7 +20,7 @@ const DetailProductProvider = ({ children }) => {
   }, []);
   const deleteDetailProduct = async (detail_product_id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/detailproducts/${detail_product_id}`);
+      await axios.delete(`https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts/${detail_product_id}`);
       setDetailProducts(detailProducts.filter(detailProduct => detailProduct.detail_product_id !== detail_product_id));
     } catch (error) {
       console.error('Error deleting detail product:', error);
@@ -30,8 +30,8 @@ const DetailProductProvider = ({ children }) => {
 
   const addDetailProduct = async (newDetailProduct) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/detailproducts', newDetailProduct);
-      setDetailProducts([...detailProducts, response.data]);
+      const response = await axios.post('https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts', newDetailProduct);
+      setDetailProducts([...detailProducts, newDetailProduct]);
     } catch (error) {
       console.error('Error adding detail product:', error);
       alert("Error adding detail product");
@@ -40,9 +40,9 @@ const DetailProductProvider = ({ children }) => {
 
   const updateDetailProduct = async (detail_product_id, updatedDetailProduct) => {
     try {
-      const response = await axios.put(`http://localhost:8000/api/detailproducts/${detail_product_id}`, updatedDetailProduct);
+      const response = await axios.put(`https://m8mp78nj-8000.asse.devtunnels.ms/api/detailproducts/${detail_product_id}`, updatedDetailProduct);
       setDetailProducts(detailProducts.map(detailProduct => 
-        detailProduct.detail_product_id === detail_product_id ? response.data : detailProduct
+        detailProduct.detail_product_id === detail_product_id ? updatedDetailProduct : detailProduct
       ));
     } catch (error) {
       console.error('Error updating detail product:', error);

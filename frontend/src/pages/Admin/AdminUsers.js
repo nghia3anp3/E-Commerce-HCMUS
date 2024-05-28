@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import AdminSidebar from '../../components/Admin/SidebarAdmin';
+import AdminSidebar from '../../components/AdminSidebar';
 import { UserContext } from '../../context/UserContext';
 
 const AdminUsers = () => {
@@ -17,6 +17,9 @@ const AdminUsers = () => {
     address: '',
     phone: '',
   });
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   // Filter users based on the entered user ID
   const filteredUsers = users.filter(user => {
@@ -60,6 +63,12 @@ const AdminUsers = () => {
 
   const handleDelete = (user_id) => {
     deleteUser(user_id);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteConfirmation = (user) => {
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
   };
 
   const handleChange = (e) => {
@@ -102,7 +111,6 @@ const AdminUsers = () => {
                 <th className="py-3 px-6 text-left">Email</th>
                 <th className="py-3 px-6 text-left">Address</th>
                 <th className="py-3 px-6 text-left">Phone</th>
-                {/* <th className="py-3 px-6 text-left">Avatar</th> */}
                 <th className="py-3 px-6 text-left">Actions</th>
               </tr>
             </thead>
@@ -115,9 +123,6 @@ const AdminUsers = () => {
                   <td className="py-3 px-6 text-left">{user.email}</td>
                   <td className="py-3 px-6 text-left">{user.address}</td>
                   <td className="py-3 px-6 text-left">{user.phone}</td>
-                  {/* <td className="py-3 px-6 text-left">
-                    <img src={user.avatar} alt={user.account} className="h-10 w-10 rounded-full" />
-                  </td> */}
                   <td className="py-3 px-6 text-left">
                     <button
                       className="bg-blue-500 text-white px-3 py-1 rounded-md mr-2"
@@ -127,7 +132,7 @@ const AdminUsers = () => {
                     </button>
                     <button
                       className="bg-red-500 text-white px-3 py-1 rounded-md"
-                      onClick={() => handleDelete(user.user_id)}
+                      onClick={() => handleDeleteConfirmation(user)}
                     >
                       Delete
                     </button>
@@ -160,16 +165,6 @@ const AdminUsers = () => {
           <div className="bg-white p-4 rounded-lg">
             <h2 className="text-xl mb-4">Edit User</h2>
             <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className="block mb-1">Account</label>
-                <input
-                  type="text"
-                  name="account"
-                  value={formData.account}
-                  onChange={handleChange}
-                  className="border border-gray-300 px-4 py-2 rounded-md w-full"
-                />
-              </div>
               <div className="mb-4">
                 <label className="block mb-1">Role</label>
                 <select
@@ -212,16 +207,6 @@ const AdminUsers = () => {
                   className="border border-gray-300 px-4 py-2 rounded-md w-full"
                 />
               </div>
-              {/* <div className="mb-4">
-                <label className="block mb-1">Avatar</label>
-                <input
-                  type="text"
-                  name="avatar"
-                  value={formData.avatar}
-                  onChange={handleChange}
-                  className="border border-gray-300 px-4 py-2 rounded-md w-full"
-                />
-              </div> */}
               <div className="flex justify-end">
                 <button
                   type="button"
@@ -238,6 +223,29 @@ const AdminUsers = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-lg">
+            <h2 className="text-xl mb-4">Confirm</h2>
+            <p>Do you want to delete this user? {userToDelete?.account}?</p>
+            <div className="flex justify-end mt-4">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2"
+                onClick={() => setIsDeleteModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
+                onClick={() => handleDelete(userToDelete.user_id)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

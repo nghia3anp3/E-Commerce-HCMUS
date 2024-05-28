@@ -53,11 +53,12 @@ const SearchBar = () => {
     };
 
     return (
-        <div className="ml-6 md:ml-0 flex-grow max-w-md">
+        <div className="ml-6 md:ml-0 flex flex-row gap-5 max-w-md">
             <ReactSearchAutocomplete
                 placeholder=" Tìm kiếm..."
                 items={items}
                 onSelect={handleOnSelect}
+                className = "w-[300px]"
             />
             <button className="bg-stone-950 text-white py-2 px-4 rounded-lg" onClick={onClickSearch}>Tìm kiếm</button>
         </div>

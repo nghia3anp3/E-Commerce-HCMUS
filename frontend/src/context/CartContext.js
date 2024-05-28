@@ -82,6 +82,7 @@ const CartProvider = ({children}) => {
         removeFromCart(product_id)
     }
   }
+  
   return (
     <CartContext.Provider value={{cart, addToCart, removeFromCart, clearCart, increaseAmount, decreaseAmount, itemAmount, total}}>
       {children}

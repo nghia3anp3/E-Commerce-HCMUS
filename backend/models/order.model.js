@@ -7,7 +7,11 @@ const orderSchema = mongoose.Schema(
     date: Date,
     address: String,
     detail_product_ids: Array,
-    status: String
+    email: String,
+    phone: String,
+    status: String,
+    total: Number,
+    shipping_method: String,
   },
   {
     Timestamp: true,

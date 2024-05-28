@@ -32,7 +32,7 @@ class Sidebar extends Component {
                   <div className='flex w-full justify-between items-center'>
                     {/* total */}
                     <div className='uppercase text font-semibold'>
-                      <span>Tổng cộng: </span> {parseFloat(cartContext.total).toFixed(2)} VND
+                      <span>Tổng cộng: </span> {(cartContext.total.toLocaleString())} VND
                     </div>
                     {/* clear cart icon */}
                     <div onClick={cartContext.clearCart} className='cursor-pointer py-4 bg-red-500 text white w-12 h-12 flex justify-center items-center text-xl'>

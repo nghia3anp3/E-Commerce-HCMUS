@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AdminSidebar from '../../components/Admin/SidebarAdmin';
+import AdminSidebar from '../../components/AdminSidebar';
 import { FiUser, FiActivity, FiBell, FiPieChart, FiBarChart2, FiHeart } from 'react-icons/fi';
 
 const AdminDashboard = () => {
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <FiPieChart className="w-6 h-6" />
-                <p>Total Sales: $10,000</p>
+                <p>Total Sales: $10,000</p> 
               </div>
               {/* <button onClick={() => openModal('Sales Overview Data')} className="text-blue-500 hover:text-blue-700 focus:outline-none">
                 View Details

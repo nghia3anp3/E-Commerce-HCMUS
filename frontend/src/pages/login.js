@@ -71,7 +71,7 @@ class Login extends React.Component {
       let {account, password, showPassword, errors} = this.state
       const { isLoggedIn } = this.context;
       if (isLoggedIn) {
-        return <Navigate to="/" replace />
+        return <Navigate to= {"/"} replace />
       }
         return (
           <div className="pt-20 pb-12 lg-py-25 h-auto">

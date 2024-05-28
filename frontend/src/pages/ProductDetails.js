@@ -6,7 +6,7 @@ import { CartContext } from '../context/CartContext'
 //import product context
 import { ProductContext } from '../context/ProductContext'
 //Comment
-import Comments from '../components/Comment/Comments'
+import Comments from '../components/Comment'
 import { CommentContext } from '../context/CommentContext'
 import { SubCommentContext } from '../context/SubCommentContext'
 //Icon

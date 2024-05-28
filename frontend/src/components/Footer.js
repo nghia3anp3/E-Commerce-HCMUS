@@ -46,29 +46,29 @@ class Footer extends Component {
                 <img className='w-6 h-auto inline mr-2' src={Home} alt='Home'></img>
                 HCMUS
               </div>
-              <div className='flex items-center justify-center md:justify-start'>
+              {/* <div className='flex items-center justify-center md:justify-start'>
                 <img className='w-6 h-auto inline mr-2' src={Mail} alt='Mail'></img>
                 lehuuhung30023010@gmail.com
               </div>
               <div className='flex items-center justify-center md:justify-start'>
                 <img className='w-6 h-auto inline mr-2' src={Phone} alt='Phone'></img>
                 0355559236
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
         {/* Social network icons */}
         <div className="flex justify-center items-center border-t-2 border-neutral-200 py-6 dark:border-neutral-500 mx-6">
           <div className="flex flex-row">
-            <a className='w-6 h-6 mr-4' href="https://www.facebook.com/hung.lehuu.18400" target="blank">
+            {/* <a className='w-6 h-6 mr-4' href="https://www.facebook.com/hung.lehuu.18400" target="blank">
               <img src={Facebook} alt="Le Huu Hung-facebook" />
+            </a> */}
+            <a className='w-6 h-6 mr-4' href="https://github.com/nghia3anp3/E-Commerce-HCMUS" target="blank">
+              <img src={Github} alt="github" />
             </a>
-            <a className='w-6 h-6 mr-4' href="https://github.com/lhhmmiii" target="blank">
-              <img src={Github} alt="Le Huu Hung-github" />
-            </a>
-            <a className='w-6 h-6 mr-4' href="https://www.linkedin.com/in/h%C6%B0ng-l%C3%AA-h%E1%BB%AFu-b87883247/" target="blank">
+            {/* <a className='w-6 h-6 mr-4' href="https://www.linkedin.com/in/h%C6%B0ng-l%C3%AA-h%E1%BB%AFu-b87883247/" target="blank">
               <img src={Linkedin} alt="Le Huu Hung-linkedin" />
-            </a>
+            </a> */}
           </div>
         </div>
       </footer>

@@ -6,7 +6,6 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState('');
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -16,7 +15,7 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8000/api/account/', {
+      const response = await axios.get('https://m8mp78nj-8000.asse.devtunnels.ms/api/account/', {
         headers: {
           authorization: `Bearer ${token}`
         }
@@ -55,7 +54,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (account, password) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/login/", {
+      const response = await axios.post("https://m8mp78nj-8000.asse.devtunnels.ms/api/login/", {
         account,
         password,
       });
@@ -95,7 +94,7 @@ const AuthProvider = ({ children }) => {
       const role = 'customer'
       const user_id = parseInt(Date.now(), 12);
       console.log(user_id)
-      const response = await axios.post("http://localhost:8000/api/register/", {
+      const response = await axios.post("https://m8mp78nj-8000.asse.devtunnels.ms/api/register/", {
         user_id,  
         account,
         password,
