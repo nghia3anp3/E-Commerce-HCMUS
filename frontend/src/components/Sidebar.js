@@ -46,7 +46,8 @@ class Sidebar extends Component {
                       <FiTrash2 />
                     </div>
                   </div>
-                  <Link to='/checkout' className='bg-stone-950 flex p-6 justify-center items-center text-white w-full font-medium'>Thanh toán</Link>
+                  <Link to='/checkout' className='bg-stone-950 flex p-6 justify-center items-center text-white w-full font-medium' onClick={sidebarContext.handleClose}>Thanh toán</Link>
+                  
                 </div>
               </div>
             )}

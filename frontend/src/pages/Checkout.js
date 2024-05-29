@@ -15,7 +15,8 @@ class Checkout extends React.Component {
         phone: "",
         total: "",
         shipping_method: "Fast Ship",
-        ship_fee: 30000
+        ship_fee: 30000,
+        success: false,
     }
 
     onChangeEmail = (event) => {
@@ -92,12 +93,14 @@ class Checkout extends React.Component {
         console.log({...new_order, detail_product_ids: detail_product_ids})
         orderContext.updateOrder(new_order_id, {...new_order, detail_product_ids: detail_product_ids})
         userContext.updateUser(user.user_id, {...user, cart: []})
-        alert("Bạn đã đặt hàng thành công!")
-        window.location.replace("/");
+        this.setState({success: true})
+        setTimeout(() => {
+            window.location.replace("/");
+        }, 3000);
     }
 
     render (){
-        const {address, email, phone, total, shipping_method, ship_fee} = this.state
+        const {address, email, phone, shipping_method, ship_fee, success} = this.state
         // console.log(address, email, phone)
 
         return (
@@ -293,6 +296,15 @@ class Checkout extends React.Component {
                             </UserContext.Consumer>                         
                             </div>
                         </div>
+                        {success && (
+                            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                <div className="bg-white p-8 rounded shadow-lg text-center">
+                                    <h2 className="text-2xl font-semibold mb-4">Đặt hàng thành công!</h2>
+                                    <p className="text-gray-700">Cảm ơn bạn đã mua hàng. Bạn sẽ được chuyển hướng về trang chủ.</p>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                     )
                 )}
