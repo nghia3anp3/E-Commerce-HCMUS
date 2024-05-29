@@ -17,6 +17,7 @@ Router.get("/", (req, res) => {
 Router.post("/login", login);
 Router.post("/register", register);
 Router.get("/logout", logout);
+Router.post("/search");
 
 // Account Routes
 Router.get("/account", getAccount);
@@ -65,6 +66,8 @@ Router.post("/products", createInfo);
 Router.put("/products/:product_id", updateInfo);
 Router.delete("/products/:product_id", deleteInfo);
 
+// AI model 1 routes
+// Send Image to user
 
 
 
