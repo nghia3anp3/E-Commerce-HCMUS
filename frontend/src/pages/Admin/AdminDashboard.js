@@ -166,9 +166,6 @@ const AdminDashboard = () => {
                 <FiBarChart2 className="w-6 h-6" />
                 <p>Total Orders: {totalOrders}</p>
               </div>
-              <button onClick={() => openModal('Sales Overview Data', getBarChartData(detailProducts, orders))} className="text-blue-500 hover:text-blue-700 focus:outline-none">
-                View Details
-              </button>
             </div>
           </div>
           {/* Total Users */}
@@ -179,9 +176,6 @@ const AdminDashboard = () => {
                 <FiUser className="w-6 h-6" />
                 <p>Total Users: {totalUsers}</p>
               </div>
-              <button onClick={() => openModal('Sales Overview Data', getBarChartData(detailProducts, orders))} className="text-blue-500 hover:text-blue-700 focus:outline-none">
-                View Details
-              </button>
             </div>
           </div>
         </div>

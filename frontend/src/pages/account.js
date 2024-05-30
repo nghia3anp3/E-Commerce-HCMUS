@@ -29,24 +29,22 @@ class Account extends Component {
       });
     }
   };
+
   handleInputChange = (event) => {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   };
+
   handleSaveClick = (type) => {
     if (type === 'email') {
       console.log("New email:", this.state.editedEmail);
-      // const { updateUserEmail } = this.context;
-      // updateUserEmail(this.state.editedEmail);
       this.setState({
         isEditingEmail: false
       });
     } else if (type === 'phone') {
       console.log("New phone:", this.state.editedPhone);
-      // const { updateUserPhone } = this.context;
-      // updateUserPhone(this.state.editedPhone);
       this.setState({
         isEditingPhone: false
       });
@@ -55,7 +53,7 @@ class Account extends Component {
 
   render() {
     const { isLoggedIn, user } = this.context;
-    const { isEditingEmail, editedEmail } = this.state;
+    const { isEditingEmail, editedEmail, isEditingPhone, editedPhone } = this.state;
 
     return (
       <section className='py-20'>
@@ -106,16 +104,34 @@ class Account extends Component {
                 </div>
                 <div className="mb-4 flex flex-row gap-2">
                   <p className="text-gray-700"><strong>Phone:</strong></p>
-                                {/* <Link to="/changePhoneNumber" className="text-blue-300 underline">Change phone number</Link> */}
-                  {/* {isEditingPhone  ? (
+                  {isEditingPhone ? (
                     <>
-                    <p className="text-gray-700">{user.phone}</p>
+                      <input
+                        type="text"
+                        name="editedPhone"
+                        value={editedPhone}
+                        onChange={this.handleInputChange}
+                        className="border rounded px-2 py-1 mr-2"
+                        placeholder="Enter new gmail"
+                      />
+                      <button
+                        onClick={() => this.handleSaveClick('phone')}
+                        className="bg-blue-500 text-white px-2 py-1 rounded"
+                      >
+                        Submit
+                      </button>
                     </>
                   ) : (
                     <>
-                    <p className="text-gray-700">{user.phone}</p>
+                      <p className="text-gray-700">{user.phone}</p>
+                      <button
+                        onClick={() => this.handleEditClick('phone')}
+                        className="text-blue-300 underline"
+                      >
+                        Change Phone
+                      </button>
                     </>
-                  )}         */}
+                  )}
                 </div>
             </div>
             ) : (   
