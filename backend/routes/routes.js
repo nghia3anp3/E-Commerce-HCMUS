@@ -3,7 +3,7 @@ const Router = express.Router();
 const {login, register, logout} = require('../controllers/auth.controller.js');
 const {getAccount, forgetPassword, changePassword, update} = require('../controllers/account.controller.js');
 const {getAllusers,getUser,deleteUser,updateUser} = require('../controllers/user.controller.js');
-const {getComments, getCommentByProductID, createComment, updateComment, deleteComment} = require('../controllers/main_comment.controller.js');
+const {getComments, getCommentByProductID, createComment, updateComment, deleteComment,getReplyComments} = require('../controllers/main_comment.controller.js');
 const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, deleteSubcomment} = require('../controllers/sub_comment.controller.js');
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
 const {getAllDetailProduct, getDetailProductbyID, createDetailProduct, updateDetailProduct, deleteDetailProduct} = require('../controllers/detail_product.controller.js');
@@ -37,6 +37,7 @@ Router.get("/comments/:product_id", getCommentByProductID);
 Router.post("/comments", createComment);
 Router.put("/comments/:product_id", updateComment);
 Router.delete("/comments/:product_id", deleteComment);
+Router.post("/comments/AI_auto_comments", getReplyComments);
 
 // Sub_comment Routes
 Router.get("/subcomments", getSubComments);
