@@ -2,7 +2,7 @@ const express = require("express");
 const Router = express.Router();
 const {login, register, logout} = require('../controllers/auth.controller.js');
 const {getAccount, forgetPassword, changePassword, update} = require('../controllers/account.controller.js');
-const {getAllusers,getUser,deleteUser,updateUser} = require('../controllers/user.controller.js');
+const {getAllusers,getUser,deleteUser,updateUser, getAvatar, upload} = require('../controllers/user.controller.js');
 const {getComments, getCommentByProductID, createComment, updateComment, deleteComment,getReplyComments} = require('../controllers/main_comment.controller.js');
 const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, deleteSubcomment} = require('../controllers/sub_comment.controller.js');
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
@@ -28,8 +28,10 @@ Router.post("/account", update);
 // User Routes
 Router.get("/users/", getAllusers);
 Router.get("/users/:user_id", getUser);
-Router.put("/users/:user_id", updateUser);
+// Router.put("/users/:user_id", updateUser);
 Router.delete("/users/:user_id", deleteUser);
+Router.put('/users/:user_id', upload.single('avatar'), updateUser);
+Router.get('/avatar/:user_id', getAvatar);
 
 // Main_comment Routes
 Router.get("/comments", getComments);

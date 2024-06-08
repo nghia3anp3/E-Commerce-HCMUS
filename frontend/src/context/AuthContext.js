@@ -102,6 +102,8 @@ const AuthProvider = ({ children }) => {
         address,
         phone,
         role,
+        avatar: null,
+        avatarContentType: 'image/png',
       });
       if (response.status === 200) {
         const data = response.data;
@@ -123,6 +125,7 @@ const AuthProvider = ({ children }) => {
       return "An error occurred while registering";
     }
   };
+
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register }}>

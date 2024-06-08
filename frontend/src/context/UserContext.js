@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://e-commerce-hcmus-chi.vercel.app/api/users/');
+        const response = await axios.get('http://localhost:8000/api/users/');
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -25,7 +25,7 @@ const UserProvider = ({ children }) => {
   // Add user
   const addUser = async (newUser) => {
     try {
-      const response = await axios.post('https://e-commerce-hcmus-chi.vercel.app/api/users/', newUser);
+      const response = await axios.post('http://localhost:8000/api/users/', newUser);
       setUsers([...users, response.data]);
     } catch (error) {
       console.error('Error adding user:', error);
@@ -34,21 +34,26 @@ const UserProvider = ({ children }) => {
   };
 
   // Update user
-  const updateUser = async (user_id, updatedData) => {
+  const updateUser = async (user_id, updatedData, isFormData = false) => {
     try {
-      console.log(updatedData)
-      const response = await axios.put(`https://e-commerce-hcmus-chi.vercel.app/api/users/${user_id}`, updatedData);
-      setUsers(users.map(user => (user.user_id === user_id ? response.data : user)));
+      const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+      const response = await axios.put(`http://localhost:8000/api/users/${user_id}`, updatedData, config);
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        setUsers(users.map(user => (user.user_id === user_id ? updatedUser : user)));
+      } else {
+        console.error('Unexpected response:', response);
+        alert('Unexpected response');
+      }
     } catch (error) {
       console.error('Error updating user:', error);
       alert('Error updating user');
     }
   };
-
   // Delete user
   const deleteUser = async (user_id) => {
     try {
-      await axios.delete(`https://e-commerce-hcmus-chi.vercel.app/api/users/${user_id}`);
+      await axios.delete(`http://localhost:8000/api/users/${user_id}`);
       setUsers(users.filter(user => user.user_id !== user_id));
     } catch (error) {
       console.error('Error deleting user:', error);

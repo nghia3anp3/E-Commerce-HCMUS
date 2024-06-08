@@ -80,8 +80,12 @@ class AdminOrders extends Component {
                             <th className="px-4 py-2">Customer ID</th>
                             <th className="px-4 py-2">Date</th>
                             <th className="px-4 py-2">Address</th>
-                            <th className="px-4 py-2">Product IDs</th>
+                            <th className="px-4 py-2">Detail Product IDs</th>
+                            <th className="px-4 py-2">Email</th>
+                            <th className="px-4 py-2">Phone</th>
                             <th className="px-4 py-2">Status</th>
+                            <th className="px-4 py-2">Total</th>
+                            <th className="px-4 py-2">Shipping Method</th>
                             <th className="px-4 py-2">Actions</th>
                           </tr>
                         </thead>
@@ -97,7 +101,11 @@ class AdminOrders extends Component {
                                 <td className="px-4 py-2">{order.date}</td>
                                 <td className="px-4 py-2">{order.address}</td>
                                 <td className="px-4 py-2">{order.detail_product_ids.join(', ')}</td>
+                                <td className="px-4 py-2">{order.email}</td>
+                                <td className="px-4 py-2">{order.phone}</td>
                                 <td className="px-4 py-2">{order.status}</td>
+                                <td className="px-4 py-2">{order.total}</td>
+                                <td className="px-4 py-2">{order.shipping_method}</td>
                                 <td className="px-4 py-2">
                                   {order.status === 'Pending' && (
                                     <div>

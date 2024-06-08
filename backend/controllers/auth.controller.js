@@ -25,7 +25,7 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-    const { user_id, account, password, email,  address, phone, role} = req.body;
+    const { user_id, account, password, email,  address, phone, role, avatar, avatarContentType} = req.body;
     
     try {
       const existingUser = await User.findOne({ account: account });
@@ -43,6 +43,8 @@ const register = async (req, res) => {
           address: address,
           role: role,
           phone: phone,
+          avatar: avatar,
+          avatarContentType: avatarContentType,
           cart: [],
         };
         await User.create(newUser);

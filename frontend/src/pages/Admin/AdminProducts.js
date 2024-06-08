@@ -745,6 +745,7 @@ class AdminProducts extends Component {
               Add Product
             </button>
           </div>
+          <h2 className="text-xl font-bold mb-5">Product List</h2>
           <div className="mb-4">
             <input
               type="text"
@@ -756,7 +757,6 @@ class AdminProducts extends Component {
           </div>
           <div className="flex justify-center items-center overflow-x-auto">
             <div className="table-container" style={{ maxWidth: "1200px" }}>
-              <h2 className="text-xl font-bold mb-5">Product List</h2>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-800 text-white">

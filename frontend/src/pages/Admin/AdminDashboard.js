@@ -161,27 +161,21 @@ const AdminDashboard = () => {
           {/* Order Statistics */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-bold mb-4">Order Statistics</h2>
-            <div className="flex flex-col items-center justify-between">
+            <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <FiBarChart2 className="w-6 h-6" />
                 <p>Total Orders: {totalOrders}</p>
               </div>
-              <button onClick={() => openModal('Sales Overview Data', getBarChartData(detailProducts, orders))} className="text-blue-500 hover:text-blue-700 focus:outline-none">
-                View Details
-              </button>
             </div>
           </div>
           {/* Total Users */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-bold mb-4">Total Users</h2>
-            <div className="flex flex-col items-center justify-between">
+            <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <FiUser className="w-6 h-6" />
                 <p>Total Users: {totalUsers}</p>
               </div>
-              <button onClick={() => openModal('Sales Overview Data', getBarChartData(detailProducts, orders))} className="text-blue-500 hover:text-blue-700 focus:outline-none">
-                View Details
-              </button>
             </div>
           </div>
         </div>
