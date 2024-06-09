@@ -93,7 +93,7 @@ const AuthProvider = ({ children }) => {
     try {
       const role = 'customer'
       const user_id = parseInt(Date.now(), 12);
-      console.log(user_id)
+      // console.log(user_id)
       const response = await axios.post("http://localhost:8000/api/register/", {
         user_id,  
         account,
@@ -124,8 +124,24 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const reset_password = async (account, email) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/reset_password/", {
+        account,
+        email,
+      });
+      if (response.status === 200) {
+        console.log("Reset successful");
+        return response;
+      }
+    } catch (error) {
+      console.error("An error occurred while reseting:", error);
+      return "An error occurred while reseting";
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register, reset_password }}>
       {children}
     </AuthContext.Provider>
   );

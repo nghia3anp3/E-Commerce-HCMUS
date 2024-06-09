@@ -3,7 +3,6 @@ import {TERipple } from "tw-elements-react";
 import LoginLogo from '../img/login_logo2.webp'
 import { Link, Navigate} from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash  } from "react-icons/fa";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 class Login extends React.Component {
   static contextType = AuthContext;

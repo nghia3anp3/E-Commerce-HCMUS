@@ -9,6 +9,7 @@ import { ProductContext } from '../context/ProductContext'
 import Comments from '../components/Comment'
 import { CommentContext } from '../context/CommentContext'
 import { SubCommentContext } from '../context/SubCommentContext'
+
 //Icon
 import SpecificInfo from '../components/SpecificInfo'
 
@@ -76,8 +77,8 @@ const ProductDetails = () => {
         product_subcomments.push(item);
     }
   });
-  // console.log(1111111, product_comments)
-  // console.log(222222222, product_subcomments)
+  // Trích xuất type của proudct
+  let type = product.type
 
   return (
     <section className='pt-20 pb12 lg:py-25 h-auto'>
@@ -120,7 +121,7 @@ const ProductDetails = () => {
             <SpecificInfo specificProduct = {specificProduct1} />
             </div>
         </div>
-        <Comments product_comments = {product_comments} product_subcomments = {product_subcomments} product_id = {product_id}/>
+        <Comments product_comments = {product_comments} product_subcomments = {product_subcomments} product_id = {product_id} type ={type}/>
       </div>
     </section>
   )

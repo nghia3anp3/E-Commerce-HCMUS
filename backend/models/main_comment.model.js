@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Define main comment schema
 const MainCommentSchema = mongoose.Schema({
     product_id: Number,
-    type: Number,
+    type: String,
     comment_id: Number,
     title: String,
     content: String,

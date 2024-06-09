@@ -1,27 +1,30 @@
 import React from 'react';
 import Logo from '../img/logo.png';
-import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 class ForgetPassword extends React.Component {
-    state = {
-        account: '',
-        email: '',
-        errors: ""
+    static contextType = AuthContext;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            account: '',
+            email: '',
+            errors: '',
+            is_successfull: false
+        };
+        this.onClickButton = this.onClickButton.bind(this);
     }
 
     onChangeEmailInput = (event) => {
-        this.setState({
-            email: event.target.value
-        });
+        this.setState({ email: event.target.value });
     }
 
     onChangeAccountInput = (event) => {
-        this.setState({
-            account: event.target.value
-        });
+        this.setState({ account: event.target.value });
     }
 
-    onKeyDownSentEmail = (event) => {
+    onKeyDown = (event) => {
         if (event.key === 'Enter') {
             this.onClickButton(event);
         }
@@ -32,6 +35,7 @@ class ForgetPassword extends React.Component {
         const { account, email } = this.state;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let errors = "";
+        const { reset_password } = this.context;
 
         if (email.trim() === "") {
             errors = "Bạn chưa nhập email";
@@ -40,7 +44,6 @@ class ForgetPassword extends React.Component {
         } else if (account.trim() === "") {
             errors = "Bạn chưa nhập tài khoản";
         }
-
         if (errors) {
             this.setState({ errors });
             return;
@@ -49,27 +52,20 @@ class ForgetPassword extends React.Component {
         }
 
         try {
-            const response = await axios.post("http://localhost:8000/user/account/forgetPassword", { account, email });
-            if (response.status === 200) {
-                window.location.replace("/changePassword");
-            }
+            const response = await reset_password(account, email);
+            this.setState({ is_successfull: true });
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 403) {
-                    this.setState({ errors: "Email không khớp" });
-                } else if (error.response.status === 404 && error.response.data === "User not found") {
-                    this.setState({ errors: "Tài khoản không tồn tại" });
-                } else {
-                    this.setState({ errors: "An error occurred" });
-                }
-            } else {
-                this.setState({ errors: "An error occurred" });
-            }
+            console.log("Error: ", error);
         }
     }
 
+    closeSuccessMessage = () => {
+        this.setState({ is_successfull: false });
+        window.location.replace("/login");
+    }
+
     render() {
-        const { account, email, errors } = this.state;
+        let { account, email, errors, is_successfull } = this.state;
         return (
             <section className='bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col items-center justify-center'>
                 <div className='flex flex-col items-center mb-6'>
@@ -86,7 +82,7 @@ class ForgetPassword extends React.Component {
                                 placeholder='Tài khoản'
                                 value={account}
                                 onChange={this.onChangeAccountInput}
-                                onKeyDown={this.onKeyDownSentEmail}
+                                onKeyDown={this.onKeyDown}
                             />
                         </div>
                         <div>
@@ -97,7 +93,7 @@ class ForgetPassword extends React.Component {
                                 placeholder='Email'
                                 value={email}
                                 onChange={this.onChangeEmailInput}
-                                onKeyDown={this.onKeyDownSentEmail}
+                                onKeyDown={this.onKeyDown}
                             />
                         </div>
                         <button
@@ -113,6 +109,20 @@ class ForgetPassword extends React.Component {
                         )}
                     </form>
                 </div>
+                {is_successfull && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                            <h2 className="text-2xl font-bold mb-4">Thành công</h2>
+                            <p className="mb-4">Mật khẩu đã được đặt lại thành công. Vui lòng kiểm tra email của bạn.</p>
+                            <button
+                                className="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                onClick={this.closeSuccessMessage}
+                            >
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                )}
             </section>
         );
     }

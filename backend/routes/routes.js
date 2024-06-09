@@ -1,6 +1,6 @@
 const express = require("express");
 const Router = express.Router();
-const {login, register, logout} = require('../controllers/auth.controller.js');
+const {login, register, reset_password, logout} = require('../controllers/auth.controller.js');
 const {getAccount, forgetPassword, changePassword, update} = require('../controllers/account.controller.js');
 const {getAllusers,getUser,deleteUser,updateUser} = require('../controllers/user.controller.js');
 const {getComments, getCommentByProductID, createComment, updateComment, deleteComment} = require('../controllers/main_comment.controller.js');
@@ -17,6 +17,7 @@ Router.get("/", (req, res) => {
 Router.post("/login", login);
 Router.post("/register", register);
 Router.get("/logout", logout);
+Router.post("/reset_password", reset_password)
 Router.post("/search");
 
 // Account Routes
