@@ -102,7 +102,7 @@ const register = async (req, res) => {
                             <p>Trân trọng,</p>
                             <p><strong>TechAssist Mall</strong></p>
                             <hr style="border: 0; border-top: 1px solid #eee;">
-                            <p style="font-size: 0.9em; color: #999;">Nếu bạn gặp vấn đề hoặc có câu hỏi, vui lòng <a href="mailto:${email}" style="color: #007bff;">liên hệ với chúng tôi</a>.</p>
+                            <p style="font-size: 0.9em; color: #999;">Nếu bạn gặp vấn đề hoặc có câu hỏi, vui lòng <a href="mailto:${process.env.EMAIL_ADDRESS}" style="color: #007bff;">liên hệ với chúng tôi</a>.</p>
                         </div>
                     </div>
                   `,

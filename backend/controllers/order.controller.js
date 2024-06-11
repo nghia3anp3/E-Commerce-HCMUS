@@ -71,12 +71,15 @@ const updateOrder = async (req, res) => {
     const status = updatedorder[0].status
     const detail_product_ids = updatedorder[0].detail_product_ids
     let list_products_name = []
+    let list_products_price = []
     let list_detail_products = [];
     for (let i = 0; i < detail_product_ids.length; i++) {
         let detail_product_info = await Detail_products.findOne({ order_id: order_id, detail_product_id: detail_product_ids[i] });
         let product = await Product.findOne({product_id: detail_product_info.product_id})
         let name = product.name
+        let price = product.price.toLocaleString()
         list_detail_products.push(detail_product_info);
+        list_products_price.push(price)
         list_products_name.push(name)
     }
     res.status(200).json(updatedorder);
@@ -114,6 +117,7 @@ const updateOrder = async (req, res) => {
                 <tr>
                     <th>Mã sản phẩm</th>
                     <th>Tên sản phẩm</th>
+                    <th>Giá tiền sản phẩm</th>
                     <th>Số lượng</th>
                 </tr>
             </thead>
@@ -122,6 +126,7 @@ const updateOrder = async (req, res) => {
                     <tr>
                         <td>${product.product_id}</td>
                         <td>${list_products_name[index]}</td>
+                        <td>${list_products_price[index]} đồng</td>
                         <td>${product.quantity}</td>
                     </tr>
                 `).join('')}
@@ -129,7 +134,7 @@ const updateOrder = async (req, res) => {
         </table>
 
         <h2>Liên hệ</h2>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Email:</strong> ${process.env.EMAIL_ADDRESS}</p>
     </body>
     </html>
     `;
@@ -147,7 +152,7 @@ const updateOrder = async (req, res) => {
     <h2 style="color: #333;">Thông Báo Đơn Hàng</h2>
     <p>Xin chào,</p>
     <p>Chúng tôi xin trân trọng thông báo rằng đơn hàng với mã số ${updatedorder[0].order_id} của bạn đã được bị từ chối vì vi phạm quy định.</p>
-    <p>Nếu bạn có bất kỳ thắc mắc nào, vui lòng <a href="mailto:${email}" style="color: #007bff;">liên hệ với chúng tôi</a>.</p>
+    <p>Nếu bạn có bất kỳ thắc mắc nào, vui lòng <a href="mailto:${process.env.EMAIL_ADDRESS}" style="color: #007bff;">liên hệ với chúng tôi</a>.</p>
     </div>
     `
     let htmlContent
