@@ -1,5 +1,10 @@
 const Users = require("../models/user.model");
+const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
 
+// Multer setup
+const upload = multer({ dest: 'uploads/' });
 
 const getAllusers = async (req, res) => {
   try {
@@ -45,39 +50,34 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { user_id } = req.params;
-    const queryParams = req.query;
-    if (Object.keys(req.body).length === 0) {
-      const updateResult = await Users.updateMany(
-        { user_id: user_id },
-        { $set: req.body },
-        { new: true }
-      );
-      // Fetch updated users
-      const updatedUsers = await Users.find({ user_id: user_id });
-      return res.status(200).json(updatedUsers);
+    const updatedData = req.body;
+
+    if (req.file) {
+      const avatarData = fs.readFileSync(req.file.path);
+      const avatarContentType = req.file.mimetype;
+
+      updatedData.avatar = avatarData;
+      updatedData.avatarContentType = avatarContentType;
+
+      fs.unlinkSync(req.file.path);
     }
-    // Create filter with user_id
-    const filter = { user_id };
-    // Add query parameters to filter if they exist
-    Object.keys(queryParams).forEach(key => {
-      filter[key] = queryParams[key];
-    });
-    // Update multiple users based on filter
-    const updateResult = await Users.updateMany(
-      filter,
-      { $set: req.body },
+
+    const updatedUser = await Users.findOneAndUpdate(
+      { user_id },
+      { $set: updatedData },
       { new: true }
     );
-    if (updateResult.matchedCount === 0) {
-      return res.status(404).json({ message: "No users found matching the criteria" });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
-    // Fetch updated users
-    const updatedusers = await Users.find(filter);
-    res.status(200).json(updatedusers);
+
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 const deleteUser = async (req, res) => {
@@ -96,9 +96,27 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getAvatar = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const user = await Users.findOne({ user_id });
+
+    if (user && user.avatar && user.avatarContentType) {
+      res.set('Content-Type', user.avatarContentType);
+      res.send(user.avatar);
+    } else {
+      res.status(404).send('Avatar not found');
+    }
+  } catch (error) {
+    res.status(500).send('Error fetching avatar');
+  }
+};
+
 module.exports = {
     getUser,
     deleteUser,
     updateUser,
-    getAllusers
+    getAllusers,
+    getAvatar,
+    upload
 };

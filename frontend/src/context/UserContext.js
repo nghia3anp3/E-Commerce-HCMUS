@@ -34,17 +34,22 @@ const UserProvider = ({ children }) => {
   };
 
   // Update user
-  const updateUser = async (user_id, updatedData) => {
+  const updateUser = async (user_id, updatedData, isFormData = false) => {
     try {
-      console.log(updatedData)
-      const response = await axios.put(`http://localhost:8000/api/users/${user_id}`, updatedData);
-      setUsers(users.map(user => (user.user_id === user_id ? response.data : user)));
+      const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+      const response = await axios.put(`http://localhost:8000/api/users/${user_id}`, updatedData, config);
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        setUsers(users.map(user => (user.user_id === user_id ? updatedUser : user)));
+      } else {
+        console.error('Unexpected response:', response);
+        alert('Unexpected response');
+      }
     } catch (error) {
       console.error('Error updating user:', error);
       alert('Error updating user');
     }
   };
-
   // Delete user
   const deleteUser = async (user_id) => {
     try {

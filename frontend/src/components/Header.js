@@ -72,7 +72,7 @@ class Header extends Component {
                           {authContext.isLoggedIn ? (
                             // Nếu đã đăng nhập, hiển thị thông tin tài khoản và dropdown menu
                             <>
-                              <MdOutlineAccountCircle className='text-xl text-gray-800' />
+                              <img src={`http://localhost:8000/api/avatar/${authContext.user.user_id}`} alt="Avatar" className="w-8 h-8 rounded-full" />
                               <span className="ml-2">{authContext.user.account}</span>
                               {isDropdownOpen && (
                                 <div className="absolute top-12 right-0 w-48 mt-2 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
