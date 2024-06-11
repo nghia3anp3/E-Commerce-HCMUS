@@ -7,6 +7,8 @@ import { SidebarContext } from '../context/SidebarContext';
 import { CartContext } from '../context/CartContext';
 
 class Sidebar extends Component {
+
+
   render() {
     return (
       <SidebarContext.Consumer>
@@ -30,15 +32,14 @@ class Sidebar extends Component {
                   <div className='flex w-full justify-between items-center'>
                     {/* total */}
                     <div className='uppercase text font-semibold'>
-                      <span>Tổng cộng: </span> $ {parseFloat(cartContext.total).toFixed(2)}
+                      <span>Tổng cộng: </span> {parseFloat(cartContext.total).toFixed(2)} VND
                     </div>
                     {/* clear cart icon */}
                     <div onClick={cartContext.clearCart} className='cursor-pointer py-4 bg-red-500 text white w-12 h-12 flex justify-center items-center text-xl'>
                       <FiTrash2 />
                     </div>
                   </div>
-                  <Link to='/' className='bg-gray-200 flex p-4 justify-center items-center text-primary w-full font-medium'>Xem giỏ hàng</Link>
-                  <Link to='/' className='bg-stone-950 flex p-4 justify-center items-center text-white w-full font-medium'>Thanh toán</Link>
+                  <Link to='/checkout' className='bg-stone-950 flex p-6 justify-center items-center text-white w-full font-medium'>Thanh toán</Link>
                 </div>
               </div>
             )}

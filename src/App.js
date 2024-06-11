@@ -9,6 +9,7 @@ import Register from './pages/register';
 import Account from './pages/account';
 import ForgetPassword from './pages/ForgetPassword';
 import ChangePassword from './pages/ChangePassword';
+import CheckOut from './pages/Checkout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProducts from './pages/Admin/AdminProducts';
 import AdminOrders from './pages/Admin/AdminOrders';
@@ -72,6 +73,7 @@ const PublicRoutes = () => (
       <Route path = '/register' element = {<Register/>} />
       <Route path = '/forgetPassword' element = {<ForgetPassword/>} />
       <Route path = '/changePassword' element = {<ChangePassword/>} />
+      <Route path = '/checkout' element = {<CheckOut/>} />
     </Routes>
   </div>
   <Sidebar />
