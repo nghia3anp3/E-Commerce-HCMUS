@@ -29,34 +29,36 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-    const { user_id, account, password, email,  address, phone, role} = req.body;
-    
-    try {
-      const existingUser = await User.findOne({ account: account });
-      if (existingUser) {
-        res.json("exist");
-      } else
-      {
-        // Hash the password before storing it
-        const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
-        const newUser = {
-          user_id: user_id,
-          account: account,
-          password: hashedPassword,
-          email: email,
-          address: address,
-          role: role,
-          phone: phone,
-          cart: [],
-        };
-        await User.create(newUser);
-        res.json("notexist");
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json("fail");
+  const { user_id, account, password, email,  address, phone, role, avatar, avatarContentType} = req.body;
+  
+  try {
+    const existingUser = await User.findOne({ account: account });
+    if (existingUser) {
+      res.json("exist");
+    } else
+    {
+      // Hash the password before storing it
+      const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
+      const newUser = {
+        user_id: user_id,
+        account: account,
+        password: hashedPassword,
+        email: email,
+        address: address,
+        role: role,
+        phone: phone,
+        avatar: avatar,
+        avatarContentType: avatarContentType,
+        cart: [],
+      };
+      await User.create(newUser);
+      res.json("notexist");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("fail");
+  }
+};
 
   const reset_password = async (req, res) => {
     const { account, email } = req.body;

@@ -10,7 +10,8 @@ const userSchema = mongoose.Schema(
     email: String,
     address: String,
     phone: String,
-    avatar: String,
+    avatar: Buffer,
+    avatarContentType: Buffer,
     cart: Array,
   },
   {
@@ -20,4 +21,3 @@ const userSchema = mongoose.Schema(
 
 const Users = mongoose.model("users", userSchema);
 module.exports = Users;
-

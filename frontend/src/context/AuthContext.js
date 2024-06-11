@@ -93,7 +93,7 @@ const AuthProvider = ({ children }) => {
     try {
       const role = 'customer'
       const user_id = parseInt(Date.now(), 12);
-      // console.log(user_id)
+      console.log(user_id)
       const response = await axios.post("http://localhost:8000/api/register/", {
         user_id,  
         account,
@@ -102,6 +102,8 @@ const AuthProvider = ({ children }) => {
         address,
         phone,
         role,
+        avatar: null,
+        avatarContentType: 'image/png',
       });
       if (response.status === 200) {
         const data = response.data;
