@@ -114,10 +114,44 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const getReplyComments = async (req, res) => {
+  try {
+    const bodyParams = req.body;
+    console.log(bodyParams);//input
+    try {
+      if (bodyParams) {
+        const options = {
+          cwd : __dirname
+        };
+        var spawn = require("child_process").spawn;
+        //Write comments to txt
+        const fs = require('fs');
+        fs.writeFileSync("./handle_txt/input_comment.txt", bodyParams.comments);
+        //Send notify to python file
+        var active_noti = "1";  
+        var process = spawn('python',["../../AI_process/test.py", active_noti], options);        
+        process.stdout.on('data', function (chunk) {
+          const data = fs.readFileSync('./handle_txt/output_comment.txt', 'utf8');
+          console.log("New comment: ", data);
+          res.status(200).json("Succesfully");
+        });
+      } else {
+          res.status(403).json("Error");
+      }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json("An error occurred");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
     getComments,
     getCommentByProductID,
     createComment,
     updateComment,
-    deleteComment,
+  deleteComment,
+  getReplyComments,
 };
