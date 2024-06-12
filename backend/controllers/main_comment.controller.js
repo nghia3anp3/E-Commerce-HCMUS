@@ -129,11 +129,14 @@ const getReplyComments = async (req, res) => {
         fs.writeFileSync("./handle_txt/input_comment.txt", bodyParams.comments);
         //Send notify to python file
         var active_noti = "1";  
-        var process = spawn('python',["../../AI_process/test.py", active_noti], options);        
+        var process = spawn('python',["../../AI_process/sentiment_analysis.py", active_noti], options);        
         process.stdout.on('data', function (chunk) {
           const data = fs.readFileSync('./handle_txt/output_comment.txt', 'utf8');
           console.log("New comment: ", data);
-          res.status(200).json("Succesfully");
+          const replyComment = {
+            message:data
+          };
+          res.status(200).json(replyComment);
         });
       } else {
           res.status(403).json("Error");

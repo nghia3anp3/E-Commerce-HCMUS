@@ -13,6 +13,9 @@ venv/
 # production
 /build
 
+# AI model and test
+AI_process/saved_model/
+
 # misc
 .DS_Store
 .env.local
@@ -23,3 +26,4 @@ venv/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
