@@ -162,6 +162,6 @@ module.exports = {
     getCommentByProductID,
     createComment,
     updateComment,
-  deleteComment,
-  getReplyComments,
+    deleteComment,
+    getReplyComments,
 };

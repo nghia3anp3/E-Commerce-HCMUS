@@ -50,10 +50,14 @@ class ForgetPassword extends React.Component {
         } else {
             this.setState({ errors: "" });
         }
-
         try {
             const response = await reset_password(account, email);
-            this.setState({ is_successfull: true });
+            if (response) {
+                this.setState({ errors: response });
+            }
+            else{
+                this.setState({ is_successfull: true });
+            }
         } catch (error) {
             console.log("Error: ", error);
         }
