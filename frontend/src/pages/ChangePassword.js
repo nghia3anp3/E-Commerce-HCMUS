@@ -1,13 +1,14 @@
 import React from 'react';
 import Logo from '../img/logo.png';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 class ChangePassword extends React.Component {
     state = {
+        account: "",
         password: "",
         new_password: "",
         confirm_newpassword: "",
+        is_successfull: false,
         errors: "",
     }
 
@@ -44,23 +45,6 @@ class ChangePassword extends React.Component {
         }
 
         this.setState({ errors: "" });
-
-        try {
-            const response = await axios.post('http://localhost:8000/user/account/changePassword', {
-                account, password, new_password, confirm_newpassword
-            });
-            if (response.status === 200) {
-                window.location.replace("/");
-            }
-        } catch (error) {
-            if (error.response.status === 401) {
-                this.setState({ errors: "Tài khoản hoặc mật khẩu không đúng" });
-            } else if (error.response.status === 404) {
-                this.setState({ errors: "Tài khoản không tồn tại" });
-            } else {
-                this.setState({ errors: "Error occurred" });
-            }
-        }
     }
 
     render() {
