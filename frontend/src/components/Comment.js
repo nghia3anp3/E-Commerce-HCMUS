@@ -2,9 +2,8 @@ import React from 'react';
 import NoAvatar from '../img/Comment/No_avatar.png';
 import { AuthContext } from '../context/AuthContext';
 
-import axios from 'axios';
-
 class Comments extends React.Component {
+
   state = {
     replyText: '',
     showReplyBox: false,
@@ -12,6 +11,7 @@ class Comments extends React.Component {
     username: '',
     commentInput: '',
     current_comment_id: 0,
+    is_autoreply: false,
     comments: [],
   };
 
@@ -50,6 +50,7 @@ class Comments extends React.Component {
       commentInput: '',
     }));
 
+    // Create comment
     try {
       const response = await fetch('http://localhost:8000/api/comments', {
         method: 'POST',
@@ -59,28 +60,52 @@ class Comments extends React.Component {
         body: JSON.stringify({
           product_id: product_id,
           type: type,
-          comment_id: comment_id,  // Assuming comment_id is generated as current timestamp
-          title: "",  // Assuming title is not provided by the user
+          comment_id: comment_id,  
+          title: "",  
           content: commentInput,
-          thank_count: 0,  // Initializing thank_count to 0
+          thank_count: 0,  
           customer_id: userid,
-          rating: 0,  // Assuming rating is not provided by the user
+          rating: 0,  
           created_at: Date.now(),
           customer_name: username,
-          purchased_at: Date.now(),  // Assuming purchased_at is the current timestamp
-          sub_comments_id: 0  // Initializing sub_comments_id to 0
+          purchased_at: Date.now(), 
+          sub_comments_id: 0
         })
       });
 
       const result = await response.json();
-
+      
       if (response.ok) {
-        console.log('Comment posted successfully:', result);
+        console.log('Comment posted successfully:', result.content);
       } else {
         console.error('Error posting comment:', result.message);
         this.setState({ error: result.message });
       }
     } catch (error) {
+      console.error('Error posting comment:', error);
+    }
+
+    // AI auto reply
+    try {
+      const response1 = await fetch('http://localhost:8000/api/comments/AI_auto_comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          comments: commentInput
+        })
+      });
+      const result1 = await response1.json();
+      this.setState({
+        replyText: result1.message,
+        current_comment_id: comment_id,
+        is_autoreply: true
+      }, () => {
+        this.onClickSave();
+      });
+      this.setState({is_autoreply: false})
+    }catch (error) {
       console.error('Error posting comment:', error);
     }
   };
@@ -168,7 +193,7 @@ class Comments extends React.Component {
   
   onClickSave = async () => {
     
-    const {replyText, userid, username } = this.state;
+    const {replyText, userid, username, is_autoreply } = this.state;
     const {product_id, type } = this.props;
     let comment_id = this.state.current_comment_id
     this.addReply(comment_id, replyText);
@@ -179,6 +204,13 @@ class Comments extends React.Component {
       },
       replyText: '',
     }));
+    let fullname
+    if (is_autoreply){
+      fullname = "Admin"
+    }
+    else{
+      fullname = username
+    }
 
     try {
       const response = await fetch("http://localhost:8000/api/subcomments",{
@@ -193,7 +225,7 @@ class Comments extends React.Component {
           comment_id: comment_id,
           commentator: "customer",
           customer_id: userid,
-          fullname: username,
+          fullname: fullname,
           avatar_url: "",
           content: replyText,
           score: 0,
@@ -203,7 +235,6 @@ class Comments extends React.Component {
           is_reported: false,
         })
       })
-
       const result = await response.json();
 
       if (response.ok) {
