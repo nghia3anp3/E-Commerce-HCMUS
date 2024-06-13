@@ -159,13 +159,13 @@ const AuthProvider = ({ children }) => {
       });
       if (response.status === 200) {
         console.log("Change password successful");
-        return response;
+        return null;
       }
     } catch (error) {
       console.error("Error during login:", error);
       if (error.response && error.response.status === 401 && error.response.data === "Invalid credentials") {
-        console.log("mật khẩu cũ không đúng hoặc mật khẩu mới và xác nhận của nó không đúng.");
-        return "Sai email";
+        console.log("mật khẩu cũ không đúng.");
+        return "Mật khẩu cũ không đúng";
       } else if (error.response && error.response.status === 404 && error.response.data === "User not found") {
         console.log("User not found");
         return "Tài khoản không tồn tại";

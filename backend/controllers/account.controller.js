@@ -106,7 +106,7 @@ const changePassword = async (req, res) => {
     const user = await Account.findOne({ account: account });
     if (user) {
       const match = await bcrypt.compare(password, user.password);
-      if (match && new_password === confirm_newpassword) {
+      if (match) {
         const hashedPassword = await bcrypt.hash(new_password, 10);
         const user_id = { _id: user.id };
         const update = { $set: { password: hashedPassword } };
