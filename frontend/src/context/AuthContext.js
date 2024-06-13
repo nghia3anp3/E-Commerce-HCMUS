@@ -137,7 +137,7 @@ const AuthProvider = ({ children }) => {
         return null;
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during reset password:", error);
       if (error.response && error.response.status === 400 && error.response.data === "Email does not match account") {
         console.log("Email does not match account");
         return "Sai email";
@@ -162,7 +162,7 @@ const AuthProvider = ({ children }) => {
         return null;
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during change password:", error);
       if (error.response && error.response.status === 401 && error.response.data === "Invalid credentials") {
         console.log("mật khẩu cũ không đúng.");
         return "Mật khẩu cũ không đúng";
@@ -176,8 +176,50 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  const change_email = async (account, editedEmail) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api//account/changeEmail", {
+        account, editedEmail
+      });
+      if (response.status === 200) {
+        console.log("Change email successful");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error during change email:", error);
+      if (error.response && error.response.status === 404 && error.response.data === "User not found") {
+        console.log("User not found");
+        return "Tài khoản không tồn tại";
+      } else {
+        console.error("Error during change:", error);
+        return "Có lỗi xảy ra khi trong quá trình thay đổi email";
+      }
+    }
+  }
+
+  const change_phone = async (account, editedPhone) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/account/changePhone", {
+        account, editedPhone
+      });
+      if (response.status === 200) {
+        console.log("Change phone successful");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error during change phone:", error);
+      if (error.response && error.response.status === 404 && error.response.data === "User not found") {
+        console.log("User not found");
+        return "Tài khoản không tồn tại";
+      } else {
+        console.error("Error during change:", error);
+        return "Có lỗi xảy ra khi trong quá trình thay đổi số điện thoại";
+      }
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register, reset_password, change_password }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register, reset_password, change_password, change_phone, change_email }}>
       {children}
     </AuthContext.Provider>
   );

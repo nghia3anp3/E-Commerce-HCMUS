@@ -101,7 +101,7 @@ const forgetPassword = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-  const { account, password, new_password, confirm_newpassword } = req.body;
+  const { account, password, new_password} = req.body;
   try {
     const user = await Account.findOne({ account: account });
     if (user) {
@@ -123,6 +123,42 @@ const changePassword = async (req, res) => {
   }
 };
 
+const changeEmail = async (req, res) => {
+  const {account, editedEmail} = req.body
+  try {
+    const user = await Account.findOne({account: account})
+    if (user){
+      const user_id = { _id: user.id };
+      const update = {$set: {email: editedEmail}}
+      await Account.updateOne(user_id, update)
+      res.status(200).json("Change email uccessfully")
+    }
+    else{
+      res.status(404).json("User not found");
+    }
+  } catch (error) {
+    res.status(500).json("An error accurred")
+  }
+}
+
+const changePhone = async (req, res) => {
+  const {account, editedPhone} = req.body
+  try {
+    const user = await Account.findOne({account: account})
+    if (user){
+      const user_id = { _id: user.id };
+      const update = {$set: {phone: editedPhone}}
+      await Account.updateOne(user_id, update)
+      res.status(200).json("Change phone successfully")
+    }
+    else{
+      res.status(404).json("User not found");
+    }
+  } catch (error) {
+    res.status(500).json("An error accurred")
+  }
+}
+
 const update = async (req, res) => {
     try {
       const { user_id } = req.params;
@@ -142,6 +178,8 @@ module.exports = {
     getAccount,
     forgetPassword,
     changePassword,
+    changeEmail,
+    changePhone,
     update,
 };
 
