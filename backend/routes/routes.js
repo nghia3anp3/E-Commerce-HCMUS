@@ -8,7 +8,7 @@ const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, del
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
 const {getAllDetailProduct, getDetailProductbyID, createDetailProduct, updateDetailProduct, deleteDetailProduct} = require('../controllers/detail_product.controller.js');
 const {getAllInfo, getInfo, createInfo, updateInfo, deleteInfo,} = require('../controllers/product.controller.js');
-
+const {getContext_semantic_search} = require('../controllers/search.controller.js');
 Router.get("/", (req, res) => {
     res.send("Hello from Node API Server");
   });
@@ -40,7 +40,10 @@ Router.get("/comments/:product_id", getCommentByProductID);
 Router.post("/comments", createComment);
 Router.put("/comments/:product_id", updateComment);
 Router.delete("/comments/:product_id", deleteComment);
+
+//AI Main route
 Router.post("/comments/AI_auto_comments", getReplyComments);
+Router.post("/semantic_seach", getContext_semantic_search);
 
 // Sub_comment Routes
 Router.get("/subcomments", getSubComments);
