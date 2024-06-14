@@ -2,15 +2,16 @@ import React from 'react';
 import NoAvatar from '../img/Comment/No_avatar.png';
 import { AuthContext } from '../context/AuthContext';
 
-import axios from 'axios';
-
 class Comments extends React.Component {
+
   state = {
     replyText: '',
     showReplyBox: false,
     userid: '',
     username: '',
     commentInput: '',
+    current_comment_id: 0,
+    is_autoreply: false,
     comments: [],
   };
 
@@ -41,35 +42,74 @@ class Comments extends React.Component {
   handlePostComment = async () => {
     const { commentInput, userid, username } = this.state;
     const { product_id, type } = this.props;
-    const newComment = this.newComment(username, commentInput);
+    const comment_id = Date.now()
+    const newComment = this.newComment(comment_id, username, commentInput);
+
     this.setState(prevState => ({
       comments: [newComment, ...prevState.comments],
       commentInput: '',
     }));
+
+    // Create comment
     try {
-      const response = await axios.post('http://localhost:8000/api/comments', {
-        product_id: product_id,
-        type: type,
-        comment_id: Date.now(),
-        title: "",
-        content: commentInput,
-        thank_count: 0,
-        rating: 0,
-        customer_id: userid,
-        customer_name: username,
-        created_at: Date.now(),
-        sub_comments_id: null
-      });  
-      console.log(response.data);
+      const response = await fetch('http://localhost:8000/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          product_id: product_id,
+          type: type,
+          comment_id: comment_id,  
+          title: "",  
+          content: commentInput,
+          thank_count: 0,  
+          customer_id: userid,
+          rating: 0,  
+          created_at: Date.now(),
+          customer_name: username,
+          purchased_at: Date.now(), 
+          sub_comments_id: 0
+        })
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        console.log('Comment posted successfully:', result.content);
+      } else {
+        console.error('Error posting comment:', result.message);
+        this.setState({ error: result.message });
+      }
     } catch (error) {
+      console.error('Error posting comment:', error);
+    }
+
+    // AI auto reply
+    try {
+      const response1 = await fetch('http://localhost:8000/api/comments/AI_auto_comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          comments: commentInput
+        })
+      });
+      const result1 = await response1.json();
+      this.setState({
+        replyText: result1.message,
+        current_comment_id: comment_id,
+        is_autoreply: true
+      }, () => {
+        this.onClickSave();
+      });
+      this.setState({is_autoreply: false})
+    }catch (error) {
       console.error('Error posting comment:', error);
     }
   };
 
-  
-  onClickPostComment = () => {
-    this.handlePostComment();
-  };
 
   onChangeComment = (event) => {
     this.setState({
@@ -77,31 +117,35 @@ class Comments extends React.Component {
     });
   };
 
-  newComment = (username, content) => {
+  newComment = (comment_id, username, content) => {
     return {
+      comment_id: comment_id,
       customer_name: username, 
       content: content,
       subcomment: [],
     };
   };
 
-  insertComment = (comments, parentId, text, username) => {
+  insertComment = (comments, parentId, comment_id, username, text) => {
+  
     for (let i = 0; i < comments.length; i++) {
       let comment = comments[i];
-      if (comment.customer_name === parentId) {
-        comment.subcomment.unshift(this.newComment(username, text));
+      if (comment.comment_id === parentId) {
+        comment.subcomment.unshift(this.newComment(comment_id, username, text));
       }
     }
 
     for (let i = 0; i < comments.length; i++) {
       let comment = comments[i];
-      this.insertComment(comment.subcomment, parentId, text, username);
+      this.insertComment(comment.subcomment, parentId, comment_id, username, text);
     }
   };
 
-  addReply = (commentId, replyText) => {
+
+  addReply = (parentId, replyText) => {
     let commentsWithNewReply = [...this.state.comments];
-    this.insertComment(commentsWithNewReply, commentId, replyText, this.state.username);
+    const comment_id = Date.now()
+    this.insertComment(commentsWithNewReply, parentId, comment_id, this.state.username, replyText);
     this.setState({
       comments: commentsWithNewReply,
     });
@@ -113,12 +157,12 @@ class Comments extends React.Component {
 
     for (let i = 0; i < product_subcomments.length; i++) {
       let subcomment = product_subcomments[i];
-      oldSubComments.push(this.newComment(subcomment.fullname, subcomment.content));
+      oldSubComments.push(this.newComment(subcomment.sub_comment_id, subcomment.fullname, subcomment.content));
     }
 
     for (let i = 0; i < product_comments.length; i++) {
       let comment = product_comments[i];
-      let _comment = this.newComment(comment.customer_name, comment.content);
+      let _comment = this.newComment(comment.comment_id, comment.customer_name, comment.content);
       for (let j = 0; j < product_subcomments.length; j++) {
         let subcomment = product_subcomments[j];
         if (subcomment.comment_id === comment.comment_id) {
@@ -136,68 +180,87 @@ class Comments extends React.Component {
     });
   };
 
-  onClickReply = (commentId) => {
+  onClickReply = (comment_id) => {
     this.setState((prevState) => ({
       showReplyBox: {
         ...prevState.showReplyBox,
-        [commentId]: !prevState.showReplyBox[commentId],
+        [comment_id]: !prevState.showReplyBox[comment_id],
       },
     }));
+    this.setState({current_comment_id: comment_id})
   };
 
-  // handleSaveSubComment = async () => {
-  //   const {replyText, userid, username } = this.state;
-  //   const {product_id, type } = this.props;
-  //   console.log(replyText, userid, username)
-  //   try {
-  //     const response = await axios.post('localhost:8000/api/subcomments', {
-  //       product_id: product_id,
-  //       type: type,
-  //       sub_comment_id: Date.now(),
-  //       comment_id: 0,
-  //       commentator: "customer",
-  //       customer_id: userid,
-  //       fullname: username,
-  //       avatar_url: "",
-  //       content: replyText,
-  //       score: 0,
-  //       created_at: Date.now(),
-  //       badge: "",
-  //       status: 2,
-  //       is_reported: false,
-  //     });
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error('Error posting sub comment: ', error)
-  //   }
-  // }
   
-  onClickSave = (commentId, replyText) => {
-
-    // this.handleSaveSubComment(replyText);
+  onClickSave = async () => {
     
-    this.addReply(commentId, replyText);
+    const {replyText, userid, username, is_autoreply } = this.state;
+    const {product_id, type } = this.props;
+    let comment_id = this.state.current_comment_id
+    this.addReply(comment_id, replyText);
     this.setState((prevState) => ({
       showReplyBox: {
         ...prevState.showReplyBox,
-        [commentId]: false,
+        [comment_id]: false,
       },
       replyText: '',
     }));
+    let fullname
+    if (is_autoreply){
+      fullname = "Admin"
+    }
+    else{
+      fullname = username
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/api/subcomments",{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          product_id: product_id,
+          type: type,
+          sub_comment_id: Date.now(),
+          comment_id: comment_id,
+          commentator: "customer",
+          customer_id: userid,
+          fullname: fullname,
+          avatar_url: "",
+          content: replyText,
+          score: 0,
+          created_at: Date.now(),
+          badge: "",
+          status: 2,
+          is_reported: false,
+        })
+      })
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log('Subcomment posted successfully:', result);
+      } else {
+        console.error('Error posting subcomment:', result.message);
+      }
+
+    } catch (error) {
+      console.error('Error posting sub comment: ', error)
+    }
   };
 
-  onClickCancel = (commentId) => {
+  onClickCancel = (comment_id) => {
     this.setState((prevState) => ({
       showReplyBox: {
         ...prevState.showReplyBox,
-        [commentId]: false,
+        [comment_id]: false,
       },
       replyText: '',
     }));
+    this.setState({current_comment_id: 0})
   };
 
   renderComment = (comment) => {
-    const { customer_name, avatar, content, subcomment } = comment;
+    const { comment_id, customer_name, avatar, content, subcomment } = comment;
     const { replyText, showReplyBox } = this.state;
 
     return (
@@ -214,15 +277,15 @@ class Comments extends React.Component {
               <div className="text-white">{content}</div>
             </div>
           </div>
-          {!showReplyBox[customer_name] && (
+          {!showReplyBox[comment_id] && (
             <div>
               <button className="p-2 text-blue-500 hover:underline">Thích</button>
-              <button className="p-2 text-blue-500 hover:underline" onClick={() => this.onClickReply(customer_name)}>
+              <button className="p-2 text-blue-500 hover:underline" onClick={() => this.onClickReply(comment_id)}>
                 Phản hồi
               </button>
             </div>
           )}
-          {showReplyBox[customer_name] && (
+          {showReplyBox[comment_id] && (
             <div className="mt-4">
               <input
                 className="bg-gray-100 rounded border border-gray-400 leading-normal h-20 py-2 px-3 mb-4 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
@@ -234,13 +297,13 @@ class Comments extends React.Component {
               <div className="flex flex-row justify-start">
                 <button
                   className="p-2 mr-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
-                  onClick={() => this.onClickSave(customer_name, replyText)}
+                  onClick={this.onClickSave}
                 >
                   Lưu
                 </button>
                 <button
                   className="p-2 bg-gray-300 text-gray-600 rounded hover:bg-gray-400 transition duration-300 ease-in-out"
-                  onClick={() => this.onClickCancel(customer_name)}
+                  onClick={() => this.onClickCancel(comment_id)}
                 >
                   Hủy
                 </button>
@@ -283,7 +346,7 @@ class Comments extends React.Component {
                     type="submit"
                     className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
                     value="Bình luận"
-                    onClick={this.onClickPostComment}
+                    onClick={this.handlePostComment}
                   />
                 </div>
               </div>

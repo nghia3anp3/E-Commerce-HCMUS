@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { UserContext } from '../context/UserContext';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
 
 class Account extends Component {
   static contextType = AuthContext;

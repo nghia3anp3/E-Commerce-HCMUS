@@ -117,7 +117,7 @@ const deleteComment = async (req, res) => {
 const getReplyComments = async (req, res) => {
   try {
     const bodyParams = req.body;
-    console.log(bodyParams);//input
+    // console.log(bodyParams);
     try {
       if (bodyParams) {
         const options = {
@@ -129,11 +129,21 @@ const getReplyComments = async (req, res) => {
         fs.writeFileSync("./handle_txt/input_comment.txt", bodyParams.comments);
         //Send notify to python file
         var active_noti = "1";  
-        var process = spawn('python',["../../AI_process/test.py", active_noti], options);        
+        var process = spawn('python',["../../AI_process/sentiment_analysis.py", active_noti], options);        
         process.stdout.on('data', function (chunk) {
           const data = fs.readFileSync('./handle_txt/output_comment.txt', 'utf8');
-          console.log("New comment: ", data);
-          res.status(200).json("Succesfully");
+          // console.log("New comment: ", data);
+          // Split the content by lines
+          const lines = data.split('\n');
+          // Get the first line (Positive/Negative)
+          const sentiment = lines[0].trim();
+          // Get the rest of the content as the comment
+          const comment = lines.slice(1).join('\n').trim();
+          const replyComment = {
+            sentiment: sentiment,
+            message:comment
+          };
+          res.status(200).json(replyComment);
         });
       } else {
           res.status(403).json("Error");
@@ -152,6 +162,6 @@ module.exports = {
     getCommentByProductID,
     createComment,
     updateComment,
-  deleteComment,
-  getReplyComments,
+    deleteComment,
+    getReplyComments,
 };

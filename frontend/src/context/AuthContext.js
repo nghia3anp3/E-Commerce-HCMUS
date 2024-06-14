@@ -128,22 +128,98 @@ const AuthProvider = ({ children }) => {
 
   const reset_password = async (account, email) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/reset_password/", {
+      const response = await axios.post("http://localhost:8000/api/account/forgetPassword/", {
         account,
         email,
       });
       if (response.status === 200) {
         console.log("Reset successful");
-        return response;
+        return null;
       }
     } catch (error) {
-      console.error("An error occurred while reseting:", error);
-      return "An error occurred while reseting";
+      console.error("Error during reset password:", error);
+      if (error.response && error.response.status === 400 && error.response.data === "Email does not match account") {
+        console.log("Email does not match account");
+        return "Sai email";
+      } else if (error.response && error.response.status === 404 && error.response.data === "User not found") {
+        console.log("User not found");
+        return "Tài khoản không tồn tại";
+      } else {
+        console.error("Error during reset:", error);
+        // Handle other errors (e.g., network issues)
+        return "Có lỗi xảy ra khi trong quá trình reset mật khẩu";
+      }
+    }
+  }
+
+  const change_password = async (account, password, new_password, confirm_newpassword) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/account/changePassword", {
+        account, password, new_password, confirm_newpassword
+      });
+      if (response.status === 200) {
+        console.log("Change password successful");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error during change password:", error);
+      if (error.response && error.response.status === 401 && error.response.data === "Invalid credentials") {
+        console.log("mật khẩu cũ không đúng.");
+        return "Mật khẩu cũ không đúng";
+      } else if (error.response && error.response.status === 404 && error.response.data === "User not found") {
+        console.log("User not found");
+        return "Tài khoản không tồn tại";
+      } else {
+        console.error("Error during change:", error);
+        return "Có lỗi xảy ra khi trong quá trình thay đổi mật khẩu";
+      }
+    }
+  }
+
+  const change_email = async (account, editedEmail) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api//account/changeEmail", {
+        account, editedEmail
+      });
+      if (response.status === 200) {
+        console.log("Change email successful");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error during change email:", error);
+      if (error.response && error.response.status === 404 && error.response.data === "User not found") {
+        console.log("User not found");
+        return "Tài khoản không tồn tại";
+      } else {
+        console.error("Error during change:", error);
+        return "Có lỗi xảy ra khi trong quá trình thay đổi email";
+      }
+    }
+  }
+
+  const change_phone = async (account, editedPhone) => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/account/changePhone", {
+        account, editedPhone
+      });
+      if (response.status === 200) {
+        console.log("Change phone successful");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error during change phone:", error);
+      if (error.response && error.response.status === 404 && error.response.data === "User not found") {
+        console.log("User not found");
+        return "Tài khoản không tồn tại";
+      } else {
+        console.error("Error during change:", error);
+        return "Có lỗi xảy ra khi trong quá trình thay đổi số điện thoại";
+      }
     }
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register, reset_password }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, register, reset_password, change_password, change_phone, change_email }}>
       {children}
     </AuthContext.Provider>
   );
