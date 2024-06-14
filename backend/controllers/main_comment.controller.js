@@ -132,7 +132,7 @@ const getReplyComments = async (req, res) => {
         var process = spawn('python',["../../AI_process/sentiment_analysis.py", active_noti], options);        
         process.stdout.on('data', function (chunk) {
           const data = fs.readFileSync('./handle_txt/output_comment.txt', 'utf8');
-          // console.log("New comment: ", data);
+          console.log("New comment: ", data);
           // Split the content by lines
           const lines = data.split('\n');
           // Get the first line (Positive/Negative)

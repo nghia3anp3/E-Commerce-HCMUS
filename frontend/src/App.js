@@ -9,6 +9,7 @@ import Register from './pages/register';
 import Account from './pages/account';
 import ForgetPassword from './pages/ForgetPassword';
 import ChangePassword from './pages/ChangePassword';
+import SearchPage from './pages/SearchPage';
 import CheckOut from './pages/Checkout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminProducts from './pages/Admin/AdminProducts';
@@ -61,6 +62,7 @@ const PublicRoutes = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/:page' element={<Home />} />
+          <Route path='/search' element={<SearchPage/>} />
           <Route path='/account' element={<Account />} />
           <Route path='/product/:product_id' element={<ProductDetails />} />
           <Route path='/:p_type/:type/:page' element={<ProductType />} />
