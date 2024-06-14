@@ -37,12 +37,12 @@ def process_search(search_components):
             "limit": 5,
             }
             },
-            {"$project": {"_id": 1, "score": {"$meta": "vectorSearchScore"}}},
+            {"$project": {"_id": 1, "product_id": 1, "score": {"$meta": "vectorSearchScore"}}},
         ]
     )
     return list(cursor)
-input_path = "../backend/handle_txt/input_comment.txt"
-output_path = "../backend/handle_txt/output_comment.txt"
+input_path = "../backend/handle_txt/input_query.txt"
+output_path = "../backend/handle_txt/output_query.txt"
 
 with open(input_path, "r", encoding="utf-8") as file:
     input_data = file.read()

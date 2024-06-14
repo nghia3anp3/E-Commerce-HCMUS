@@ -17,7 +17,9 @@ const getContext_semantic_search = async (req, res) => {
           const currentDirectory = __dirname;
           console.log('Current Directory:', currentDirectory);  
           var process = spawn('python',["../../AI_process/semantic_search.py", active_noti], options);    
-              
+          process.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+        });
           process.on('exit', function (code) {
             const data = fs.readFileSync('./handle_txt/output_query.txt', 'utf8');
             console.log("New data: ", data);
@@ -28,7 +30,8 @@ const getContext_semantic_search = async (req, res) => {
                   return null;
               }
               }).filter(item => item !== null);
-              const ids = parsedData.map(item => ({ _id: item._id }));
+              console.log(parsedData)
+              const ids = parsedData.map(item => ({ product_id: item.product_id }));
               console.log(ids)
               res.status(200).json(ids);
               });

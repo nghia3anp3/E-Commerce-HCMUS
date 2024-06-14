@@ -45,10 +45,10 @@ def process_search(search_components):
             "path": "embedding",
             "queryVector": embeddings,
             "numCandidates": total_documents,
-            "limit": 5,
+            "limit": 10,
             }
             },
-            {"$project": {"_id": 1, "score": {"$meta": "vectorSearchScore"}}},
+            {"$project": {"_id": 1, "product_id": 1, "score": {"$meta": "vectorSearchScore"}}},
         ]
     )
     return list(cursor)

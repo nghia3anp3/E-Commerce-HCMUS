@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-Samsung
-=======
 Chiếc điện thoại này rất tốt.
->>>>>>> 2f358107e2317972562aa2361e664c125d6b4225
-=======
-Chiếc điện thoại này rất tốt.
->>>>>>> 2f358107e2317972562aa2361e664c125d6b4225
