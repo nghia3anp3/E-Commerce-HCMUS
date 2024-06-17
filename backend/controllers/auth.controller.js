@@ -6,14 +6,30 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 const login = async (req, res) => {
-  // Handle POST requests for login
-  const { account, password } = req.body;
+  const { accountOrEmail, password } = req.body;
+
+  if (!accountOrEmail || !password) {
+    return res.status(400).json("Account or email and password are required");
+  }
+
   try {
-    const user = await User.findOne({ account: account });
+    // Determine if the input is an email
+    const isEmail = accountOrEmail.includes('@');
+    // Find the user by email or account
+    const user = isEmail
+      ? await User.findOne({ email: accountOrEmail })
+      : await User.findOne({ account: accountOrEmail });
+
     if (user) {
+      // Compare the provided password with the stored hashed password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {
-        const token = jwt.sign({ userId: user._id }, '6f1c30a32c702daaca573d4cc8c6959a64ee27c189b87469e5da84764116c22caf1f13fc308cf2f354d135fbb653eeba2c17a8f26ac1abb9b90cb1f100387c432d6e7c2f35057634fa842d45c967ad3674ef923e2d9bce5b82d64d9cae5aea40587b727d64381d38594c181e206e8546b8066306f765eb0011eeab5d339d2a92eda713bb8c9d326d219a8e704db2200bbc3eff222087c8635994cfe144f4245d450fcd968a8a839948bbb4eaab54a66e1ceeff5296e76a5bbb5ddf7687dfe37f', { expiresIn: '1h' });
+        // Generate a token and send it to the client
+        const token = jwt.sign(
+          { userId: user._id },
+          '6f1c30a32c702daaca573d4cc8c6959a64ee27c189b87469e5da84764116c22caf1f13fc308cf2f354d135fbb653eeba2c17a8f26ac1abb9b90cb1f100387c432d6e7c2f35057634fa842d45c967ad3674ef923e2d9bce5b82d64d9cae5aea40587b727d64381d38594c181e206e8546b8066306f765eb0011eeab5d339d2a92eda713bb8c9d326d219a8e704db2200bbc3eff222087c8635994cfe144f4245d450fcd968a8a839948bbb4eaab54a66e1ceeff5296e76a5bbb5ddf7687dfe37f',
+          { expiresIn: '1h' }
+        );
         res.status(200).json({ token });
       } else {
         res.status(401).json("Invalid credentials");
@@ -28,14 +44,17 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { user_id, account, password, email,  address, phone, role, avatar, avatarContentType} = req.body;
-  
+  const { user_id, account, password, email, address, phone, role, avatar, avatarContentType } = req.body;
+
   try {
-    const existingUser = await User.findOne({ account: account });
-    if (existingUser) {
-      res.json("exist");
-    } else
-    {
+    const existingAccount = await User.findOne({ account: account });
+    const existingEmail = await User.findOne({ email: email });
+
+    if (existingAccount) {
+      res.json("existedaccount");
+    } else if (existingEmail) {
+      res.json("existedemail");
+    } else {
       // Hash the password before storing it
       const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
       const newUser = {
