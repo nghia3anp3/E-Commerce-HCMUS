@@ -52,10 +52,10 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (account, password) => {
+  const login = async (accountOrEmail, password) => {
     try {
       const response = await axios.post("http://localhost:8000/api/login/", {
-        account,
+        accountOrEmail,
         password,
       });
       if (response.status === 200) {
@@ -71,10 +71,10 @@ const AuthProvider = ({ children }) => {
       console.error("Error during login:", error);
       if (error.response && error.response.status === 401 && error.response.data === "Invalid credentials") {
         console.log("Unauthorized: Incorrect credentials");
-        return "Tài khoản hoặc mất khẩu không đúng";
+        return "Tài khoản hoặc mật khẩu không đúng";
       } else if (error.response && error.response.status === 404 && error.response.data === "User not found") {
         console.log("User not found");
-        return "Tài khoản hoặc mất khẩu không đúng";
+        return "Tài khoản hoặc mật khẩu không đúng";
       } else {
         console.error("Error during login:", error);
         // Handle other errors (e.g., network issues)
@@ -107,8 +107,11 @@ const AuthProvider = ({ children }) => {
       });
       if (response.status === 200) {
         const data = response.data;
-        if (data === "exist") {
+        if (data === "existedaccount") {
           return "Tài khoản đã tồn tại";
+        }
+        else if (data === "existedemail") {
+          return "Email này đã được đăng ký";
         } else if (data === "notexist") {
           alert("Đăng ký thành công")
           window.location.replace("/login");
@@ -116,7 +119,8 @@ const AuthProvider = ({ children }) => {
         } else {
           return "Unexpected response from server";
         }
-      } else {
+      } 
+      else {
         console.log("Unexpected response status: " + response.status);
         return "Unexpected response from server";
       }
