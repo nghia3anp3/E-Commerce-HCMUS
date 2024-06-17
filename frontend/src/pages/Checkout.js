@@ -8,6 +8,7 @@ import { OrderContext } from '../context/OrderContext';
 import { AuthContext } from '../context/AuthContext';
 import { DetailProductContext } from '../context/DetailProductContext';
 import { UserContext } from '../context/UserContext';
+import { ProductContext } from '../context/ProductContext';
 class Checkout extends React.Component {
     state = {
         address: "", 
@@ -59,7 +60,7 @@ class Checkout extends React.Component {
         window.scrollTo(0, 0);
     }
 
-    onClickSubmit = (user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext ) => {
+    onClickSubmit = (user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext, productContext ) => {
         const new_order_id = orderContext.orders.length
         const new_order = {
             order_id: new_order_id,
@@ -87,6 +88,9 @@ class Checkout extends React.Component {
             }
             detailProductContext.addDetailProduct(json_product_i)
             detail_product_ids.push(new_json_product_i_id)
+            let product = productContext.findProductById(item.product_id)
+            let new_stock_item_qty = product.stock_item_qty - item.amount
+            productContext.updateProduct(item.product_id,{...productContext.findProductById(item.product_id),  stock_item_qty: new_stock_item_qty})
         })
         console.log(new_order_id)
         // new_order.detail_product_ids = detail_product_ids
@@ -258,42 +262,48 @@ class Checkout extends React.Component {
                             <UserContext.Consumer>
                                 {(userContext) => {
                                     return (
-                                    <AuthContext.Consumer>
-                                        {(authContext) => {
-                                            return (
-                                                <CartContext.Consumer>
-                                                    {(cartContext) => {
-                                                        return (
-                                                            <OrderContext.Consumer>
-                                                                {(orderContext) => {
-                                                                    return (
-                                                                        <DetailProductContext.Consumer>
-                                                                            {(detailProductContext) => {
-                                                                                const user = authContext.user
-                                                                                const total = cartContext.total + ship_fee;  // Ensure `ship_fee` is defined and accessible
+                                        <AuthContext.Consumer>
+                                            {(authContext) => {
+                                                return (
+                                                    <CartContext.Consumer>
+                                                        {(cartContext) => {
+                                                            return (
+                                                                <OrderContext.Consumer>
+                                                                    {(orderContext) => {
+                                                                        return (
+                                                                            <DetailProductContext.Consumer>
+                                                                                {(detailProductContext) => {
+                                                                                    return (
+                                                                                        <ProductContext.Consumer>
+                                                                                            {(productContext) => {
+                                                                                                const user = authContext.user;
+                                                                                                const total = cartContext.total + ship_fee;  // Ensure `ship_fee` is defined and accessible
 
-                                                                                return (
-                                                                                    <button 
-                                                                                        className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-                                                                                        onClick={() => this.onClickSubmit(user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext)}
-                                                                                    >    
-                                                                                    Đặt hàng
-                                                                                    </button>
-                                                                                );
-                                                                            }}
-                                                                        </DetailProductContext.Consumer>
-                                                                    );
-                                                                }}
-                                                            </OrderContext.Consumer>
-                                                        );
-                                                    }}
-                                                </CartContext.Consumer>
-                                            );
-                                        }}
-                                    </AuthContext.Consumer>
+                                                                                                return (
+                                                                                                    <button 
+                                                                                                        className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                                                                                                        onClick={() => this.onClickSubmit(user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext, productContext)}
+                                                                                                    >    
+                                                                                                    Đặt hàng
+                                                                                                    </button>
+                                                                                                );
+                                                                                            }}
+                                                                                        </ProductContext.Consumer>
+                                                                                    );
+                                                                                }}
+                                                                            </DetailProductContext.Consumer>
+                                                                        );
+                                                                    }}
+                                                                </OrderContext.Consumer>
+                                                            );
+                                                        }}
+                                                    </CartContext.Consumer>
+                                                );
+                                            }}
+                                        </AuthContext.Consumer>
                                     );
                                 }}
-                            </UserContext.Consumer>                         
+                            </UserContext.Consumer>                       
                             </div>
                         </div>
                         {success && (
