@@ -22,7 +22,8 @@ list_neg_replies = [
 input_notify = sys.argv[1]
 
 def pos_neg_classify(comment):
-    model = RobertaForSequenceClassification.from_pretrained("D://LHH//E-Commerce-HCMUS//AI_process//save_model")
+    model_path = "../../AI_process/saved_model"
+    model = RobertaForSequenceClassification.from_pretrained(model_path)
     #tokenize
     tokenizer = AutoTokenizer.from_pretrained("wonrax/phobert-base-vietnamese-sentiment")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
