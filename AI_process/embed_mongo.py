@@ -5,8 +5,8 @@ import pymongo
 from dotenv import load_dotenv
 import pandas as pd
 import time
-
-load_dotenv()
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', 'backend', '.env')
+load_dotenv(dotenv_path)
 
 co = cohere.Client(os.getenv('COHERE_API_KEY'))
 myclient = pymongo.MongoClient(os.getenv('MONGO_URL'))

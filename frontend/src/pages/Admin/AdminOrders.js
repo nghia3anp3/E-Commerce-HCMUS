@@ -29,18 +29,22 @@ class AdminOrders extends Component {
     try {
       const updatedOrder = { ...order, status: 'Approved' };
       await updateOrder(order.order_id, updatedOrder);
-      window.location.reload();
     } catch (error) {
       console.error('Error approving order:', error);
       this.setState({ error: 'Failed to approve order.' });
     }
   };
 
-  handleDecline = async (order, updateOrder) => {
+  handleDecline = async (order, updateOrder, productContext, detailProducts) => {
     try {
       const updatedOrder = { ...order, status: 'Declined' };
+      const details = detailProducts.filter(detailProduct => detailProduct.order_id === order.order_id)
+      for (const detail of details) {
+        let product = productContext.findProductById(detail.product_id)
+        let new_stock_item_qty = product.stock_item_qty + detail.quantity
+        productContext.updateProduct(detail.product_id,{...product,  stock_item_qty: new_stock_item_qty})
+    }
       await updateOrder(order.order_id, updatedOrder);
-      window.location.reload();
     } catch (error) {
       console.error('Error declining order:', error);
       this.setState({ error: 'Failed to decline order.' });
@@ -118,7 +122,7 @@ class AdminOrders extends Component {
                                             className="bg-red-500 text-white px-3 py-1 rounded-md"
                                             onClick={(e) => {
                                               e.stopPropagation();
-                                              this.handleDecline(order, updateOrder);
+                                              this.handleDecline(order, updateOrder, productContext, detailProducts);
                                             }}
                                           >
                                             Decline

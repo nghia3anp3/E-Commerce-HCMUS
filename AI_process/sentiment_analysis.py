@@ -22,7 +22,7 @@ list_neg_replies = [
 input_notify = sys.argv[1]
 
 def pos_neg_classify(comment):
-    model = RobertaForSequenceClassification.from_pretrained("C://Users//DELL//Desktop//Nam3_HK2//CNPM_AI//E-Commerce-HCMUS//AI_process//saved_model")
+    model = RobertaForSequenceClassification.from_pretrained("D://LHH//E-Commerce-HCMUS//AI_process//save_model")
     #tokenize
     tokenizer = AutoTokenizer.from_pretrained("wonrax/phobert-base-vietnamese-sentiment")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -36,10 +36,6 @@ def pos_neg_classify(comment):
             return "Positive\n"+random.choice(list_pos_replies)
         else:
             return "Negative\n"+random.choice(list_neg_replies)
-    # if comment in ["Sản phẩm tốt", "Chất lượng cao", "Rất hài lòng", "Hài lòng"]:
-    #     return "Positive"
-    # else:
-    #     return "Negative"
     
 
 if input_notify=="1":

@@ -2,9 +2,8 @@ import React from 'react';
 import NoAvatar from '../img/Comment/No_avatar.png';
 import { AuthContext } from '../context/AuthContext';
 
-import axios from 'axios';
-
 class Comments extends React.Component {
+
   state = {
     replyText: '',
     showReplyBox: false,
@@ -12,6 +11,7 @@ class Comments extends React.Component {
     username: '',
     commentInput: '',
     current_comment_id: 0,
+    is_autoreply: false,
     comments: [],
   };
 
@@ -50,6 +50,7 @@ class Comments extends React.Component {
       commentInput: '',
     }));
 
+    // Create comment
     try {
       const response = await fetch('http://localhost:8000/api/comments', {
         method: 'POST',
@@ -59,28 +60,53 @@ class Comments extends React.Component {
         body: JSON.stringify({
           product_id: product_id,
           type: type,
-          comment_id: comment_id,  // Assuming comment_id is generated as current timestamp
-          title: "",  // Assuming title is not provided by the user
+          comment_id: comment_id,  
+          title: "",  
           content: commentInput,
-          thank_count: 0,  // Initializing thank_count to 0
+          thank_count: 0,  
           customer_id: userid,
-          rating: 0,  // Assuming rating is not provided by the user
+          rating: 0,  
           created_at: Date.now(),
           customer_name: username,
-          purchased_at: Date.now(),  // Assuming purchased_at is the current timestamp
-          sub_comments_id: 0  // Initializing sub_comments_id to 0
+          purchased_at: Date.now(), 
+          sub_comments_id: 0
         })
       });
 
       const result = await response.json();
-
+      
       if (response.ok) {
-        console.log('Comment posted successfully:', result);
+        console.log('Comment posted successfully:', result.content);
       } else {
         console.error('Error posting comment:', result.message);
         this.setState({ error: result.message });
       }
     } catch (error) {
+      console.error('Error posting comment:', error);
+    }
+
+    // AI auto reply
+    try {
+      const response1 = await fetch('http://localhost:8000/api/comments/AI_auto_comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          comments: commentInput
+        })
+      });
+      const result1 = await response1.json();
+      console.log(result1)
+      this.setState({
+        replyText: result1.message,
+        current_comment_id: comment_id,
+        is_autoreply: true
+      }, () => {
+        this.onClickSave();
+      });
+      this.setState({is_autoreply: false})
+    }catch (error) {
       console.error('Error posting comment:', error);
     }
   };
@@ -168,7 +194,7 @@ class Comments extends React.Component {
   
   onClickSave = async () => {
     
-    const {replyText, userid, username } = this.state;
+    const {replyText, userid, username, is_autoreply } = this.state;
     const {product_id, type } = this.props;
     let comment_id = this.state.current_comment_id
     this.addReply(comment_id, replyText);
@@ -179,6 +205,13 @@ class Comments extends React.Component {
       },
       replyText: '',
     }));
+    let fullname
+    if (is_autoreply){
+      fullname = "Admin"
+    }
+    else{
+      fullname = username
+    }
 
     try {
       const response = await fetch("http://localhost:8000/api/subcomments",{
@@ -193,7 +226,7 @@ class Comments extends React.Component {
           comment_id: comment_id,
           commentator: "customer",
           customer_id: userid,
-          fullname: username,
+          fullname: fullname,
           avatar_url: "",
           content: replyText,
           score: 0,
@@ -203,7 +236,6 @@ class Comments extends React.Component {
           is_reported: false,
         })
       })
-
       const result = await response.json();
 
       if (response.ok) {
@@ -228,10 +260,54 @@ class Comments extends React.Component {
     this.setState({current_comment_id: 0})
   };
 
-  renderComment = (comment) => {
-    const { comment_id, customer_name, avatar, content, subcomment } = comment;
-    const { replyText, showReplyBox } = this.state;
+  handleDeleteMainComment = async (comment_id) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/comments/${comment_id}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        this.setState((prevState) => ({
+          comments: prevState.comments.filter((comment) => comment.comment_id !== comment_id),
+        }));
+      } else {
+        const result = await response.json();
+        console.error('Error deleting comment:', result.message);
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
 
+  handleDeleteSubComment = async (sub_comment_id) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/subcomments/${sub_comment_id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        this.setState((prevState) => ({
+          comments: this.removeSubcomment(prevState.comments, sub_comment_id),
+        }));
+      } else {
+        const result = await response.json();
+        console.error('Error deleting subcomment:', result.message);
+      }
+    } catch (error) {
+      console.error('Error deleting subcomment:', error);
+    }
+  };
+
+  removeSubcomment = (comments, sub_comment_id) => {
+    for (let comment of comments) {
+      comment.subcomment = comment.subcomment.filter(subcomment => subcomment.comment_id !== sub_comment_id);
+      comment.subcomment = this.removeSubcomment(comment.subcomment, sub_comment_id);
+    }
+    return comments;
+  };
+
+  renderComment = (comment, is_sub_comment = false) => {
+    const { comment_id, customer_name, avatar, content, subcomment } = comment;
+    const { replyText, showReplyBox, username} = this.state;
     return (
       <div className="flex gap-4 m-4 relative" key={customer_name}>
         <div className="flex-shrink-0">
@@ -248,17 +324,27 @@ class Comments extends React.Component {
           </div>
           {!showReplyBox[comment_id] && (
             <div>
-              <button className="p-2 text-blue-500 hover:underline">Thích</button>
               <button className="p-2 text-blue-500 hover:underline" onClick={() => this.onClickReply(comment_id)}>
                 Phản hồi
               </button>
+              {customer_name === username && !is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleDeleteMainComment(comment_id)}>
+                  Xóa
+                </button>
+              )}
+              {customer_name === username && is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleDeleteSubComment(comment_id)}>
+                  Xóa
+                </button>
+              )}
+
             </div>
           )}
           {showReplyBox[comment_id] && (
             <div className="mt-4">
               <input
                 className="bg-gray-100 rounded border border-gray-400 leading-normal h-20 py-2 px-3 mb-4 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-                placeholder="Bình luận"
+                placeholder="Comment"
                 type="text"
                 value={replyText}
                 onChange={this.onChangeContext}
@@ -282,7 +368,9 @@ class Comments extends React.Component {
           {subcomment.length > 0 && (
             <ul className="mt-4">
               {subcomment.map((childComment) => (
-                <li key={childComment.customer_name}>{this.renderComment(childComment)}</li>
+                <li key={childComment.comment_id}>
+                  {this.renderComment(childComment, true)}
+                </li>
               ))}
             </ul>
           )}
@@ -290,44 +378,31 @@ class Comments extends React.Component {
       </div>
     );
   };
+  
 
   render() {
     let { commentInput, comments } = this.state;
-
     return (
-      <AuthContext.Consumer>
-        {(authContext) => (
-          <>
-            {authContext.isLoggedIn ? (
-              <div className="p-4 m-4 bg-gray-200">
-                <h3 className="font-semibold p-1">Bình luận</h3>
-                <ul>
-                  {comments.map((comment) => this.renderComment(comment))}
-                </ul>
-                <div className="flex flex-col justify-start ml-6">
-                  <input
-                    className="w-2/3 bg-gray-100 rounded border border-gray-400 leading-normal h-20 mb-6 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-                    placeholder="Comment"
-                    value={commentInput}
-                    onChange={this.onChangeComment}
-                  />
-                  <input
-                    type="submit"
-                    className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
-                    value="Bình luận"
-                    onClick={this.handlePostComment}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="p-4 m-4 bg-red-200">
-                <h3 className="font-semibold p-1">Error: Not Logged In</h3>
-                <p>Please log in to participate in the discussion.</p>
-              </div>
-            )}
-          </>
-        )}
-      </AuthContext.Consumer>
+      <div className="p-4 m-4 bg-gray-200">
+        <h3 className="font-semibold p-1">Bình luận</h3>
+        <ul>
+          {comments.map((comment) => this.renderComment(comment))}
+        </ul>
+        <div className="flex flex-col justify-start ml-6">
+          <input
+            className="w-2/3 bg-gray-100 rounded border border-gray-400 leading-normal h-20 mb-6 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
+            placeholder="Comment"
+            value={commentInput}
+            onChange={this.onChangeComment}
+          />
+          <input
+            type="submit"
+            className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
+            value="Bình luận"
+            onClick={this.handlePostComment}
+          />
+        </div>
+      </div>
     );
   }
 }
