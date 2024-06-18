@@ -3,8 +3,8 @@ const Router = express.Router();
 const {login, register, logout} = require('../controllers/auth.controller.js');
 const {getAccount, forgetPassword, changePassword, update} = require('../controllers/account.controller.js');
 const {getAllusers,getUser,deleteUser,updateUser, getAvatar, upload} = require('../controllers/user.controller.js');
-const {getComments, getCommentByProductID, createComment, updateComment, deleteComment, getReplyComments} = require('../controllers/main_comment.controller.js');
-const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, deleteSubcomment} = require('../controllers/sub_comment.controller.js');
+const {getComments, getCommentByProductID, createComment, updateComment, deleteComment, deleteCommentByID, getReplyComments} = require('../controllers/main_comment.controller.js');
+const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, deleteSubcomment, deleteSubCommentByID} = require('../controllers/sub_comment.controller.js');
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
 const {getAllDetailProduct, getDetailProductbyID, createDetailProduct, updateDetailProduct, deleteDetailProduct} = require('../controllers/detail_product.controller.js');
 const {getAllInfo, getInfo, createInfo, updateInfo, deleteInfo,} = require('../controllers/product.controller.js');
@@ -38,18 +38,21 @@ Router.get("/comments", getComments);
 Router.get("/comments/:product_id", getCommentByProductID);
 Router.post("/comments", createComment);
 Router.put("/comments/:product_id", updateComment);
-Router.delete("/comments/:product_id", deleteComment);
-
-//AI Main route
-Router.post("/comments/AI_auto_comments", getReplyComments);
-Router.post("/semantic_seach", getContext_semantic_search);
+// Router.delete("/comments/:product_id", deleteComment);
+Router.delete("/comments/:comment_id", deleteCommentByID);
 
 // Sub_comment Routes
 Router.get("/subcomments", getSubComments);
 Router.get("/subcomments/:product_id", getSubcommentbyID);
 Router.post("/subcomments", createSubcomment);
 Router.put("/subcomments/:product_id", updateSubcomment);
-Router.delete("/subcomments/:product_id", deleteSubcomment);
+// Router.delete("/subcomments/:product_id", deleteSubcomment);
+Router.delete("/subcomments/:sub_comment_id", deleteSubCommentByID);
+
+//AI Main route
+Router.post("/comments/AI_auto_comments", getReplyComments);
+Router.post("/semantic_seach", getContext_semantic_search);
+
 
 // Order Routes
 Router.get("/orders", getAll);

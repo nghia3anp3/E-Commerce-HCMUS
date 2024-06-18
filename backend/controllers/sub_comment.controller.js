@@ -134,10 +134,31 @@ const deleteSubcomment = async (req, res) => {
   }
 };
 
+const deleteSubCommentByID = async (req, res) => {
+  try {
+    const { sub_comment_id } = req.params;
+
+    // Create filter with comment_id
+    const filter = { sub_comment_id: sub_comment_id };
+
+    // Delete the comment based on filter
+    const deleteResult = await SubComments.deleteOne(filter);
+
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
     getSubComments,
     getSubcommentbyID,
     createSubcomment,
     updateSubcomment,
     deleteSubcomment,
+    deleteSubCommentByID
 };

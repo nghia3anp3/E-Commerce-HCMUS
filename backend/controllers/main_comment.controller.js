@@ -114,6 +114,26 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const deleteCommentByID = async (req, res) => {
+  try {
+    const { comment_id } = req.params;
+
+    // Create filter with comment_id
+    const filter = { comment_id: comment_id };
+
+    // Delete the comment based on filter
+    const deleteResult = await Comments.deleteOne(filter);
+
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getReplyComments = async (req, res) => {
   try {
     const bodyParams = req.body;
@@ -163,5 +183,6 @@ module.exports = {
     createComment,
     updateComment,
     deleteComment,
+    deleteCommentByID,
     getReplyComments,
 };

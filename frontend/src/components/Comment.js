@@ -97,6 +97,7 @@ class Comments extends React.Component {
         })
       });
       const result1 = await response1.json();
+      console.log(result1)
       this.setState({
         replyText: result1.message,
         current_comment_id: comment_id,
@@ -259,10 +260,54 @@ class Comments extends React.Component {
     this.setState({current_comment_id: 0})
   };
 
-  renderComment = (comment) => {
-    const { comment_id, customer_name, avatar, content, subcomment } = comment;
-    const { replyText, showReplyBox } = this.state;
+  handleDeleteMainComment = async (comment_id) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/comments/${comment_id}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        this.setState((prevState) => ({
+          comments: prevState.comments.filter((comment) => comment.comment_id !== comment_id),
+        }));
+      } else {
+        const result = await response.json();
+        console.error('Error deleting comment:', result.message);
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
 
+  handleDeleteSubComment = async (sub_comment_id) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/subcomments/${sub_comment_id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        this.setState((prevState) => ({
+          comments: this.removeSubcomment(prevState.comments, sub_comment_id),
+        }));
+      } else {
+        const result = await response.json();
+        console.error('Error deleting subcomment:', result.message);
+      }
+    } catch (error) {
+      console.error('Error deleting subcomment:', error);
+    }
+  };
+
+  removeSubcomment = (comments, sub_comment_id) => {
+    for (let comment of comments) {
+      comment.subcomment = comment.subcomment.filter(subcomment => subcomment.comment_id !== sub_comment_id);
+      comment.subcomment = this.removeSubcomment(comment.subcomment, sub_comment_id);
+    }
+    return comments;
+  };
+
+  renderComment = (comment, is_sub_comment = false) => {
+    const { comment_id, customer_name, avatar, content, subcomment } = comment;
+    const { replyText, showReplyBox, username} = this.state;
     return (
       <div className="flex gap-4 m-4 relative" key={customer_name}>
         <div className="flex-shrink-0">
@@ -279,17 +324,27 @@ class Comments extends React.Component {
           </div>
           {!showReplyBox[comment_id] && (
             <div>
-              <button className="p-2 text-blue-500 hover:underline">Thích</button>
               <button className="p-2 text-blue-500 hover:underline" onClick={() => this.onClickReply(comment_id)}>
                 Phản hồi
               </button>
+              {customer_name === username && !is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleDeleteMainComment(comment_id)}>
+                  Xóa
+                </button>
+              )}
+              {customer_name === username && is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleDeleteSubComment(comment_id)}>
+                  Xóa
+                </button>
+              )}
+
             </div>
           )}
           {showReplyBox[comment_id] && (
             <div className="mt-4">
               <input
                 className="bg-gray-100 rounded border border-gray-400 leading-normal h-20 py-2 px-3 mb-4 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-                placeholder="Bình luận"
+                placeholder="Comment"
                 type="text"
                 value={replyText}
                 onChange={this.onChangeContext}
@@ -313,7 +368,9 @@ class Comments extends React.Component {
           {subcomment.length > 0 && (
             <ul className="mt-4">
               {subcomment.map((childComment) => (
-                <li key={childComment.customer_name}>{this.renderComment(childComment)}</li>
+                <li key={childComment.comment_id}>
+                  {this.renderComment(childComment, true)}
+                </li>
               ))}
             </ul>
           )}
@@ -321,10 +378,10 @@ class Comments extends React.Component {
       </div>
     );
   };
+  
 
   render() {
     let { commentInput, comments } = this.state;
-
     return (
       <div className="p-4 m-4 bg-gray-200">
         <h3 className="font-semibold p-1">Bình luận</h3>
