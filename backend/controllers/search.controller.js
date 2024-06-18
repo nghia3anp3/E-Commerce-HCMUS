@@ -22,7 +22,7 @@ const getContext_semantic_search = async (req, res) => {
         });
           process.on('exit', function (code) {
             const data = fs.readFileSync('./handle_txt/output_query.txt', 'utf8');
-            console.log("New data: ", data);
+            // console.log("New data: ", data);
             const parsedData = data.split('\n').map(line => {
               try {
                   return JSON.parse(line);
@@ -30,7 +30,7 @@ const getContext_semantic_search = async (req, res) => {
                   return null;
               }
               }).filter(item => item !== null);
-              console.log(parsedData)
+              // console.log(parsedData)
               const ids = parsedData.map(item => ({ product_id: item.product_id }));
               console.log(ids)
               res.status(200).json(ids);

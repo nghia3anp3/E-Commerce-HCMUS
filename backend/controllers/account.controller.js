@@ -12,7 +12,7 @@ const getAccount = async (req, res) => {
   if (!token) {
     return res.sendStatus(401);
   }
-  jwt.verify(token, 'your_secret_key', async (err, user) => {
+  jwt.verify(token, '6f1c30a32c702daaca573d4cc8c6959a64ee27c189b87469e5da84764116c22caf1f13fc308cf2f354d135fbb653eeba2c17a8f26ac1abb9b90cb1f100387c432d6e7c2f35057634fa842d45c967ad3674ef923e2d9bce5b82d64d9cae5aea40587b727d64381d38594c181e206e8546b8066306f765eb0011eeab5d339d2a92eda713bb8c9d326d219a8e704db2200bbc3eff222087c8635994cfe144f4245d450fcd968a8a839948bbb4eaab54a66e1ceeff5296e76a5bbb5ddf7687dfe37f', async (err, user) => {
     if (err) {
       return res.sendStatus(403);
     }

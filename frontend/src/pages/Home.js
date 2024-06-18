@@ -30,7 +30,6 @@ const Home = () => {
     window.scrollTo(0, 0);
   }, [page]);
 
-  console.log(currentPage);
 
   // Tạo số lượng trang hiện thị tối đa
   const getVisiblePages = () => {
@@ -69,7 +68,6 @@ const Home = () => {
   let currentProducts = getProductCurrentPage(currentPage);
 
   return (
-    <div>
       <div>
         <section className='h-full py-20'>
           {/* <div className="h-auto w-[60%] sm:w-[80%] m-auto pt-8 sm:pt-11">
@@ -100,7 +98,6 @@ const Home = () => {
           </div>
         </section>
       </div>
-    </div>
   );
 }
 

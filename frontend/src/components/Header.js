@@ -92,12 +92,24 @@ class Header extends Component {
                         </div>
 
                         {/* Cart */}
-                        <div onClick={() => sidebarContext.setisOpen(!sidebarContext.isOpen)} className="cursor-pointer flex items-center ml-6">
+                        {authContext.isLoggedIn ? (
+                          <div onClick={() => sidebarContext.setisOpen(!sidebarContext.isOpen)} className="cursor-pointer flex items-center ml-6">
                           <MdOutlineShoppingCart className='text-xl text-gray-800' />
                           <div className='bg-red-500 text-xs text-white w-5 h-5 flex justify-center items-center rounded-full ml-1'>
                             {cartContext.itemAmount}
                           </div>
                         </div>
+                        ): 
+                        (
+                          <div className="cursor-pointer flex items-center ml-6">
+                            <Link to="/login">
+                              <MdOutlineShoppingCart className='text-xl text-gray-800' />
+                            </Link>
+                            <div className='bg-red-500 text-xs text-white w-5 h-5 flex justify-center items-center rounded-full ml-1'>
+                              {cartContext.itemAmount}
+                          </div>
+                        </div>
+                        )}
                       </div>
                     </div>
                     <Menu className='py-2' />
