@@ -18,6 +18,52 @@ class Checkout extends React.Component {
         shipping_method: "Fast Ship",
         ship_fee: 30000,
         success: false,
+        errors: {
+            email: "",
+            phone: "",
+            address: ""
+        }
+    }
+
+    validateEmail = (email) => {
+        // Regex pattern for basic email validation
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+    }
+    
+    validatePhone = (phone) => {
+        // Regex pattern for phone number validation (Vietnam format)
+        const pattern = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+        return pattern.test(phone);
+    }
+    
+    validateForm = () => {
+        let valid = true;
+        let errors = {};
+    
+        if (this.state.email === "") {
+            valid = false;
+            errors.email = "Email không được để trống";
+        } else if (!this.validateEmail(this.state.email)) {
+            valid = false;
+            errors.email = "Email không hợp lệ";
+        }
+    
+        if (this.state.phone === "") {
+            valid = false;
+            errors.phone = "Số điện thoại không được để trống";
+        } else if (!this.validatePhone(this.state.phone)) {
+            valid = false;
+            errors.phone = "Số điện thoại không hợp lệ";
+        }
+    
+        if (this.state.address === "") {
+            valid = false;
+            errors.address = "Địa chỉ không được để trống";
+        }
+    
+        this.setState({ errors: errors });
+        return valid;
     }
 
     onChangeEmail = (event) => {
@@ -61,6 +107,9 @@ class Checkout extends React.Component {
     }
 
     onClickSubmit = (user, address, email, phone, total, shipping_method, cartContext, orderContext, detailProductContext, userContext, productContext ) => {
+        if (!this.validateForm()) {
+            return;
+        }
         const new_order_id = orderContext.orders.length
         const new_order = {
             order_id: new_order_id,
@@ -104,7 +153,7 @@ class Checkout extends React.Component {
     }
 
     render (){
-        const {address, email, phone, shipping_method, ship_fee, success} = this.state
+        const {address, email, phone, shipping_method, ship_fee, success, errors} = this.state
         // console.log(address, email, phone)
 
         return (
@@ -181,6 +230,7 @@ class Checkout extends React.Component {
                                     className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                                     placeholder="your.email@gmail.com"
                                 />
+                                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                                 <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                                     <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -211,6 +261,7 @@ class Checkout extends React.Component {
                                     className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                                     placeholder="Số điện thoại"
                                 />
+                                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                                 <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                                     <FaPhone/>
                                 </div>
@@ -229,6 +280,7 @@ class Checkout extends React.Component {
                                     className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                                     placeholder="Địa chỉ"
                                     />
+                                    {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
                                     <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
