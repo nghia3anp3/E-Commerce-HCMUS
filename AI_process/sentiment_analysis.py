@@ -7,6 +7,7 @@ import random
 input_path = r"../handle_txt/input_comment.txt"
 output_path = "../handle_txt/output_comment.txt"
 model_path = "../../AI_process/saved_model"
+# model_path = "D://LHH//E-Commerce-HCMUS//AI_process//saved_model"
 
 list_pos_replies = [
 "Rất vui khi nhận được sự ủng hộ từ bạn. Hy vọng bạn sẽ tiếp tục ủng hộ^^^.",
@@ -21,7 +22,6 @@ list_neg_replies = [
 ]
 
 def pos_neg_classify(comment):
-    model_path = "../../AI_process/saved_model"
     model = RobertaForSequenceClassification.from_pretrained(model_path)
     #tokenize
     tokenizer = AutoTokenizer.from_pretrained("wonrax/phobert-base-vietnamese-sentiment")

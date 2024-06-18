@@ -11,7 +11,6 @@ class Comments extends React.Component {
     username: '',
     commentInput: '',
     current_comment_id: 0,
-    is_autoreply: false,
     comments: [],
   };
 
@@ -101,11 +100,10 @@ class Comments extends React.Component {
       this.setState({
         replyText: result1.message,
         current_comment_id: comment_id,
-        is_autoreply: true
+        username: 'Admin',
       }, () => {
-        this.onClickSave();
+        this.onClickSave(true);
       });
-      this.setState({is_autoreply: false})
     }catch (error) {
       console.error('Error posting comment:', error);
     }
@@ -194,9 +192,9 @@ class Comments extends React.Component {
   
   onClickSave = async () => {
     
-    const {replyText, userid, username, is_autoreply } = this.state;
+    const {replyText, userid, username, current_comment_id} = this.state;
     const {product_id, type } = this.props;
-    let comment_id = this.state.current_comment_id
+    let comment_id = current_comment_id
     this.addReply(comment_id, replyText);
     this.setState((prevState) => ({
       showReplyBox: {
@@ -205,14 +203,6 @@ class Comments extends React.Component {
       },
       replyText: '',
     }));
-    let fullname
-    if (is_autoreply){
-      fullname = "Admin"
-    }
-    else{
-      fullname = username
-    }
-
     try {
       const response = await fetch("http://localhost:8000/api/subcomments",{
         method: 'POST',
@@ -226,7 +216,7 @@ class Comments extends React.Component {
           comment_id: comment_id,
           commentator: "customer",
           customer_id: userid,
-          fullname: fullname,
+          fullname: username,
           avatar_url: "",
           content: replyText,
           score: 0,
@@ -237,7 +227,7 @@ class Comments extends React.Component {
         })
       })
       const result = await response.json();
-
+      this.updateUser()
       if (response.ok) {
         console.log('Subcomment posted successfully:', result);
       } else {
