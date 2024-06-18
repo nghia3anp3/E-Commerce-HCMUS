@@ -6,6 +6,7 @@ import random
 
 input_path = r"../handle_txt/input_comment.txt"
 output_path = "../handle_txt/output_comment.txt"
+
 list_pos_replies = [
 "Rất vui khi nhận được sự ủng hộ từ bạn. Hy vọng bạn sẽ tiếp tục ủng hộ^^^.",
 "Cảm ơn bạn đã ủng hộ shop, chúng tôi sẽ cố gắng hơn nữa để phục vụ bạn tốt hơn.", 
@@ -32,9 +33,9 @@ def pos_neg_classify(comment):
         outputs = model(input_ids=input_ids, attention_mask=attention_mask)
         prediction = torch.argmax(outputs.logits, dim=1).item()
         if prediction == 1:
-            return random.choice(list_pos_replies)
+            return "Positive\n"+random.choice(list_pos_replies)
         else:
-            return random.choice(list_neg_replies)
+            return "Negative\n"+random.choice(list_neg_replies)
     # if comment in ["Sản phẩm tốt", "Chất lượng cao", "Rất hài lòng", "Hài lòng"]:
     #     return "Positive"
     # else:
