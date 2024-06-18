@@ -6,6 +6,7 @@ import random
 
 input_path = r"../handle_txt/input_comment.txt"
 output_path = "../handle_txt/output_comment.txt"
+model_path = "../../AI_process/saved_model"
 
 list_pos_replies = [
 "Rất vui khi nhận được sự ủng hộ từ bạn. Hy vọng bạn sẽ tiếp tục ủng hộ^^^.",
@@ -18,11 +19,10 @@ list_neg_replies = [
 "Rất tiếc vì trải nghiệm của bạn không được như mong đợi. Chúng tôi rất coi trọng ý kiến của bạn và sẽ cố gắng khắc phục sớm nhất có thể.",
 "Cảm ơn bạn đã cho chúng tôi biết về vấn đề này. Chúng tôi rất tiếc và sẽ nỗ lực để đảm bảo điều này không tái diễn. Xin hãy liên hệ với chúng tôi để được hỗ trợ thêm."
 ]
-# input_data = ""
-input_notify = sys.argv[1]
 
 def pos_neg_classify(comment):
-    model = RobertaForSequenceClassification.from_pretrained("D://LHH//E-Commerce-HCMUS//AI_process//save_model")
+    # model = RobertaForSequenceClassification.from_pretrained("C:\Users\DELL\Desktop\Nam3_HK2\CNPM_AI\E-Commerce-HCMUS\AI_process\saved_model")
+    model = RobertaForSequenceClassification.from_pretrained(model_path)
     #tokenize
     tokenizer = AutoTokenizer.from_pretrained("wonrax/phobert-base-vietnamese-sentiment")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -37,7 +37,8 @@ def pos_neg_classify(comment):
         else:
             return "Negative\n"+random.choice(list_neg_replies)
     
-
+input_data = ""
+input_notify = sys.argv[1]
 if input_notify=="1":
     with open(input_path, "r", encoding="utf-8") as file:
         input_data = file.read()
@@ -47,6 +48,6 @@ if input_notify=="1":
     print(input_notify)
 sys.stdout.flush()
 
-
+# print(pos_neg_classify("Sản phẩm rất tốt, tôi rất hài lòng với dịch vụ của shop"))
 
 
