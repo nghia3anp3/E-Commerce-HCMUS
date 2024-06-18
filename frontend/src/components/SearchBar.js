@@ -35,7 +35,6 @@ class SearchBar extends Component {
                     comments: item
                   })
             })
-            console.log(item)
             const result = await response.json()
             let ai_search_products = []
             result.map((item, index) => {
@@ -45,6 +44,7 @@ class SearchBar extends Component {
             })
             const ai_search_products_str = JSON.stringify(ai_search_products);
             localStorage.setItem('ai_search_products', ai_search_products_str);
+            localStorage.setItem('search_query', item);
             window.location.href = '/search';
         } catch (error) {
             console.error('Error sematic searching:', error);

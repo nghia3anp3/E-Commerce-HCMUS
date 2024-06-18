@@ -326,39 +326,26 @@ class Comments extends React.Component {
     let { commentInput, comments } = this.state;
 
     return (
-      <AuthContext.Consumer>
-        {(authContext) => (
-          <>
-            {authContext.isLoggedIn ? (
-              <div className="p-4 m-4 bg-gray-200">
-                <h3 className="font-semibold p-1">Bình luận</h3>
-                <ul>
-                  {comments.map((comment) => this.renderComment(comment))}
-                </ul>
-                <div className="flex flex-col justify-start ml-6">
-                  <input
-                    className="w-2/3 bg-gray-100 rounded border border-gray-400 leading-normal h-20 mb-6 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-                    placeholder="Comment"
-                    value={commentInput}
-                    onChange={this.onChangeComment}
-                  />
-                  <input
-                    type="submit"
-                    className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
-                    value="Bình luận"
-                    onClick={this.handlePostComment}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="p-4 m-4 bg-red-200">
-                <h3 className="font-semibold p-1">Error: Not Logged In</h3>
-                <p>Please log in to participate in the discussion.</p>
-              </div>
-            )}
-          </>
-        )}
-      </AuthContext.Consumer>
+      <div className="p-4 m-4 bg-gray-200">
+        <h3 className="font-semibold p-1">Bình luận</h3>
+        <ul>
+          {comments.map((comment) => this.renderComment(comment))}
+        </ul>
+        <div className="flex flex-col justify-start ml-6">
+          <input
+            className="w-2/3 bg-gray-100 rounded border border-gray-400 leading-normal h-20 mb-6 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
+            placeholder="Comment"
+            value={commentInput}
+            onChange={this.onChangeComment}
+          />
+          <input
+            type="submit"
+            className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
+            value="Bình luận"
+            onClick={this.handlePostComment}
+          />
+        </div>
+      </div>
     );
   }
 }
