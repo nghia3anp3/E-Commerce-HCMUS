@@ -3,6 +3,7 @@ import { ProductContext } from '../context/ProductContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCamera, faTimes } from '@fortawesome/free-solid-svg-icons';
 import 'tailwindcss/tailwind.css';
+import axios from 'axios';
 
 class SearchBar extends Component {
     static contextType = ProductContext;
@@ -14,6 +15,14 @@ class SearchBar extends Component {
             modalIsOpen: false,
             selectedImages: [],
         };
+    }
+
+    componentDidMount() {
+        window.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
     handleInputChange = (event) => {
@@ -44,7 +53,8 @@ class SearchBar extends Component {
             })
             const ai_search_products_str = JSON.stringify(ai_search_products);
             localStorage.setItem('ai_search_products', ai_search_products_str);
-            localStorage.setItem('search_query', item);
+            // localStorage.setItem('search_query', item);
+            // localStorage.setItem('is_image', false)
             window.location.href = '/search';
         } catch (error) {
             console.error('Error sematic searching:', error);
@@ -54,6 +64,38 @@ class SearchBar extends Component {
     onImageSearch = () => {
         this.setState({ modalIsOpen: true });
     };
+
+    handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            this.handleImageSearch();
+        }
+    };
+
+    handleImageSearch = async () => {
+        const { selectedImages } = this.state;
+        const image = selectedImages[0]
+
+        // try {
+        //     // Fetch the blob and convert it to a File
+        //     const response = await fetch(image);
+        //     // console.log(22222222222, response)
+        //     const blob = await response.blob();
+        //     // console.log(3333333333333, blob)
+        //     const file = new File([blob], 'image.jpg', { type: blob.type });
+        //     // console.log(222222222222222, file)
+        //     const formData = new FormData();
+        //     formData.append('image', file);
+        //     console.log('FormData:', formData);
+
+        //     const apiResponse = await axios.post('http://localhost:8000/api/image_search', file);
+
+        //     const result = apiResponse.data;
+        //     const { findProductById } = this.context;
+        //     findProductById(result);
+        // } catch (error) {
+        //     console.error('Error uploading image:', error);
+        // }
+    }
 
     closeModal = () => {
         this.setState({ modalIsOpen: false, selectedImages: [] });
@@ -69,9 +111,8 @@ class SearchBar extends Component {
     };
 
     onConfirm = () => {
-       
         console.log("Confirmed Images:", this.state.selectedImages);
-        this.closeModal();
+        this.setState({ modalIsOpen: false});
     };
 
     render() {

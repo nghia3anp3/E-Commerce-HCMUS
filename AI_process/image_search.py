@@ -53,18 +53,18 @@ def extract_vgg16_features(image_tensor):
     return features.view(-1)
 
 # Load faiss index
-input_path_faiss = r"../../AI_process/image_search/faiss_index.index"
+input_path_faiss = r"../AI_process/image_search/faiss_index.index"
 index = faiss.read_index(input_path_faiss)
 
 # Đường dẫn đến tệp danh sách các tệp hình ảnh
-file_list_path = r"../../AI_process/image_search/anhxa.txt"
+file_list_path = r"../AI_process/image_search/anhxa.txt"
 
 # Đọc danh sách các tên tệp hình ảnh từ tệp .txt
 with open(file_list_path, "r") as f:
     file_list = f.read().splitlines()
 
 # Path to file mapping image filenames to product IDs
-image_to_id_path = r"../../AI_process/image_search/image_names.txt"
+image_to_id_path = r"../AI_process/image_search/image_names.txt"
 
 def image_process(image):
     # Xử lý hình ảnh input
@@ -110,7 +110,7 @@ def image_process(image):
 
 # Save unique product IDs to a new .txt file
 input_image = sys.argv[1]
-output_path = r"../../backend/handle_txt/output_image.txt"
+output_path = r"backend/handle_txt/output_image.txt"
 
 unique_product_ids = image_process(input_image)
 

@@ -44,7 +44,7 @@ Router.delete("/comments/:product_id", deleteComment);
 //AI Main route
 Router.post("/comments/AI_auto_comments", getReplyComments);
 Router.post("/semantic_seach", getContext_semantic_search);
-Router.post("/image_search", upload.single('file'), getContext_image_search);
+Router.post("/image_search", getContext_image_search);
 
 // Sub_comment Routes
 Router.get("/subcomments", getSubComments);

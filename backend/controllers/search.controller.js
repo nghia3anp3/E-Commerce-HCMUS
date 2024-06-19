@@ -1,5 +1,6 @@
 const Products = require("../models/product.model");
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 const getContext_semantic_search = async (req, res) => {
     try {
@@ -11,7 +12,6 @@ const getContext_semantic_search = async (req, res) => {
             cwd : __dirname
           };
           var spawn = require("child_process").spawn;
-          const fs = require('fs');
           fs.writeFileSync("./handle_txt/input_query.txt", bodyParams.comments);
           var active_noti = "1";
           const currentDirectory = __dirname;
@@ -44,6 +44,58 @@ const getContext_semantic_search = async (req, res) => {
       }
     } catch (error) {
       res.status(500).json({ message: error.message });
+    }
+  };
+
+
+  const getContext_image_search = async (req, res) => {
+    try {
+        // Define the path where the image will be saved
+        const imageData = req.body;
+        const imagePath = "../../backend/handle_txt/input_image.jpg";
+        console.log('Image path:', imagePath);
+  
+        // Write the binary data to a file using async/await
+        await fs.promises.writeFile(imagePath, imageData);
+        console.log('Image saved successfully.');
+  
+        // Call Python script to process the image
+        const pythonScriptPath = "../../AI_process/image_search.py";
+        const process = spawn('python', [pythonScriptPath, imagePath], { cwd: __dirname });
+  
+        process.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+        });
+  
+        process.on('exit', async (code) => {
+            console.log('Python process exited with code:', code); // Log Python process exit code
+  
+            try {
+                const outputFilePath = "./handle_txt/output_image.txt";
+                const data = await fs.promises.readFile(outputFilePath, 'utf8');
+                console.log('Read data from output file:', data);
+  
+                const parsedData = data.split('\n').map(line => {
+                    try {
+                        return JSON.parse(line);
+                    } catch (e) {
+                        return null;
+                    }
+                }).filter(item => item !== null);
+  
+                const ids = parsedData.map(item => ({ product_id: item.product_id }));
+                console.log('Parsed IDs:', ids);
+  
+                res.status(200).json(ids);
+            } catch (error) {
+                console.error('Error reading or parsing output file:', error);
+                res.status(501).json({ error: 'Error reading or parsing output file' });
+            }
+        });
+  
+    } catch (error) {
+        console.error('Error processing request:', error);
+        res.status(500).json({ error: 'An error occurred' });
     }
   };
 
@@ -81,6 +133,8 @@ const getContext_semantic_search = async (req, res) => {
 //     }
 // };
 
+
+
 module.exports = {
-    getContext_semantic_search
+    getContext_semantic_search, getContext_image_search
 };
