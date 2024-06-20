@@ -113,8 +113,6 @@ const AuthProvider = ({ children }) => {
         else if (data === "existedemail") {
           return "Email này đã được đăng ký";
         } else if (data === "notexist") {
-          alert("Đăng ký thành công")
-          window.location.replace("/login");
           return null;
         } else {
           return "Unexpected response from server";
