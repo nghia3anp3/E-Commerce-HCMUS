@@ -44,7 +44,7 @@ class Comments extends React.Component {
     const { authContext } = this.props;
     if (!authContext.isLoggedIn) {
       this.setState({ showNotification: true });
-      localStorage.setItem('redirectAfterLogin', window.location.href);
+      localStorage.setItem('redirectUrl', window.location.href);
       return false;
     }
     return true;
@@ -452,6 +452,7 @@ class Comments extends React.Component {
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
                   onClick={() => {
                     this.setState({ showNotification: false });
+                    {localStorage.setItem('redirectUrl', window.location.href);}
                     window.location.href = '/login';
                   }}
                 >

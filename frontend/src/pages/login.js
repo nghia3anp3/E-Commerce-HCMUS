@@ -17,14 +17,18 @@ class Login extends React.Component {
         accountOrEmail: "",
         password: "",
         general: ""
-      }
+      },
     };
+    this.hasLoggedRedirectUrl = false;
   }
 
   componentDidMount() {
-    const params = new URLSearchParams(this.props.location.search);
-    const redirectUrl = params.get('redirectUrl') || "/";
-    this.setState({ redirectUrl });
+    if (!this.hasLoggedRedirectUrl) {
+      const redirectUrl = localStorage.getItem('redirectUrl') || '/';
+      this.setState({ redirectUrl: redirectUrl });
+      localStorage.removeItem('redirectUrl');
+      this.hasLoggedRedirectUrl = true;
+    }
   }
 
   handleKeyDown = (event) => {
@@ -98,9 +102,9 @@ class Login extends React.Component {
   render() {
     const { accountOrEmail, password, showPassword, errors, redirectUrl } = this.state;
     const { isLoggedIn } = this.context;
-
+    console.log(11111111111, redirectUrl);
     if (isLoggedIn) {
-      return <Navigate to = {this.state.redirectUrl}  replace />;
+      return <Navigate to = {redirectUrl}  replace />;
     }
 
     return (
