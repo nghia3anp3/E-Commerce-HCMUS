@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import LoginLogo from '../img/login_logo2.webp';
 import { AuthContext } from "../context/AuthContext";
@@ -19,6 +19,12 @@ class Login extends React.Component {
         general: ""
       }
     };
+  }
+
+  componentDidMount() {
+    const params = new URLSearchParams(this.props.location.search);
+    const redirectUrl = params.get('redirectUrl') || "/";
+    this.setState({ redirectUrl });
   }
 
   handleKeyDown = (event) => {
@@ -90,11 +96,11 @@ class Login extends React.Component {
   };
 
   render() {
-    const { accountOrEmail, password, showPassword, errors } = this.state;
+    const { accountOrEmail, password, showPassword, errors, redirectUrl } = this.state;
     const { isLoggedIn } = this.context;
 
     if (isLoggedIn) {
-      return <Navigate to="/" replace />;
+      return <Navigate to = {this.state.redirectUrl}  replace />;
     }
 
     return (
