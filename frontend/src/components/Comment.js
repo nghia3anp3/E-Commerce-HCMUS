@@ -12,6 +12,7 @@ class Comments extends React.Component {
     commentInput: '',
     current_comment_id: 0,
     comments: [],
+    showNotification: false,
   };
 
   componentDidMount() {
@@ -38,7 +39,17 @@ class Comments extends React.Component {
     }
   }
 
+  checkLoginAndRedirect = () => {
+    const { authContext } = this.props;
+    if (!authContext.isLoggedIn) {
+      this.setState({ showNotification: true }); // Show the notification
+      return false;
+    }
+    return true;
+  };
+
   handlePostComment = async () => {
+    if (!this.checkLoginAndRedirect()) return;
     const { commentInput, userid, username } = this.state;
     const { product_id, type } = this.props;
     const comment_id = Date.now()
@@ -180,6 +191,7 @@ class Comments extends React.Component {
   };
 
   onClickReply = (comment_id) => {
+    if (!this.checkLoginAndRedirect()) return;
     this.setState((prevState) => ({
       showReplyBox: {
         ...prevState.showReplyBox,
@@ -250,41 +262,70 @@ class Comments extends React.Component {
     this.setState({current_comment_id: 0})
   };
 
-  handleDeleteMainComment = async (comment_id) => {
-    try {
-      const response = await fetch(`http://localhost:8000/api/comments/${comment_id}`, {
-        method: 'DELETE',
-      });
-  
-      if (response.ok) {
-        this.setState((prevState) => ({
-          comments: prevState.comments.filter((comment) => comment.comment_id !== comment_id),
-        }));
-      } else {
-        const result = await response.json();
-        console.error('Error deleting comment:', result.message);
+  // Confirm deletion methods
+  handleDeleteMainComment = (comment_id) => {
+    this.setState({
+      showDeleteConfirm: true,
+      commentToDelete: comment_id,
+      isSubComment: false,
+    });
+  };
+
+  handleDeleteSubComment = (sub_comment_id) => {
+    this.setState({
+      showDeleteConfirm: true,
+      commentToDelete: sub_comment_id,
+      isSubComment: true,
+    });
+  };
+
+  confirmDelete = async () => {
+    const { commentToDelete, isSubComment } = this.state;
+
+    if (isSubComment) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/subcomments/${commentToDelete}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          this.setState((prevState) => ({
+            comments: this.removeSubcomment(prevState.comments, commentToDelete),
+            showDeleteConfirm: false,
+            commentToDelete: null,
+          }));
+        } else {
+          const result = await response.json();
+          console.error('Error deleting subcomment:', result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting subcomment:', error);
       }
-    } catch (error) {
-      console.error('Error deleting comment:', error);
+    } else {
+      try {
+        const response = await fetch(`http://localhost:8000/api/comments/${commentToDelete}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          this.setState((prevState) => ({
+            comments: prevState.comments.filter((comment) => comment.comment_id !== commentToDelete),
+            showDeleteConfirm: false,
+            commentToDelete: null,
+          }));
+        } else {
+          const result = await response.json();
+          console.error('Error deleting comment:', result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting comment:', error);
+      }
     }
   };
 
-  handleDeleteSubComment = async (sub_comment_id) => {
-    try {
-      const response = await fetch(`http://localhost:8000/api/subcomments/${sub_comment_id}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        this.setState((prevState) => ({
-          comments: this.removeSubcomment(prevState.comments, sub_comment_id),
-        }));
-      } else {
-        const result = await response.json();
-        console.error('Error deleting subcomment:', result.message);
-      }
-    } catch (error) {
-      console.error('Error deleting subcomment:', error);
-    }
+  cancelDelete = () => {
+    this.setState({
+      showDeleteConfirm: false,
+      commentToDelete: null,
+    });
   };
 
   removeSubcomment = (comments, sub_comment_id) => {
@@ -371,10 +412,56 @@ class Comments extends React.Component {
   
 
   render() {
-    let { commentInput, comments } = this.state;
+    const { commentInput, comments, showNotification, showDeleteConfirm } = this.state;
+
     return (
       <div className="p-4 m-4 bg-gray-200">
         <h3 className="font-semibold p-1">Bình luận</h3>
+        {showNotification && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-lg font-semibold mb-4">Please log in to perform this action.</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
+                  onClick={() => {
+                    this.setState({ showNotification: false });
+                    window.location.href = '/login';
+                  }}
+                >
+                  OK
+                </button>
+                <button
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
+                  onClick={() => this.setState({ showNotification: false })}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showDeleteConfirm && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-lg font-semibold mb-4">Are you sure you want to delete this comment?</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out"
+                  onClick={this.confirmDelete}
+                >
+                  OK
+                </button>
+                <button
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
+                  onClick={this.cancelDelete}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <ul>
           {comments.map((comment) => this.renderComment(comment))}
         </ul>
