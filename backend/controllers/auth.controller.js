@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const fs = require('fs');
 // Load environment variables
 require('dotenv').config();
 
@@ -47,34 +47,43 @@ const register = async (req, res) => {
   const { user_id, account, password, email, address, phone, role, avatar, avatarContentType } = req.body;
 
   try {
-    const existingAccount = await User.findOne({ account: account });
-    const existingEmail = await User.findOne({ email: email });
+      const existingAccount = await User.findOne({ account: account });
+      const existingEmail = await User.findOne({ email: email });
 
-    if (existingAccount) {
-      res.json("existedaccount");
-    } else if (existingEmail) {
-      res.json("existedemail");
-    } else {
-      // Hash the password before storing it
-      const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
-      const newUser = {
-        user_id: user_id,
-        account: account,
-        password: hashedPassword,
-        email: email,
-        address: address,
-        role: role,
-        phone: phone,
-        avatar: avatar,
-        avatarContentType: avatarContentType,
-        cart: [],
-      };
-      await User.create(newUser);
-      res.json("notexist");
-    }
+      if (existingAccount) {
+          res.json("existedaccount");
+      } else if (existingEmail) {
+          res.json("existedemail");
+      } else {
+          // Hash the password before storing it
+          const hashedPassword = await bcrypt.hash(password, 10); // Adjust the salt rounds as needed
+
+          // Check if avatar is null, then set default avatar
+          let avatarData = avatar;  // Default to the received avatar
+          if (!avatar) {
+              const defaultAvatarPath = '../frontend/src/img/default_avatar.png';  // Adjust the path as per your server setup
+              avatarData = fs.readFileSync(defaultAvatarPath);
+          }
+
+          const newUser = {
+              user_id: user_id,
+              account: account,
+              password: hashedPassword,
+              email: email,
+              address: address,
+              role: role,
+              phone: phone,
+              avatar: avatarData,
+              avatarContentType: avatarContentType,
+              cart: [],
+          };
+
+          await User.create(newUser);
+          res.json("notexist");
+      }
   } catch (error) {
-    console.error(error);
-    res.status(500).json("fail");
+      console.error(error);
+      res.status(500).json("fail");
   }
 };
 
