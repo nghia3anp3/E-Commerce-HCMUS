@@ -161,36 +161,36 @@ const changePhone = async (req, res) => {
   }
 }
 
-const update = async (req, res) => {
-  try {
-    const { user_id } = req.params;
-    const updatedData = req.body;
+// const update = async (req, res) => {
+//   try {
+//     const { user_id } = req.params;
+//     const updatedData = req.body;
 
-    if (req.file) {
-      const avatarData = fs.readFileSync(req.file.path);
-      const avatarContentType = req.file.mimetype;
+//     if (req.file) {
+//       const avatarData = fs.readFileSync(req.file.path);
+//       const avatarContentType = req.file.mimetype;
 
-      updatedData.avatar = avatarData;
-      updatedData.avatarContentType = avatarContentType;
+//       updatedData.avatar = avatarData;
+//       updatedData.avatarContentType = avatarContentType;
 
-      fs.unlinkSync(req.file.path);
-    }
+//       fs.unlinkSync(req.file.path);
+//     }
 
-    const updatedUser = await Users.findOneAndUpdate(
-      { user_id },
-      { $set: updatedData },
-      { new: true }
-    );
+//     const updatedUser = await Users.findOneAndUpdate(
+//       { user_id },
+//       { $set: updatedData },
+//       { new: true }
+//     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     if (!updatedUser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
 
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-  };
+//     res.status(200).json(updatedUser);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+//   };
 
 module.exports = {
     getAccount,
@@ -198,6 +198,5 @@ module.exports = {
     changePassword,
     changeEmail,
     changePhone,
-    update,
 };
 
