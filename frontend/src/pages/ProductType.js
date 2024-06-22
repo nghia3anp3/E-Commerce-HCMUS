@@ -17,7 +17,6 @@ const ProductType = () => {
   const {type, p_type, page} = useParams();
   // get products from product context
   const { products } = useContext(ProductContext);
-  const isLoggedIn = localStorage.getItem('token') !== null;
   
   //filtered category
   const filteredProducts = products.filter((item) => {
@@ -39,33 +38,12 @@ const ProductType = () => {
     const endIndex = startIndex + 40
     return filteredProducts.slice(startIndex, endIndex)
   }
-  //Chuyển đến trang tiếp theo
-  const goNextPage = () => {
-    if (currentPage === totalPage) {
-      setCurrentPage(1)
-    }
-    else{
-      setCurrentPage(currentPage + 1)
-    }
-  }
-
-  //Chuyển qua trang phía trước
-  const goPreviousPage = () => {
-    if (currentPage === 1){
-      setCurrentPage(totalPage)
-    }
-    else{
-      setCurrentPage(currentPage - 1)
-    }
-  }
 
   //
   const currentProducts = getProductsPerPage(page)
 
   return (
     <div>
-      {isLoggedIn ? (
-        // Content to display if the user is logged in
         <section className='py-20'>
           <div className='container mx-auto p-12'>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0'>
@@ -83,14 +61,6 @@ const ProductType = () => {
             </div>
             </div>
         </section>
-      ) : 
-      (
-        // Content to display if the user is not logged in
-        <div className="text-center py-20 mt-36">
-          <h2 className="text-2xl font-semibold mb-4">Please log in to view products</h2>
-          <Link to="/login" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Log In</Link>
-        </div>
-      )}
     </div>
   );
 }

@@ -11,8 +11,8 @@ class Comments extends React.Component {
     username: '',
     commentInput: '',
     current_comment_id: 0,
-    is_autoreply: false,
     comments: [],
+    showNotification: false,
   };
 
   componentDidMount() {
@@ -39,7 +39,17 @@ class Comments extends React.Component {
     }
   }
 
+  checkLoginAndRedirect = () => {
+    const { authContext } = this.props;
+    if (!authContext.isLoggedIn) {
+      this.setState({ showNotification: true }); // Show the notification
+      return false;
+    }
+    return true;
+  };
+
   handlePostComment = async () => {
+    if (!this.checkLoginAndRedirect()) return;
     const { commentInput, userid, username } = this.state;
     const { product_id, type } = this.props;
     const comment_id = Date.now()
@@ -97,14 +107,14 @@ class Comments extends React.Component {
         })
       });
       const result1 = await response1.json();
+      console.log(result1)
       this.setState({
         replyText: result1.message,
         current_comment_id: comment_id,
-        is_autoreply: true
+        username: 'Admin',
       }, () => {
-        this.onClickSave();
+        this.onClickSave(true);
       });
-      this.setState({is_autoreply: false})
     }catch (error) {
       console.error('Error posting comment:', error);
     }
@@ -181,6 +191,7 @@ class Comments extends React.Component {
   };
 
   onClickReply = (comment_id) => {
+    if (!this.checkLoginAndRedirect()) return;
     this.setState((prevState) => ({
       showReplyBox: {
         ...prevState.showReplyBox,
@@ -193,9 +204,9 @@ class Comments extends React.Component {
   
   onClickSave = async () => {
     
-    const {replyText, userid, username, is_autoreply } = this.state;
+    const {replyText, userid, username, current_comment_id} = this.state;
     const {product_id, type } = this.props;
-    let comment_id = this.state.current_comment_id
+    let comment_id = current_comment_id
     this.addReply(comment_id, replyText);
     this.setState((prevState) => ({
       showReplyBox: {
@@ -204,14 +215,6 @@ class Comments extends React.Component {
       },
       replyText: '',
     }));
-    let fullname
-    if (is_autoreply){
-      fullname = "Admin"
-    }
-    else{
-      fullname = username
-    }
-
     try {
       const response = await fetch("http://localhost:8000/api/subcomments",{
         method: 'POST',
@@ -225,7 +228,7 @@ class Comments extends React.Component {
           comment_id: comment_id,
           commentator: "customer",
           customer_id: userid,
-          fullname: fullname,
+          fullname: username,
           avatar_url: "",
           content: replyText,
           score: 0,
@@ -236,7 +239,7 @@ class Comments extends React.Component {
         })
       })
       const result = await response.json();
-
+      this.updateUser()
       if (response.ok) {
         console.log('Subcomment posted successfully:', result);
       } else {
@@ -259,10 +262,83 @@ class Comments extends React.Component {
     this.setState({current_comment_id: 0})
   };
 
-  renderComment = (comment) => {
-    const { comment_id, customer_name, avatar, content, subcomment } = comment;
-    const { replyText, showReplyBox } = this.state;
+  // Confirm deletion methods
+  handleDeleteMainComment = (comment_id) => {
+    this.setState({
+      showDeleteConfirm: true,
+      commentToDelete: comment_id,
+      isSubComment: false,
+    });
+  };
 
+  handleDeleteSubComment = (sub_comment_id) => {
+    this.setState({
+      showDeleteConfirm: true,
+      commentToDelete: sub_comment_id,
+      isSubComment: true,
+    });
+  };
+
+  confirmDelete = async () => {
+    const { commentToDelete, isSubComment } = this.state;
+
+    if (isSubComment) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/subcomments/${commentToDelete}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          this.setState((prevState) => ({
+            comments: this.removeSubcomment(prevState.comments, commentToDelete),
+            showDeleteConfirm: false,
+            commentToDelete: null,
+          }));
+        } else {
+          const result = await response.json();
+          console.error('Error deleting subcomment:', result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting subcomment:', error);
+      }
+    } else {
+      try {
+        const response = await fetch(`http://localhost:8000/api/comments/${commentToDelete}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          this.setState((prevState) => ({
+            comments: prevState.comments.filter((comment) => comment.comment_id !== commentToDelete),
+            showDeleteConfirm: false,
+            commentToDelete: null,
+          }));
+        } else {
+          const result = await response.json();
+          console.error('Error deleting comment:', result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting comment:', error);
+      }
+    }
+  };
+
+  cancelDelete = () => {
+    this.setState({
+      showDeleteConfirm: false,
+      commentToDelete: null,
+    });
+  };
+
+  removeSubcomment = (comments, sub_comment_id) => {
+    for (let comment of comments) {
+      comment.subcomment = comment.subcomment.filter(subcomment => subcomment.comment_id !== sub_comment_id);
+      comment.subcomment = this.removeSubcomment(comment.subcomment, sub_comment_id);
+    }
+    return comments;
+  };
+
+  renderComment = (comment, is_sub_comment = false) => {
+    const { comment_id, customer_name, avatar, content, subcomment } = comment;
+    const { replyText, showReplyBox, username} = this.state;
     return (
       <div className="flex gap-4 m-4 relative" key={customer_name}>
         <div className="flex-shrink-0">
@@ -279,17 +355,27 @@ class Comments extends React.Component {
           </div>
           {!showReplyBox[comment_id] && (
             <div>
-              <button className="p-2 text-blue-500 hover:underline">Thích</button>
               <button className="p-2 text-blue-500 hover:underline" onClick={() => this.onClickReply(comment_id)}>
                 Phản hồi
               </button>
+              {customer_name === username && !is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleDeleteMainComment(comment_id)}>
+                  Xóa
+                </button>
+              )}
+              {customer_name === username && is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleDeleteSubComment(comment_id)}>
+                  Xóa
+                </button>
+              )}
+
             </div>
           )}
           {showReplyBox[comment_id] && (
             <div className="mt-4">
               <input
                 className="bg-gray-100 rounded border border-gray-400 leading-normal h-20 py-2 px-3 mb-4 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-                placeholder="Bình luận"
+                placeholder="Comment"
                 type="text"
                 value={replyText}
                 onChange={this.onChangeContext}
@@ -313,7 +399,9 @@ class Comments extends React.Component {
           {subcomment.length > 0 && (
             <ul className="mt-4">
               {subcomment.map((childComment) => (
-                <li key={childComment.customer_name}>{this.renderComment(childComment)}</li>
+                <li key={childComment.comment_id}>
+                  {this.renderComment(childComment, true)}
+                </li>
               ))}
             </ul>
           )}
@@ -321,44 +409,77 @@ class Comments extends React.Component {
       </div>
     );
   };
+  
 
   render() {
-    let { commentInput, comments } = this.state;
+    const { commentInput, comments, showNotification, showDeleteConfirm } = this.state;
 
     return (
-      <AuthContext.Consumer>
-        {(authContext) => (
-          <>
-            {authContext.isLoggedIn ? (
-              <div className="p-4 m-4 bg-gray-200">
-                <h3 className="font-semibold p-1">Bình luận</h3>
-                <ul>
-                  {comments.map((comment) => this.renderComment(comment))}
-                </ul>
-                <div className="flex flex-col justify-start ml-6">
-                  <input
-                    className="w-2/3 bg-gray-100 rounded border border-gray-400 leading-normal h-20 mb-6 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
-                    placeholder="Comment"
-                    value={commentInput}
-                    onChange={this.onChangeComment}
-                  />
-                  <input
-                    type="submit"
-                    className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
-                    value="Bình luận"
-                    onClick={this.handlePostComment}
-                  />
-                </div>
+      <div className="p-4 m-4 bg-gray-200">
+        <h3 className="font-semibold p-1">Bình luận</h3>
+        {showNotification && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-lg font-semibold mb-4">Please log in to perform this action.</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
+                  onClick={() => {
+                    this.setState({ showNotification: false });
+                    window.location.href = '/login';
+                  }}
+                >
+                  OK
+                </button>
+                <button
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
+                  onClick={() => this.setState({ showNotification: false })}
+                >
+                  Cancel
+                </button>
               </div>
-            ) : (
-              <div className="p-4 m-4 bg-red-200">
-                <h3 className="font-semibold p-1">Error: Not Logged In</h3>
-                <p>Please log in to participate in the discussion.</p>
-              </div>
-            )}
-          </>
+            </div>
+          </div>
         )}
-      </AuthContext.Consumer>
+        {showDeleteConfirm && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-lg font-semibold mb-4">Are you sure you want to delete this comment?</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out"
+                  onClick={this.confirmDelete}
+                >
+                  OK
+                </button>
+                <button
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
+                  onClick={this.cancelDelete}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        <ul>
+          {comments.map((comment) => this.renderComment(comment))}
+        </ul>
+        <div className="flex flex-col justify-start ml-6">
+          <input
+            className="w-2/3 bg-gray-100 rounded border border-gray-400 leading-normal h-20 mb-6 py-2 px-3 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
+            placeholder="Comment"
+            value={commentInput}
+            onChange={this.onChangeComment}
+          />
+          <input
+            type="submit"
+            className="w-32 py-1.5 rounded-md text-white bg-indigo-500 text-lg"
+            value="Bình luận"
+            onClick={this.handlePostComment}
+          />
+        </div>
+      </div>
     );
   }
 }

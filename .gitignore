@@ -13,8 +13,9 @@ venv/
 # production
 /build
 
-# AI model and test
+# AI model and test, data
 AI_process/saved_model/
+AI_process/data/
 
 # misc
 .DS_Store

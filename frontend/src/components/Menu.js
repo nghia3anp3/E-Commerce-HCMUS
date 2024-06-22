@@ -9,8 +9,8 @@ class Menu extends React.Component {
   state = {
     hoverStates: { 1: false, 2: false },
     isHovered: false,
-    Phone: ['Samsung', 'Panasonic', 'Apple', 'Kindle', 'Nokia', 'Xiaomi'],
-    Laptop: ['Asus', 'Lenovo'],
+    Phone: ['Apple','Huawei', 'Samsung', 'OPPO'],
+    Laptop: ['Apple', 'Acer', 'Dell', 'Lenovo'],
   };
 
   handleMouseEnter = (index) => {

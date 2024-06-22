@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import Logo from '../img/logo.png';
 import { AuthContext } from "../context/AuthContext";
-
 class Register extends React.Component {
   static contextType = AuthContext;
 
@@ -78,6 +77,7 @@ class Register extends React.Component {
       } else {
         // Registration successful, handle accordingly (e.g., redirect to login)
         alert("Đăng ký thành công!");
+        window.location.replace("/login");
       }
     } catch (error) {
       console.error("An error occurred while registering:", error);

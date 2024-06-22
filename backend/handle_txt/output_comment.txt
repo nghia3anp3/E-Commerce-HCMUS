@@ -1,5 +1,2 @@
-{"_id": "6656d903f5f7d482200da1db", "product_id": 273186946, "score": 0.8370077610015869}
-{"_id": "6656d903f5f7d482200da1cb", "product_id": 273186911, "score": 0.836898684501648}
-{"_id": "6656d903f5f7d482200da165", "product_id": 251275686, "score": 0.8244394659996033}
-{"_id": "6656d903f5f7d482200da1c9", "product_id": 249168300, "score": 0.8243394494056702}
-{"_id": "6656d903f5f7d482200da139", "product_id": 253443894, "score": 0.8172289133071899}
+Negative
+Chúng tôi rất tiếc vì sản phẩm/dịch vụ của chúng tôi đã không đáp ứng được mong đợi của bạn. Xin vui lòng liên hệ với chúng tôi qua gmail lehuuhung03@gmail.com để chúng tôi có thể hỗ trợ bạn tốt hơn.

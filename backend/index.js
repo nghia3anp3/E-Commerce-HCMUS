@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes/routes.js");
 const cors = require("cors");
-
+bodyParser = require('body-parser');
 const app = express();
 
 
@@ -12,6 +12,10 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.text({ limit: '50mb' }));
 app.use(cors());
 
+
+app.use(
+  bodyParser.raw({ limit: '50mb', type: ['image/*'] })
+);
 
 // Routes
 app.use("/api", routes);
