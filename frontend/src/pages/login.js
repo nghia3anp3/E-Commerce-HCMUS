@@ -102,7 +102,6 @@ class Login extends React.Component {
   render() {
     const { accountOrEmail, password, showPassword, errors, redirectUrl } = this.state;
     const { isLoggedIn } = this.context;
-    console.log(11111111111, redirectUrl);
     if (isLoggedIn) {
       return <Navigate to = {redirectUrl}  replace />;
     }

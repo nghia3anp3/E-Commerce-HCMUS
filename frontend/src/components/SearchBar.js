@@ -13,7 +13,8 @@ class SearchBar extends Component {
         this.state = {
             item: "",
             modalIsOpen: false,
-            selectedImages: [],
+            selectedFile: null,
+            previewUrl: null,
         };
     }
 
@@ -31,7 +32,7 @@ class SearchBar extends Component {
 
 
     onClickSematicSearch = async () => {
-        const {item} = this.state
+        const {item, previewUrl} = this.state
         const {findProductById} = this.context
 
         try {
@@ -53,8 +54,8 @@ class SearchBar extends Component {
             })
             const ai_search_products_str = JSON.stringify(ai_search_products);
             localStorage.setItem('ai_search_products', ai_search_products_str);
-            // localStorage.setItem('search_query', item);
-            // localStorage.setItem('is_image', false)
+            localStorage.setItem('search_query', item)
+            localStorage.setItem('is_image', false)
             window.location.href = '/search';
         } catch (error) {
             console.error('Error sematic searching:', error);
@@ -67,56 +68,55 @@ class SearchBar extends Component {
 
     handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            this.handleImageSearch();
+            this.onClickSematicSearch();
         }
     };
 
-    handleImageSearch = async () => {
-        const { selectedImages } = this.state;
-        const image = selectedImages[0]
-
-        // try {
-        //     // Fetch the blob and convert it to a File
-        //     const response = await fetch(image);
-        //     // console.log(22222222222, response)
-        //     const blob = await response.blob();
-        //     // console.log(3333333333333, blob)
-        //     const file = new File([blob], 'image.jpg', { type: blob.type });
-        //     // console.log(222222222222222, file)
-        //     const formData = new FormData();
-        //     formData.append('image', file);
-        //     console.log('FormData:', formData);
-
-        //     const apiResponse = await axios.post('http://localhost:8000/api/image_search', file);
-
-        //     const result = apiResponse.data;
-        //     const { findProductById } = this.context;
-        //     findProductById(result);
-        // } catch (error) {
-        //     console.error('Error uploading image:', error);
-        // }
-    }
-
     closeModal = () => {
-        this.setState({ modalIsOpen: false, selectedImages: [] });
+        this.setState({ modalIsOpen: false, selectedFile: null });
     };
 
     handleImageUpload = (event) => {
-        const files = event.target.files;
-        const images = [...this.state.selectedImages];
-        for (let i = 0; i < files.length; i++) {
-            images.push(URL.createObjectURL(files[i]));
-        }
-        this.setState({ selectedImages: images });
+        const file = event.target.files[0];
+
+        this.setState({
+            selectedFile: file,
+            previewUrl: URL.createObjectURL(file)
+        });
     };
 
-    onConfirm = () => {
-        console.log("Confirmed Images:", this.state.selectedImages);
-        this.setState({ modalIsOpen: false});
+    onConfirm = async () => {
+        console.log("Confirmed Images:", this.state.selectedFile);
+        const { selectedFile, previewUrl, item } = this.state;
+        this.setState({ modalIsOpen: false});        
+        try {
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            // Send POST request to the server
+            const apiResponse = await axios.post('http://localhost:8000/api/image_search', formData);
+
+            // Handle response data from the server
+            const result = apiResponse.data;
+            const { findProductById } = this.context;
+            let image_search_products = []
+            result.map((item, index) => {
+                let product_id = item.product_id
+                let product = findProductById(product_id)
+                image_search_products.push(product)
+            })
+            const ai_products_str = JSON.stringify(image_search_products);
+            localStorage.setItem('ai_search_products', ai_products_str);
+            localStorage.setItem('search_query', item)
+            localStorage.setItem('is_image', true)
+            window.location.href = '/search';
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
     };
 
     render() {
-        const { modalIsOpen, selectedImages, item } = this.state;
+        const { modalIsOpen, item,  previewUrl} = this.state;
         return (
             <div className="ml-6 md:ml-0 flex flex-row gap-5 max-w-md">
                 <input
@@ -137,13 +137,12 @@ class SearchBar extends Component {
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
                             <h2 className="text-xl mb-4">Upload Image</h2>
-                            {selectedImages.length > 0 &&
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {selectedImages.map((image, index) => (
-                                        <img key={index} src={image} alt={`Uploaded ${index}`} className="w-24 h-24 object-cover rounded-lg" />
-                                    ))}
+                            {previewUrl && (
+                                <div className="mb-4">
+                                <p className="font-semibold">Preview:</p>
+                                <img src={previewUrl} alt="Preview" className="w-20 h-20" />
                                 </div>
-                            }
+                            )}
                             <input type="file" accept="image/*" onChange={this.handleImageUpload} multiple className="mb-4" />
                             <div className="flex justify-between">
                                 <button onClick={this.closeModal} className="bg-red-500 text-white py-2 px-4 rounded-lg mr-2">

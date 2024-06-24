@@ -59,20 +59,20 @@ const createSubcomment = async (req, res) => {
 const updateSubcomment = async (req, res) => {
   try {
     //
-    const { product_id } = req.params;
+    const { sub_comment_id } = req.params;
     const queryParams = req.query;
     if (Object.keys(req.body).length === 0) {
       const updateResult = await SubComments.updateMany(
-        { product_id: product_id },
+        { sub_comment_id: sub_comment_id },
         { $set: req.body },
         { new: true }
       );
       // Fetch updated SubComments
-      const updatedSubComments = await SubComments.find({ product_id: product_id });
+      const updatedSubComments = await SubComments.find({ sub_comment_id: sub_comment_id });
       return res.status(200).json(updatedSubComments);
     }
-    // Create filter with product_id
-    const filter = { product_id };
+    // Create filter with sub_comment_id
+    const filter = { sub_comment_id };
     // Add query parameters to filter if they exist
     Object.keys(queryParams).forEach(key => {
       filter[key] = queryParams[key];

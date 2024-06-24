@@ -53,22 +53,25 @@ def extract_vgg16_features(image_tensor):
     return features.view(-1)
 
 # Load faiss index
-input_path_faiss = r"../AI_process/image_search/faiss_index.index"
+# input_path_faiss = r"../../AI_process/image_search/faiss_index.index"
+input_path_faiss = "../../AI_process/image_search/faiss_index.index"
+
 index = faiss.read_index(input_path_faiss)
 
 # Đường dẫn đến tệp danh sách các tệp hình ảnh
-file_list_path = r"../AI_process/image_search/anhxa.txt"
-
+# file_list_path = r"../../AI_process/image_search/anhxa.txt"
+file_list_path = r"../../AI_process/image_search/anhxa.txt"
 # Đọc danh sách các tên tệp hình ảnh từ tệp .txt
 with open(file_list_path, "r") as f:
     file_list = f.read().splitlines()
 
 # Path to file mapping image filenames to product IDs
-image_to_id_path = r"../AI_process/image_search/image_names.txt"
+# image_to_id_path = r"../../AI_process/image_search/image_names.txt"
+image_to_id_path = r"../../AI_process/image_search/image_names.txt"
 
-def image_process(image):
-    # Xử lý hình ảnh input
-    img_tensor = preprocess_image_cv2(image) #image là path
+def image_process():
+    # Xử lý hình ảnh input'
+    img_tensor = preprocess_image_cv2("../../frontend/src/img/input_image.jpg") #image là path
     features = extract_vgg16_features(img_tensor)
     features_np = features.numpy()
     input_features = features_np.reshape(1, -1)
@@ -110,9 +113,11 @@ def image_process(image):
 
 # Save unique product IDs to a new .txt file
 input_image = sys.argv[1]
-output_path = r"backend/handle_txt/output_image.txt"
+print(input_image)
+# input_image = '../../AI_process/image_search/test.jpg'
+output_path = r"../handle_txt/output_image.txt"
 
-unique_product_ids = image_process(input_image)
+unique_product_ids = image_process()
 
 # Write JSON objects to txt file
 with open(output_path, "w") as f:

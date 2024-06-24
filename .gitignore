@@ -16,6 +16,7 @@ venv/
 # AI model and test, data
 AI_process/saved_model/
 AI_process/data/
+AI_process/image_search/faiss_index.index
 
 # misc
 .DS_Store

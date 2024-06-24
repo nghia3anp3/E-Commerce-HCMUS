@@ -55,10 +55,8 @@ const updateUser = async (req, res) => {
     if (req.file) {
       const avatarData = fs.readFileSync(req.file.path);
       const avatarContentType = req.file.mimetype;
-
       updatedData.avatar = avatarData;
       updatedData.avatarContentType = avatarContentType;
-
       fs.unlinkSync(req.file.path);
     }
 
@@ -118,5 +116,5 @@ module.exports = {
     updateUser,
     getAllusers,
     getAvatar,
-    upload
+    upload,
 };
