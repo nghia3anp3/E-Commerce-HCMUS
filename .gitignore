@@ -17,6 +17,7 @@ venv/
 AI_process/saved_model/
 AI_process/data/
 AI_process/image_search/faiss_index.index
+AI_Evaluation_Dataset/
 
 # misc
 .DS_Store
