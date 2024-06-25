@@ -26,14 +26,12 @@ class Checkout extends React.Component {
     }
 
     validateEmail = (email) => {
-        // Regex pattern for basic email validation
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return pattern.test(email);
     }
     
     validatePhone = (phone) => {
-        // Regex pattern for phone number validation (Vietnam format)
-        const pattern = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+        const pattern = /^\d+$/;
         return pattern.test(phone);
     }
     

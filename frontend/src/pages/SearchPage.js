@@ -17,7 +17,7 @@ class SearchPage extends Component {
   componentDidMount() {
     const ai_search_products_str = localStorage.getItem('ai_search_products');
     const search_query = localStorage.getItem('search_query');
-    const is_image = localStorage.getItem('is_image')
+    const is_image = JSON.parse(localStorage.getItem('is_image'));
     if (ai_search_products_str) {
       const ai_search_products = JSON.parse(ai_search_products_str);
       this.setState({ ai_search_products, search_query, is_image });
@@ -26,7 +26,6 @@ class SearchPage extends Component {
 
   render() {
     const { ai_search_products, search_query, is_image } = this.state;
-    console.log(is_image)
     return (
       <div>
           <section className='h-full py-20'>

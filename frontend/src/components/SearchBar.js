@@ -15,6 +15,7 @@ class SearchBar extends Component {
             modalIsOpen: false,
             selectedFile: null,
             previewUrl: null,
+            loading: false,
         };
     }
 
@@ -34,7 +35,7 @@ class SearchBar extends Component {
     onClickSematicSearch = async () => {
         const {item, previewUrl} = this.state
         const {findProductById} = this.context
-
+        this.setState({ loading: true });
         try {
             const response = await fetch("http://localhost:8000/api/semantic_seach", {
                 method: 'POST',
@@ -55,10 +56,11 @@ class SearchBar extends Component {
             const ai_search_products_str = JSON.stringify(ai_search_products);
             localStorage.setItem('ai_search_products', ai_search_products_str);
             localStorage.setItem('search_query', item)
-            localStorage.setItem('is_image', false)
+            localStorage.setItem('is_image', JSON.stringify(false))
             window.location.href = '/search';
         } catch (error) {
             console.error('Error sematic searching:', error);
+            this.setState({ loading: false });
         }
     };
 
@@ -88,7 +90,7 @@ class SearchBar extends Component {
     onConfirm = async () => {
         console.log("Confirmed Images:", this.state.selectedFile);
         const { selectedFile, previewUrl, item } = this.state;
-        this.setState({ modalIsOpen: false});        
+        this.setState({ modalIsOpen: false, loading: true });      
         try {
             const formData = new FormData();
             formData.append('image', selectedFile);
@@ -112,11 +114,12 @@ class SearchBar extends Component {
             window.location.href = '/search';
         } catch (error) {
             console.error('Error uploading image:', error);
+            this.setState({ loading: false });
         }
     };
 
     render() {
-        const { modalIsOpen, item,  previewUrl} = this.state;
+        const { modalIsOpen, item,  previewUrl, loading} = this.state;
         return (
             <div className="ml-6 md:ml-0 flex flex-row gap-5 max-w-md">
                 <input
@@ -132,6 +135,14 @@ class SearchBar extends Component {
                 <button className="bg-stone-950 text-white py-2 px-4 rounded-lg" onClick={this.onImageSearch}>
                     <FontAwesomeIcon icon={faCamera} />
                 </button>
+
+                {loading && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg">
+                            <p className="text-lg font-semibold">Loading, vui lòng chờ...</p>
+                        </div>
+                    </div>
+                )}
 
                 {modalIsOpen && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

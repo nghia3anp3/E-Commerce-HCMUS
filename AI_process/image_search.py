@@ -7,7 +7,7 @@ import cv2
 import faiss
 import numpy as np
 from PIL import Image, UnidentifiedImageError
-import pandas as np
+import pandas as pd
 import os
 
 # Thiết lập biến môi trường
