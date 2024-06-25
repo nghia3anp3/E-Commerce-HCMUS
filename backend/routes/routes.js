@@ -8,7 +8,7 @@ const {getSubComments, getSubcommentbyID, createSubcomment,updateSubcomment, del
 const {getAll, getbyID, createOrder, updateOrder, deleteOrder} = require('../controllers/order.controller.js');
 const {getAllDetailProduct, getDetailProductbyID, createDetailProduct, updateDetailProduct, deleteDetailProduct} = require('../controllers/detail_product.controller.js');
 const {getAllInfo, getInfo, createInfo, updateInfo, deleteInfo,} = require('../controllers/product.controller.js');
-const {getContext_semantic_search, getContext_image_search} = require('../controllers/search.controller.js');
+const {getContext_semantic_search, getContext_image_search, uploadSearch} = require('../controllers/search.controller.js');
 
 Router.get("/", (req, res) => {
     res.send("Hello from Node API Server");
@@ -39,19 +39,19 @@ Router.get('/avatar/:user_id', getAvatar);
 Router.get("/comments", getComments);
 Router.get("/comments/:product_id", getCommentByProductID);
 Router.post("/comments", createComment);
-Router.put("/comments/:product_id", updateComment);
+Router.put("/comments/:comment_id", updateComment);
 Router.delete("/comments/:comment_id", deleteCommentByID);
 
 //AI Main route
 Router.post("/comments/AI_auto_comments", getReplyComments);
 Router.post("/semantic_seach", getContext_semantic_search);
-Router.post("/image_search", getContext_image_search);
+Router.post("/image_search", uploadSearch.single('image'), getContext_image_search);
 
 // Sub_comment Routes
 Router.get("/subcomments", getSubComments);
 Router.get("/subcomments/:product_id", getSubcommentbyID);
 Router.post("/subcomments", createSubcomment);
-Router.put("/subcomments/:product_id", updateSubcomment);
+Router.put("/subcomments/:sub_comment_id", updateSubcomment);
 Router.delete("/subcomments/:sub_comment_id", deleteSubCommentByID);
 
 // Order Routes

@@ -114,21 +114,28 @@ class SpecificInfo extends React.Component {
     
       render() {
         let { dict_specific_info } = this.state;
-        let { specificProduct } = this.props;
+        let { specificProduct, isError } = this.props;
         specificProduct = specificProduct.slice(0, -3);
         return (
           <div className='mt-6'>
             <h1 className='text-2xl font-bold mb-4'>Thông tin chi tiết</h1>
-            <div className='space-y-4'>
-              {specificProduct.map((item) => (
-                <div key={item[0]} className='flex items-start gap-4 border-b-2 border-gray-200 pb-2'>
-                  <p className='font-medium w-40 text-gray-800'>{dict_specific_info[item[0]]}</p>
-                  <div className='flex-1'>
-                    {this.renderItem(item[1])}
-                  </div>
+            {isError ? 
+            (
+              <div className='=space-y-4'>
+                Thông tin đang được cập nhật
+              </div>
+            )
+          : 
+          (<div className='space-y-4'>
+            {specificProduct.map((item) => (
+              <div key={item[0]} className='flex items-start gap-4 border-b-2 border-gray-200 pb-2'>
+                <p className='font-medium w-40 text-gray-800'>{dict_specific_info[item[0]]}</p>
+                <div className='flex-1'>
+                  {this.renderItem(item[1])}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>)}
           </div>
         );
       }

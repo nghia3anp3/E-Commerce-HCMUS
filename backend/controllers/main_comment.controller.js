@@ -58,26 +58,26 @@ const createComment = async (req, res) => {
 
 const updateComment = async (req, res) => {
   try {
-    const { product_id } = req.params;
+    const { comment_id} = req.params;
     const queryParams = req.query;
     if (Object.keys(req.body).length === 0) {
-      const updateResult = await Comments.updateMany(
-        { product_id: product_id },
+      const updateResult = await Comments.updateOne(
+        { comment_id: comment_id },
         { $set: req.body },
         { new: true }
       );
       // Fetch updated comments
-      const updatedComments = await Comments.find({ product_id: product_id });
+      const updatedComments = await Comments.find({ comment_id: comment_id });
       return res.status(200).json(updatedComments);
     }
     // Create filter with product_id
-    const filter = { product_id };
+    const filter = { comment_id };
     // Add query parameters to filter if they exist
     Object.keys(queryParams).forEach(key => {
       filter[key] = queryParams[key];
     });
     // Update multiple comments based on filter
-    const updateResult = await Comments.updateMany(
+    const updateResult = await Comments.updateOne(
       filter,
       { $set: req.body },
       { new: true }
@@ -92,6 +92,7 @@ const updateComment = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const deleteComment = async (req, res) => {
   try {

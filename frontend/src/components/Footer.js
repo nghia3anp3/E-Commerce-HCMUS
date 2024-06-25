@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import Home from '../img/home.png';
-import Mail from '../img/mail.png';
-import Phone from '../img/telephone.png';
-import Facebook from '../img/facebook.png';
 import Github from '../img/github.png';
-import Linkedin from '../img/linkedin.png';
+
 
 class Footer extends Component {
   render() {

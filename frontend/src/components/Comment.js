@@ -13,6 +13,12 @@ class Comments extends React.Component {
     current_comment_id: 0,
     comments: [],
     showNotification: false,
+    isshowShortError: false,
+    showEditConfirm: false,
+    showEditForm: false,
+    commentToDelete: '',
+    commentToEdit: '',
+    commentToEditID: null,
   };
 
   componentDidMount() {
@@ -42,18 +48,28 @@ class Comments extends React.Component {
   checkLoginAndRedirect = () => {
     const { authContext } = this.props;
     if (!authContext.isLoggedIn) {
-      this.setState({ showNotification: true }); // Show the notification
+      this.setState({ showNotification: true });
+      localStorage.setItem('redirectUrl', window.location.href);
       return false;
     }
     return true;
   };
 
+
   handlePostComment = async () => {
     if (!this.checkLoginAndRedirect()) return;
     const { commentInput, userid, username } = this.state;
+    if (commentInput.length < 3) {
+      this.setState({isshowShortError: true});
+      return;
+    }
+    else{
+      this.setState({isshowShortError: false});
+    }
     const { product_id, type } = this.props;
     const comment_id = Date.now()
     const newComment = this.newComment(comment_id, username, commentInput);
+
 
     this.setState(prevState => ({
       comments: [newComment, ...prevState.comments],
@@ -137,16 +153,11 @@ class Comments extends React.Component {
   };
 
   insertComment = (comments, parentId, comment_id, username, text) => {
-  
-    for (let i = 0; i < comments.length; i++) {
-      let comment = comments[i];
-      if (comment.comment_id === parentId) {
+    for (let comment of comments) {
+      if (comment.comment_id === parentId || comment.subcomment.some(sub => sub.comment_id === parentId)) {
         comment.subcomment.unshift(this.newComment(comment_id, username, text));
+        return;
       }
-    }
-
-    for (let i = 0; i < comments.length; i++) {
-      let comment = comments[i];
       this.insertComment(comment.subcomment, parentId, comment_id, username, text);
     }
   };
@@ -202,30 +213,47 @@ class Comments extends React.Component {
   };
 
   
-  onClickSave = async () => {
-    
-    const {replyText, userid, username, current_comment_id} = this.state;
-    const {product_id, type } = this.props;
-    let comment_id = current_comment_id
-    this.addReply(comment_id, replyText);
+  onClickSave = async (is_sub_comment) => {
+    const { replyText, current_comment_id, comments } = this.state;
+    if (replyText.length < 3) {
+      this.setState({isshowShortError: true});
+      return;
+    }
+    else{
+      this.setState({isshowShortError: false});
+    }
+
+    this.addReply(current_comment_id, replyText);
     this.setState((prevState) => ({
       showReplyBox: {
         ...prevState.showReplyBox,
-        [comment_id]: false,
+        [current_comment_id]: false,
       },
       replyText: '',
     }));
+
+    const { product_id, type } = this.props;
+    const { userid, username } = this.state;
+    let parent_id = current_comment_id
+    if (is_sub_comment) {
+      for (let comment of comments) {
+        if (comment.subcomment.some(subcomment => subcomment.comment_id === current_comment_id)) {
+          parent_id = comment.comment_id;
+        }
+      }
+    }
+    // console.log(2222222222, is_sub_comment, current_comment_id, parent_id)
     try {
-      const response = await fetch("http://localhost:8000/api/subcomments",{
+      const response = await fetch("http://localhost:8000/api/subcomments", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           product_id: product_id,
           type: type,
           sub_comment_id: Date.now(),
-          comment_id: comment_id,
+          comment_id: parent_id,
           commentator: "customer",
           customer_id: userid,
           fullname: username,
@@ -236,18 +264,17 @@ class Comments extends React.Component {
           badge: "",
           status: 2,
           is_reported: false,
-        })
-      })
+        }),
+      });
       const result = await response.json();
-      this.updateUser()
+      this.updateUser();
       if (response.ok) {
         console.log('Subcomment posted successfully:', result);
       } else {
         console.error('Error posting subcomment:', result.message);
       }
-
     } catch (error) {
-      console.error('Error posting sub comment: ', error)
+      console.error('Error posting subcomment:', error);
     }
   };
 
@@ -328,6 +355,140 @@ class Comments extends React.Component {
     });
   };
 
+  //Edit comment
+  handleEditMainComment = (comment_id) => {
+    const { comments } = this.state;
+    const commentToEdit = this.getCommentContent(comments, comment_id);
+    this.setState({
+      showEditForm: true,
+      showEditConfirm: true,
+      commentToEditID: comment_id,
+      commentToEdit: commentToEdit,
+      isSubComment: false,
+    });
+  };
+
+  handleEditSubComment = (sub_comment_id) => {
+    const { comments } = this.state;
+    const commentToEdit = this.getCommentContent(comments, sub_comment_id);
+    console.log(3333333333333333, commentToEdit)
+    this.setState({
+      showEditForm: true,
+      showEditConfirm: true,
+      commentToEditID: sub_comment_id,
+      commentToEdit: commentToEdit,
+      isSubComment: true,
+    });
+  };
+
+  
+  editComment = () => {
+    const {comments, commentToEditID, commentToEdit} = this.state
+    for (let comment of comments) {
+      if (comment.comment_id ===commentToEditID) {
+        comment.content = commentToEdit;
+        return comments
+      }
+      // console.log(comment)
+      // console.log(4566, comment.subcomment[0].comment_id, commentToEditID)
+      if (comment.subcomment){
+        comment.subcomment.map((item, index) => {
+          if (item.comment_id === commentToEditID) {
+            // console.log(54444444444447899)
+            comment.subcomment[index].content = commentToEdit;
+            return comments
+          }
+        })
+      }
+    }
+    return comments
+  }
+
+  confirmEdit = async () => {
+    const { commentToEditID, isSubComment, commentToEdit} = this.state;
+
+    if (isSubComment) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/subcomments/${commentToEditID}`, {
+          method: 'PUT', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: commentToEdit
+          }),
+        });
+        console.log(11111111111, commentToEdit)
+        if (response.ok) {
+          console.log(2222222222)
+          this.setState((prevState) => ({
+            comments: this.editComment(),
+            showEditForm: false,
+            commentToEdit: '',
+          }));
+          
+        } else {
+          const result = await response.json();
+          console.error('Error deleting subcomment:', result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting subcomment:', error);
+      }
+    } else {
+      try {
+        const response = await fetch(`http://localhost:8000/api/comments/${commentToEditID}`, {
+          method: 'PUT', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: commentToEdit
+          }),
+        });
+        if (response.ok) {
+          this.setState((prevState) => ({
+            comments: this.editComment(),
+            showEditForm: false,
+            commentToEdit: '',
+          }));
+        } else {
+          const result = await response.json();
+          console.error('Error deleting comment:', result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting comment:', error);
+      }
+    }
+  };
+
+  cancelEdit = () => {
+    this.setState({
+      showEditForm: false,
+      commentToEdit: null,
+    });
+  };
+
+  getCommentContent = (comments, comment_id) => {
+    // Tìm comment chính
+    const mainComment = comments.find(comment => comment.comment_id === comment_id);
+    if (mainComment) {
+      return mainComment.content;
+    }
+
+    // Tìm subcomment
+    for (let comment of comments) {
+      const subComment = comment.subcomment.find(sub => sub.comment_id === comment_id);
+      if (subComment) {
+        return subComment.content;
+      }
+    }
+    return '';
+  }
+
+  cancelShortComment = () => {
+    this.setState({isshowShortError: false});
+  };
+
   removeSubcomment = (comments, sub_comment_id) => {
     for (let comment of comments) {
       comment.subcomment = comment.subcomment.filter(subcomment => subcomment.comment_id !== sub_comment_id);
@@ -338,21 +499,46 @@ class Comments extends React.Component {
 
   renderComment = (comment, is_sub_comment = false) => {
     const { comment_id, customer_name, avatar, content, subcomment } = comment;
-    const { replyText, showReplyBox, username} = this.state;
+    const { replyText, showReplyBox, username, showEditForm, commentToEditID, commentToEdit} = this.state;
+    // console.log(4444444444,commentToEdit)
     return (
       <div className="flex gap-4 m-4 relative" key={customer_name}>
         <div className="flex-shrink-0">
           <img src={avatar || NoAvatar} alt="Avatar" className="w-12 h-12 rounded-full" />
         </div>
         <div>
-          <div className="inline-block rounded-lg overflow-hidden">
+        {showEditForm && commentToEditID === comment_id ? (
+          <div className="mt-4">
+            <input
+              className="bg-gray-100 rounded border border-gray-400 leading-normal h-20 py-2 px-3 mb-4 font-medium placeholder-gray-400 focus:outline-none focus:bg-white"
+              type="text"
+              value={commentToEdit}
+              onChange={(e) => this.setState({commentToEdit : e.target.value })}
+            />
+            <div className="flex flex-row justify-start">
+              <button
+                className="p-2 mr-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
+                onClick={this.confirmEdit}
+              >
+                Lưu
+              </button>
+              <button
+                className="p-2 bg-gray-300 text-gray-600 rounded hover:bg-gray-400 transition duration-300 ease-in-out"
+                onClick={this.cancelEdit}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        ):
+          (<div className="inline-block rounded-lg overflow-hidden">
             <div className="bg-slate-400 px-2 pt-2 rounded-t-lg">
               <h3 className="font-bold text-lg">{customer_name}</h3>
             </div>
             <div className="bg-slate-400 p-2 rounded-b-lg">
               <div className="text-white">{content}</div>
             </div>
-          </div>
+          </div>)}
           {!showReplyBox[comment_id] && (
             <div>
               <button className="p-2 text-blue-500 hover:underline" onClick={() => this.onClickReply(comment_id)}>
@@ -368,7 +554,16 @@ class Comments extends React.Component {
                   Xóa
                 </button>
               )}
-
+              {customer_name === username && !is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleEditMainComment(comment_id)}>
+                  Sửa
+                </button>
+              )}
+              {customer_name === username && is_sub_comment  && (
+                <button className="p-2 text-red-500 hover:underline" onClick={() => this.handleEditSubComment(comment_id)}>
+                  Sửa
+                </button>
+              )}
             </div>
           )}
           {showReplyBox[comment_id] && (
@@ -383,7 +578,7 @@ class Comments extends React.Component {
               <div className="flex flex-row justify-start">
                 <button
                   className="p-2 mr-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
-                  onClick={this.onClickSave}
+                  onClick={() => this.onClickSave(is_sub_comment)}
                 >
                   Lưu
                 </button>
@@ -412,7 +607,7 @@ class Comments extends React.Component {
   
 
   render() {
-    const { commentInput, comments, showNotification, showDeleteConfirm } = this.state;
+    const { commentInput, comments, showNotification, showDeleteConfirm, isshowShortError, showEditConfirm } = this.state;
 
     return (
       <div className="p-4 m-4 bg-gray-200">
@@ -420,12 +615,13 @@ class Comments extends React.Component {
         {showNotification && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <p className="text-lg font-semibold mb-4">Please log in to perform this action.</p>
+              <p className="text-lg font-semibold mb-4">Vui lòng đăng nhập để thực hiện hành động này.</p>
               <div className="flex justify-end space-x-4">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
                   onClick={() => {
                     this.setState({ showNotification: false });
+                    {localStorage.setItem('redirectUrl', window.location.href);}
                     window.location.href = '/login';
                   }}
                 >
@@ -435,7 +631,7 @@ class Comments extends React.Component {
                   className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
                   onClick={() => this.setState({ showNotification: false })}
                 >
-                  Cancel
+                  Hủy
                 </button>
               </div>
             </div>
@@ -444,7 +640,7 @@ class Comments extends React.Component {
         {showDeleteConfirm && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
             <div className="bg-white p-8 rounded-lg shadow-lg">
-              <p className="text-lg font-semibold mb-4">Are you sure you want to delete this comment?</p>
+              <p className="text-lg font-semibold mb-4">Bạn muốn xóa bình luận này không?</p>
               <div className="flex justify-end space-x-4">
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out"
@@ -456,14 +652,33 @@ class Comments extends React.Component {
                   className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
                   onClick={this.cancelDelete}
                 >
-                  Cancel
+                  Hủy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+          {isshowShortError && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <p className="text-lg font-semibold mb-4">Bình luận của bạn ngắn quá?</p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
+                  onClick={this.cancelShortComment}
+                >
+                  Xác nhận
                 </button>
               </div>
             </div>
           </div>
         )}
         <ul>
-          {comments.map((comment) => this.renderComment(comment))}
+          {comments.map(
+            (comment) => (
+              this.renderComment(comment)
+            )
+            )}
         </ul>
         <div className="flex flex-col justify-start ml-6">
           <input

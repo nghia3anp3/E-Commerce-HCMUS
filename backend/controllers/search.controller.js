@@ -1,6 +1,8 @@
 const Products = require("../models/product.model");
 const { spawn } = require('child_process');
 const fs = require('fs');
+const multer = require('multer');
+const uploadSearch = multer({ dest: 'uploads/' });
 
 const getContext_semantic_search = async (req, res) => {
     try {
@@ -51,14 +53,20 @@ const getContext_semantic_search = async (req, res) => {
   const getContext_image_search = async (req, res) => {
     try {
         // Define the path where the image will be saved
-        const imageData = req.body;
-        const imagePath = "../../backend/handle_txt/input_image.jpg";
+        const imageData = req.file.path;
+        if (!imageData) {
+          return res.status(400).json({ error: 'No file uploaded' });
+        }
+        console.log(imageData)
+        const ImageBinary = fs.readFileSync(imageData)
+        fs.unlinkSync(req.file.path);
+        // const imagePath = "D:/LHH/E-Commerce-HCMUS/backend/handle_txt/input_image.jpg";
+        const imagePath = "../frontend/src/img/input_image.jpg";
         console.log('Image path:', imagePath);
   
         // Write the binary data to a file using async/await
-        await fs.promises.writeFile(imagePath, imageData);
+        await fs.promises.writeFile(imagePath, ImageBinary);
         console.log('Image saved successfully.');
-  
         // Call Python script to process the image
         const pythonScriptPath = "../../AI_process/image_search.py";
         const process = spawn('python', [pythonScriptPath, imagePath], { cwd: __dirname });
@@ -136,5 +144,5 @@ const getContext_semantic_search = async (req, res) => {
 
 
 module.exports = {
-    getContext_semantic_search, getContext_image_search
+    getContext_semantic_search, getContext_image_search, uploadSearch
 };

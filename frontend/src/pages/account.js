@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { UserContext } from '../context/UserContext';
 import { Link } from 'react-router-dom';
 
 class Account extends Component {
@@ -29,7 +30,7 @@ class Account extends Component {
 
   setAvatarWidth = () => {
     if (this.avatarRef.current) {
-      const width = this.avatarRef.current.clientWidth;
+      const { width } = this.avatarRef.current.getBoundingClientRect();
       this.setState({ avatarWidth: width });
     }
   };
@@ -94,8 +95,7 @@ class Account extends Component {
     });
   };
 
-  handleUploadClick = (user) => {
-    const { updateUser } = this.context;
+  handleUploadClick = (userContext, user) => {
     const { selectedFile } = this.state;
     if (!selectedFile) return;
 
@@ -105,7 +105,7 @@ class Account extends Component {
     formData.append('avatar', selectedFile);
     formData.append('avatarContentType', selectedFile.type);
 
-    updateUser(user.user_id, formData)
+    userContext.updateUser(user.user_id, formData)
       .then(() => {
         this.setState({
           selectedFile: null,
@@ -130,9 +130,11 @@ class Account extends Component {
   };
 
   handleAvatarMouseEnter = () => {
-    this.setState({ isHoveringAvatar: true });
+    this.setState({ isHoveringAvatar: true }, () => {
+      this.setAvatarWidth();
+    });
   };
-
+  
   handleAvatarMouseLeave = () => {
     this.setState({ isHoveringAvatar: false });
   };
@@ -165,13 +167,11 @@ class Account extends Component {
                     <span className="block sm:inline">{successMessage}</span>
                   </div>
                 )}
-                <div className="mb-4 relative"
-                     onMouseEnter={this.handleAvatarMouseEnter}
-                     onMouseLeave={this.handleAvatarMouseLeave}>
-                  <img src={`http://localhost:8000/api/avatar/${user.user_id}`} alt="Avatar" className={`w-20 h-20 rounded-full mb-4`} ref={this.avatarRef} />
+                <div className="mb-4 relative" onMouseEnter={this.handleAvatarMouseEnter} onMouseLeave={this.handleAvatarMouseLeave}>
+                  <img src={`http://localhost:8000/api/avatar/${user.user_id}`} alt="Avatar" className="w-20 h-20 rounded-full mb-4" ref={this.avatarRef} />
                   {isHoveringAvatar && (
                     <div className="absolute top-0 left-0" style={{ width: avatarWidth }} onClick={this.openModal}>
-                      <div className="bg-black opacity-50 rounded-full flex items-center justify-center h-20">
+                      <div className="bg-black opacity-50 rounded-full flex items-center justify-center h-20" style={{ width: avatarWidth }}>
                         <span className="text-white font-bold">Change</span>
                       </div>
                     </div>
@@ -254,33 +254,39 @@ class Account extends Component {
             )}
           </div>
         </div>
-        {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-            <div className="bg-white p-8 rounded-md max-w-lg">
-              <h2 className="text-lg font-bold mb-4">Upload New Avatar</h2>
-              <input type="file" accept="image/*" onChange={this.handleFileChange} className="mb-4" />
-              {previewUrl && (
-                <div className="mb-4">
-                  <p className="font-semibold">Preview:</p>
-                  <img src={previewUrl} alt="Preview" className="w-20 h-20 rounded-full" />
+        <UserContext.Consumer>
+          {(userContext) => (
+            isModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                <div className="bg-white p-8 rounded-md max-w-lg">
+                  <h2 className="text-lg font-bold mb-4">Upload New Avatar</h2>
+                  <input type="file" accept="image/*" onChange={this.handleFileChange} className="mb-4" />
+                  {previewUrl && (
+                    <div className="mb-4">
+                      <p className="font-semibold">Preview:</p>
+                      <img src={previewUrl} alt="Preview" className="w-20 h-20 rounded-full" />
+                    </div>
+                  )}
+                  <div className="flex justify-end mt-4">
+                    <button
+                      onClick={() => this.handleUploadClick(userContext, user)}
+                      className={`bg-blue-500 text-white px-4 py-2 rounded mr-2 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? 'Uploading...' : 'Upload'}
+                    </button>
+                    <button
+                      onClick={this.closeModal}
+                      className="bg-gray-500 text-white px-4 py-2 rounded"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-              )}
-              <button
-                onClick={() => this.handleUploadClick(user)}
-                className={`bg-blue-500 text-white px-4 py-2 rounded mr-2 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isUploading}
-              >
-                {isUploading ? 'Uploading...' : 'Upload'}
-              </button>
-              <button
-                onClick={this.closeModal}
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+              </div>
+            )
+          )}
+        </UserContext.Consumer>
       </section>
     );
   }
