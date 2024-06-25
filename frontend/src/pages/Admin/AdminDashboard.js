@@ -22,8 +22,7 @@ const AdminDashboard = () => {
   const [showModal, setShowModal] = useState(false);
   const [chartData, setChartData] = useState(null);
 
-  console.log(totalOrders, totalUsers)
-
+  
   const getTotalSales = (orders) => {
     let total = 0;
     orders.map((item) => {
@@ -39,9 +38,10 @@ const AdminDashboard = () => {
     let laptop_quantity = [0, 0];
     let phone_sales = [0, 0];
     let laptop_sales = [0, 0];
-
+    console.log(22222222, orders)
     orders.forEach((order_item) => {
       let month = parseInt(order_item.date.slice(5, 7));
+      
       detailProducts.forEach((detail_product_item) => {
         if (detail_product_item.type === "phone") {
           if (month === 5) {
@@ -49,7 +49,6 @@ const AdminDashboard = () => {
             phone_sales[0] += detail_product_item.quantity * detail_product_item.price;
           } else {
             phone_quantity[1] += detail_product_item.quantity;
-            phone_sales[1] += detail_product_item.quantity * detail_product_item.price;
           }
         } else {
           if (month === 5) {
@@ -67,27 +66,28 @@ const AdminDashboard = () => {
       labels: labels,
       datasets: [
         {
-          label: 'Phone Quantity',
+          label: 'Phone',
           data: phone_quantity,
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
         },
         {
-          label: 'Laptop Quantity',
+          label: 'Laptop',
           data: laptop_quantity,
           backgroundColor: 'rgba(153, 102, 255, 0.6)',
         },
-        {
-          label: 'Phone Sales (VNĐ)',
-          data: phone_sales,
-          backgroundColor: 'rgba(255, 159, 64, 0.6)',
-        },
-        {
-          label: 'Laptop Sales (VNĐ)',
-          data: laptop_sales,
-          backgroundColor: 'rgba(255, 206, 86, 0.6)',
-        },
+        // {
+        //   label: 'Phone Sales (VNĐ)',
+        //   data: phone_sales,
+        //   backgroundColor: 'rgba(255, 159, 64, 0.6)',
+        // },
+        // {
+        //   label: 'Laptop Sales (VNĐ)',
+        //   data: laptop_sales,
+        //   backgroundColor: 'rgba(255, 206, 86, 0.6)',
+        // },
       ],
     };
+    console.log(11111111111, barChartData)
     return barChartData;
   };
 
@@ -97,8 +97,12 @@ const AdminDashboard = () => {
         beginAtZero: true,
         ticks: {
           callback: function (value) {
-            return value.toLocaleString() + ' triệu VNĐ';
+            return value.toLocaleString();
           },
+        },
+        title: {
+          display: true,
+          text: 'Quantity',
         },
       },
     },
@@ -120,7 +124,7 @@ const AdminDashboard = () => {
       case 'Sales Overview Data':
         return (
           <div>
-            <h2 className="text-xl font-bold mb-4">Sales and Quantity Chart</h2>
+            <h2 className="text-xl font-bold mb-4">Quantity Chart</h2>
             {chartData && <Bar data={chartData} options={barChartOptions} />}
           </div>
         );
