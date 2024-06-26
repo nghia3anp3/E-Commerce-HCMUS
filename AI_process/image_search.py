@@ -43,8 +43,11 @@ def preprocess_image_cv2(image_path):
     return img_tensor
 
 
-def extract_vgg16_features(image_tensor):
-    model = models.vgg16(pretrained=True).features
+def extract_resnet50_features(image_tensor):
+    # Load the pretrained ResNet50 model
+    model = models.resnet50(pretrained=True)
+    # Remove the fully connected layers
+    model = torch.nn.Sequential(*list(model.children())[:-1])
     model.eval()
 
     with torch.no_grad():
@@ -72,12 +75,12 @@ image_to_id_path = r"../../AI_process/image_search/image_names.txt"
 def image_process():
     # Xử lý hình ảnh input'
     img_tensor = preprocess_image_cv2("../../frontend/src/img/input_image.jpg") #image là path
-    features = extract_vgg16_features(img_tensor)
+    features = extract_resnet50_features(img_tensor)
     features_np = features.numpy()
     input_features = features_np.reshape(1, -1)
 
     # Tìm 5 vector gần nhất với vector của hình ảnh input
-    k = 50
+    k = 100
     D, I = index.search(input_features, k)
 
     # In ra 50 hình ảnh gần nhất
@@ -98,7 +101,7 @@ def image_process():
     # Extract 5 unique product IDs from nearest image filenames
     unique_product_ids = set()
     for filename in nearest_image_filenames:
-        if len(unique_product_ids) >= 5:
+        if len(unique_product_ids) >= 10:
             break
         product_id = image_to_id.get(filename)
         if product_id:
