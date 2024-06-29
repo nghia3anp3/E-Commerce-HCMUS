@@ -82,7 +82,7 @@ The project follows the MVC (Model-View-Controller) architecture:
 2. Start the backend server:
     ```sh
     cd backend
-    node server.js
+    npm start
     ```
 3. Start the frontend development server:
     ```sh
